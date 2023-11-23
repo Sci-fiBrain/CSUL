@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ec="clr-namespace:CSUL.ExControls"
         xmlns:view="clr-namespace:CSUL.Views"
+        xmlns:vm="clr-namespace:CSUL.ViewModels"
         xmlns:local="clr-namespace:CSUL"
         mc:Ignorable="d"
         WindowStyle="None"
@@ -15,6 +16,9 @@
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}"/>
     </Window.Resources>
+    <Window.DataContext>
+        <vm:MainModel/>
+    </Window.DataContext>
     <Grid>
         <Border>
             <Grid>
@@ -48,13 +52,14 @@
                                     <Setter Property="Margin" Value="0,15,0,0"/>
                                     <Setter Property="Height" Value="60"/>
                                     <Setter Property="Width" Value="60"/>
+                                    <Setter Property="Command" Value="{Binding ViewCommand}"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <ec:CButton Icon="Resources/Icons/play.png"/>
-                            <ec:CButton Icon="Resources/Icons/earth.png"/>
-                            <ec:CButton Icon="Resources/Icons/map.png"/>
-                            <ec:CButton Icon="Resources/Icons/mod.png"/>
-                            <ec:CButton Icon="Resources/Icons/cog.png"/>
+                            <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0"/>
+                            <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1"/>
+                            <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2"/>
+                            <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3"/>
+                            <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -71,14 +76,14 @@
                                 </Border.Effect>
                                 <Grid>
                                     <StackPanel Margin="20,0" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <ec:CButton Icon="Resources/Icons/minimize.png" Height="40" Width="40" Margin="0,0,5,0"/>
-                                        <ec:CButton Icon="Resources/Icons/close.png" Height="40" Width="40" Margin="5,0,0,0"/>
+                                        <ec:CButton Icon="Resources/Icons/minimize.png" Height="40" Width="40" Margin="0,0,5,0" Click="Minimize_Click"/>
+                                        <ec:CButton Icon="Resources/Icons/close.png" Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
                         </Grid>
                         <Grid Grid.Row="1">
-                            <view:PlayView/>
+                            <ContentControl Margin="5,5,0,0" Content="{Binding ViewContent, Mode=OneWay}"/>
                         </Grid>
                     </Grid>
                 </Grid>

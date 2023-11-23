@@ -6,7 +6,7 @@
              xmlns:ec="clr-namespace:CSUL.ExControls"
              xmlns:local="clr-namespace:CSUL.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="610" d:DesignWidth="1078">
+             d:DesignHeight="570" d:DesignWidth="1078">
     <Grid>
         <Image  Height="280" Width="auto" Margin="0,-20,0,0"
                 Source="/Resources/Imgs/csl_logo.png"

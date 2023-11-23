@@ -11,9 +11,12 @@
   <ItemGroup>
     <None Remove="Resources\Icons\cog.png" />
     <None Remove="Resources\Icons\earth.png" />
+    <None Remove="Resources\Icons\earth_black.png" />
     <None Remove="Resources\Icons\map.png" />
+    <None Remove="Resources\Icons\map_black.png" />
     <None Remove="Resources\Icons\minimize.png" />
     <None Remove="Resources\Icons\mod.png" />
+    <None Remove="Resources\Icons\save.png" />
     <None Remove="Resources\Imgs\back_image.png" />
     <None Remove="Resources\Imgs\cslbbs_logo.png" />
     <None Remove="Resources\Imgs\csl_logo.png" />
@@ -26,9 +29,12 @@
     <Resource Include="Resources\Icons\close.png" />
     <Resource Include="Resources\Icons\cog.png" />
     <Resource Include="Resources\Icons\earth.png" />
+    <Resource Include="Resources\Icons\earth_black.png" />
     <Resource Include="Resources\Icons\map.png" />
+    <Resource Include="Resources\Icons\map_black.png" />
     <Resource Include="Resources\Icons\minimize.png" />
     <Resource Include="Resources\Icons\mod.png" />
+    <Resource Include="Resources\Icons\save.png" />
     <Resource Include="Resources\Imgs\back_image.png" />
     <Resource Include="Resources\Imgs\csl_logo.png" />
     <Resource Include="Resources\Imgs\csul_logo.png" />
@@ -42,7 +48,12 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\SaveView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

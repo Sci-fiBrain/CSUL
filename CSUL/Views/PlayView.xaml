@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="CSUL.Views.PlayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ec="clr-namespace:CSUL.ExControls"
+             xmlns:local="clr-namespace:CSUL.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="610" d:DesignWidth="1078">
+    <Grid>
+        <Image  Height="280" Width="auto" Margin="0,-20,0,0"
+                Source="/Resources/Imgs/csl_logo.png"
+                HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ec:CButton Margin="30" ButtonType="Text" Foreground="{DynamicResource WhiteBrush}"
+                Height="80" Width="255" Content="开始游戏" FontSize="40px"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

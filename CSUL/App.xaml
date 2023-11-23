@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/BaseStyle.xaml"/>
                 <ResourceDictionary Source="Styles/ExStyle.xaml"/>
+                <ResourceDictionary Source="Styles/Paths.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -9,16 +9,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\cog.png" />
+    <None Remove="Resources\Icons\earth.png" />
+    <None Remove="Resources\Icons\map.png" />
+    <None Remove="Resources\Icons\minimize.png" />
+    <None Remove="Resources\Icons\mod.png" />
     <None Remove="Resources\Imgs\back_image.png" />
     <None Remove="Resources\Imgs\cslbbs_logo.png" />
+    <None Remove="Resources\Imgs\csl_logo.png" />
+    <None Remove="Resources\Imgs\csul_logo.png" />
     <None Remove="Resources\Imgs\logo1.png" />
     <None Remove="Resources\Imgs\logo2.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\close.png" />
+    <Resource Include="Resources\Icons\cog.png" />
+    <Resource Include="Resources\Icons\earth.png" />
+    <Resource Include="Resources\Icons\map.png" />
+    <Resource Include="Resources\Icons\minimize.png" />
+    <Resource Include="Resources\Icons\mod.png" />
     <Resource Include="Resources\Imgs\back_image.png" />
+    <Resource Include="Resources\Imgs\csl_logo.png" />
+    <Resource Include="Resources\Imgs\csul_logo.png" />
     <Resource Include="Resources\Imgs\logo1.png" />
-    <Resource Include="Resources\Imgs\logo2.png" />
+    <Resource Include="Resources\Icons\play.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
     <Folder Include="Models\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>

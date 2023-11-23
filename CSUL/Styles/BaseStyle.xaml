@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="DefaultBrush" Color="#3F92D2" />
-    <SolidColorBrush x:Key="WhiteBrush" Color="#FBFBFB" />
+    <SolidColorBrush x:Key="DefaultBrush" Color="#61B3E9" />
+    <SolidColorBrush x:Key="WhiteBrush" Color="#F2F2F2" />
 
     <Style TargetType="Border">
         <Setter Property="CornerRadius" Value="10"/>

@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CSUL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Title="MainWindow"
+        Height="650" Width="1200">
     <Grid>
-
+        <Border BorderThickness="1" MouseMove="Border_MouseMove">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Border>
+                        <Image Height="100" Source="Resources/Imgs/logo.png"/>
+                    </Border>
+                </StackPanel>
+                <Grid Grid.Column="1">
+                    
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

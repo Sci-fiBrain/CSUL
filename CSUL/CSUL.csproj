@@ -7,4 +7,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\Imgs\cslbbs_logo.png" />
+    <None Remove="Resources\Imgs\logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Imgs\cslbbs_logo.png" />
+    <EmbeddedResource Include="Resources\Imgs\logo.png" />
+  </ItemGroup>
+
 </Project>

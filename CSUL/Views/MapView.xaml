@@ -11,20 +11,20 @@
             <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Margin="10">
+        <Border Grid.Row="0" Margin="0,0,0,10">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="/Resources/Icons/earth_black.png" Height="100"/>
-                    <Image Grid.Column="1" Source="/Resources/Icons/save.png" Height="100"/>
+                    <Image Grid.Column="0" Source="/Resources/Icons/earth_black.png" Height="70"/>
+                    <Image Grid.Column="1" Source="/Resources/Icons/save.png" Height="70"/>
                 </Grid>
                 <Label Content="将地图拖入此处导入，或点击导入地图" FontSize="15px" Foreground="{DynamicResource BlackBrush}"/>
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Margin="10">
+        <Border Grid.Row="1" Margin="0,10,0,0">
             
         </Border>
     </Grid>

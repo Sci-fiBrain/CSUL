@@ -23,24 +23,40 @@ namespace CSUL
         public MainWindow()
         {
             InitializeComponent();
+            Closing += (sender, e) =>
+            {
+                e.Cancel = true;
+                ExitProgram(0);
+            };
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 DragMove();
             }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
-        }
+            => ExitProgram(0);
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
+        /// 退出程序
+        /// </summary>
+        private static void ExitProgram(int exitCode)
+        {
+            MessageBoxResult ret = MessageBox.Show("确定退出吗？", "提示",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
+            if (ret == MessageBoxResult.OK)
+            {
+                Environment.Exit(exitCode);
+            }
         }
     }
 }

@@ -4,10 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ec="clr-namespace:CSUL.ExControls"
-        xmlns:view="clr-namespace:CSUL.Views"
         xmlns:vm="clr-namespace:CSUL.ViewModels"
-        xmlns:local="clr-namespace:CSUL"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -21,7 +20,7 @@
     </Window.DataContext>
     <Grid>
         <Border>
-            <Grid>
+            <Grid Margin="4">
                 <Grid.Background>
                     <ImageBrush ImageSource="Resources/Imgs/back_image.png">
                     </ImageBrush>
@@ -49,17 +48,17 @@
                         <StackPanel>
                             <StackPanel.Resources>
                                 <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}">
-                                    <Setter Property="Margin" Value="0,15,0,0"/>
-                                    <Setter Property="Height" Value="60"/>
-                                    <Setter Property="Width" Value="60"/>
+                                    <Setter Property="Margin" Value="0,13,0,13"/>
+                                    <Setter Property="Height" Value="54"/>
+                                    <Setter Property="Width" Value="54"/>
                                     <Setter Property="Command" Value="{Binding ViewCommand}"/>
                                 </Style>
                             </StackPanel.Resources>
-                            <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0"/>
-                            <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1"/>
-                            <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2"/>
-                            <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3"/>
-                            <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4"/>
+                            <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0" ToolTip="天际线2"/>
+                            <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="地图管理"/>
+                            <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="存档管理"/>
+                            <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="模组管理"/>
+                            <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="设定"/>
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -82,8 +81,15 @@
                                 </Grid>
                             </Border>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <ContentControl Margin="5,5,0,0" Content="{Binding ViewContent, Mode=OneWay}"/>
+                        <Grid Grid.Row="1" Margin="15,5,0,0">
+                            <ContentControl Content="{Binding ViewContent, Mode=OneWay}">
+                                <ec:ContentControlEx.ContentChangedAnimation>
+                                    <Storyboard>
+                                        <ThicknessAnimation From="30,0,-30,0" To="0" Duration="0:0:0.3" Storyboard.TargetProperty="Margin"/>
+                                        <DoubleAnimation From="0" To="1" Duration="0:0:0.3" Storyboard.TargetProperty="Opacity"/>
+                                    </Storyboard>
+                                </ec:ContentControlEx.ContentChangedAnimation>
+                            </ContentControl>
                         </Grid>
                     </Grid>
                 </Grid>

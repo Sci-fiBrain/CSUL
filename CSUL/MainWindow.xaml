@@ -6,6 +6,7 @@
         xmlns:ec="clr-namespace:CSUL.ExControls"
         xmlns:vm="clr-namespace:CSUL.ViewModels"
         mc:Ignorable="d"
+        Icon="Resources/Imgs/win_logo.png"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"

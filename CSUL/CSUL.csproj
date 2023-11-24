@@ -8,6 +8,8 @@
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyVersion>0.0.0.1</AssemblyVersion>
+    <FileVersion>0.0.0.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -41,6 +43,7 @@
     <None Remove="Resources\Imgs\csul_logo.png" />
     <None Remove="Resources\Imgs\logo1.png" />
     <None Remove="Resources\Imgs\logo2.png" />
+    <None Remove="Resources\Imgs\win_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +65,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\Imgs\cslbbs_logo.png" />
+    <Resource Include="Resources\Imgs\win_logo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -40,7 +40,6 @@ namespace CSUL.Models
                 }
                 catch { }
             }
-            GamePath = Path.Combine(SteamGame.GetGameInstallPath("Cities Skylines II"), "Cities2.exe");
             //得到游戏数据文件路径
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string localLow = Path.Combine(appData[0..appData.LastIndexOf('\\')], "LocalLow");
@@ -49,14 +48,16 @@ namespace CSUL.Models
             if (!Directory.Exists(game)) throw new IOException("Cities Skylines II is not existed");
 
             //初始化各文件夹信息对象
+            GameRootDir = new(SteamGame.GetGameInstallPath("Cities Skylines II"));
+            GamePath = Path.Combine(gameRootDir.FullName, "Cities2.exe");
             GameDataDir = new(game);
-            SetOtherDataDir();
         }
 
         #endregion ---构造函数---
 
         #region ---私有字段---
 
+        private DirectoryInfo gameRootDir = default!;
         private DirectoryInfo gameDataDir = default!;
         private DirectoryInfo mapDir = default!;
         private DirectoryInfo saveDir = default!;
@@ -68,7 +69,21 @@ namespace CSUL.Models
         #region ---公共属性---
 
         /// <summary>
-        /// 游戏文件夹
+        /// 游戏安装文件夹
+        /// </summary>
+        [Config]
+        public DirectoryInfo GameRootDir
+        {
+            get => gameRootDir;
+            set
+            {
+                SetDirInfo(ref gameRootDir, value);
+                SetOtherRootDir();
+            }
+        }
+
+        /// <summary>
+        /// 游戏数据文件夹
         /// </summary>
         [Config]
         public DirectoryInfo GameDataDir
@@ -124,14 +139,13 @@ namespace CSUL.Models
         {
             get
             {
-                return !File.Exists(Path.Combine(GameDataDir.FullName, "winhttp.dll"));
+                return !File.Exists(Path.Combine(GameRootDir.FullName, "winhttp.dll"));
             }
         }
 
         /// <summary>
         /// 游戏路径
         /// </summary>
-        [Config]
         public string? GamePath { get; set; }
 
         #endregion ---公共属性---
@@ -157,8 +171,15 @@ namespace CSUL.Models
         {
             MapDir = new(Path.Combine(GameDataDir.FullName, "Maps"));
             SaveDir = new(Path.Combine(GameDataDir.FullName, "Saves"));
-            BepInExDir = new(Path.Combine(GameDataDir.FullName, "BepInEx"));
-            ModDir = new(Path.Combine(GameDataDir.FullName, "BepInEx", "plugins"));
+        }
+
+        /// <summary>
+        /// 修改其他安装文件路径
+        /// </summary>
+        private void SetOtherRootDir()
+        {
+            BepInExDir = new(Path.Combine(GameRootDir.FullName, "BepInEx"));
+            ModDir = new(Path.Combine(BepInExDir.FullName, "BepInEx", "plugins"));
         }
 
         #endregion ---私有方法---

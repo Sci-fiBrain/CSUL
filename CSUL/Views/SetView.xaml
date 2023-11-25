@@ -32,7 +32,7 @@
                         <Setter Property="Margin" Value="5,10,5,0" />
                     </Style>
                 </StackPanel.Resources>
-                <Label>游戏路径</Label>
+                <Label>游戏安装根目录</Label>
                 <TextBox Text="{Binding GamePath}" />
                 <Label>游戏数据根目录</Label>
                 <TextBox Text="{Binding GameData}" />

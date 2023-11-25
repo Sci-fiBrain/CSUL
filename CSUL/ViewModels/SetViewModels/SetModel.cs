@@ -6,11 +6,11 @@ namespace CSUL.ViewModels.SetViewModels
     {
         public string GamePath
         {
-            get => FileManager.Instance.GamePath!;
+            get => FileManager.Instance.GameRootDir.FullName!;
             set
             {
                 if (value == FileManager.Instance.GamePath) return;
-                FileManager.Instance.GamePath = value;
+                FileManager.Instance.GameRootDir = new(value);
                 OnPropertyChanged();
             }
         }

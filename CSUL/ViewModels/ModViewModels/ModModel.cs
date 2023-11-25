@@ -88,7 +88,7 @@ namespace CSUL.ViewModels.ModViewModels
                     await WebManager.DownloadFromUri(data.Uri, path);
                     SevenZipExtractor zip = new(path);
                     RemoveBepInEx();
-                    await zip.ExtractArchiveAsync(FileManager.Instance.GameDataDir.FullName);
+                    await zip.ExtractArchiveAsync(FileManager.Instance.GameRootDir.FullName);
                     ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
                     MessageBox.Show("安装完成");
                 }

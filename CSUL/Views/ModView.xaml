@@ -12,18 +12,6 @@
         <vm:ModModel />
     </UserControl.DataContext>
     <Grid>
-        <Border Visibility="{Binding ShowNoEx}">
-            <Border.Background>
-                <SolidColorBrush Color="{DynamicResource BlackColor}" Opacity="0.5" />
-            </Border.Background>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                    <Label Content="BepIn" FontSize="70px" Foreground="{DynamicResource WhiteBrush}" Margin="0" Padding="0" />
-                    <Label Content="Ex" FontSize="70px" Foreground="#FFFF7500" Margin="0" Padding="0" />
-                </StackPanel>
-                <Label Content="未安装BepInEx" FontSize="25px" Foreground="{DynamicResource WhiteBrush}" HorizontalContentAlignment="Center" />
-            </StackPanel>
-        </Border>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
@@ -65,5 +53,39 @@
                 </ListView>
             </Border>
         </Grid>
+        <Border Visibility="{Binding ShowNoEx, Mode=OneWay}">
+            <Border.Background>
+                <SolidColorBrush Color="{DynamicResource BlackColor}" Opacity="0.8" />
+            </Border.Background>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                    <Label Content="BepIn" FontSize="70px" Foreground="{DynamicResource WhiteBrush}" Margin="0" Padding="0" />
+                    <Label Content="Ex" FontSize="70px" Foreground="#FFFF7500" Margin="0" Padding="0" />
+                </StackPanel>
+                <Label Content="未安装BepInEx" FontSize="25px" Foreground="{DynamicResource WhiteBrush}" HorizontalContentAlignment="Center" />
+                <ListView ItemsSource="{Binding BepData}" Background="Transparent" BorderBrush="Transparent">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Button Height="30" Width="200" FontSize="15" Margin="5"
+                                    Content="{Binding Version}" Foreground="{DynamicResource BlackBrush}"
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DownloadCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

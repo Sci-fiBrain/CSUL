@@ -14,6 +14,11 @@ namespace CSUL.Models
         public static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.config");
 
         /// <summary>
+        /// 临时文件夹路径
+        /// </summary>
+        public static readonly string TempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
+
+        /// <summary>
         /// 获取<see cref="FileManager"/>实例
         /// </summary>
         public static FileManager Instance { get; } = new();

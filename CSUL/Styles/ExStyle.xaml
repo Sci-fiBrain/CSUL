@@ -64,9 +64,9 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ec:CButton}">
-                            <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{DynamicResource DefaultBrush}">
+                            <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}">
                                 <Border.Effect>
-                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="15" Opacity="0.5" Direction="-10" />
+                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="10" Opacity="0.5" Direction="-10" />
                                 </Border.Effect>
                                 <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
                                        FontStyle="{TemplateBinding FontStyle}" Foreground="{TemplateBinding Foreground}"

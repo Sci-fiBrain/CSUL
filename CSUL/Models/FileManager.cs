@@ -179,7 +179,7 @@ namespace CSUL.Models
         private void SetOtherRootDir()
         {
             BepInExDir = new(Path.Combine(GameRootDir.FullName, "BepInEx"));
-            ModDir = new(Path.Combine(BepInExDir.FullName, "BepInEx", "plugins"));
+            ModDir = new(Path.Combine(BepInExDir.FullName, "plugins"));
         }
 
         #endregion ---私有方法---

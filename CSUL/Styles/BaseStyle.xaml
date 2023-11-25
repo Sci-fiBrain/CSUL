@@ -3,14 +3,14 @@
 
     <SolidColorBrush x:Key="DefaultBrush" Color="{DynamicResource DefaultColor}" />
     <SolidColorBrush x:Key="WhiteBrush" Color="{DynamicResource WhiteColor}" />
-    <SolidColorBrush x:Key="BlackBrush" Color="{DynamicResource BlackColor}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{DynamicResource BlackColor}" />
 
     <Color x:Key="DefaultColor">#61B3E9</Color>
     <Color x:Key="WhiteColor">#F2F2F2</Color>
     <Color x:Key="BlackColor">#3B3B3B</Color>
-    
+
     <Style TargetType="Border">
-        <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="Background" Value="{DynamicResource WhiteBrush}"/>
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource WhiteBrush}" />
     </Style>
 </ResourceDictionary>

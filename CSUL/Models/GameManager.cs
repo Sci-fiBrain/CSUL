@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSUL.Models
 {
@@ -18,7 +14,7 @@ namespace CSUL.Models
         /// <param name="gamePath">游戏路径</param>
         public static void StartGame(string gamePath)
         {
-            if(string.IsNullOrEmpty(gamePath)) throw new ArgumentNullException(nameof(gamePath));
+            if (string.IsNullOrEmpty(gamePath)) throw new ArgumentNullException(nameof(gamePath));
             Process.Start(gamePath);
         }
     }

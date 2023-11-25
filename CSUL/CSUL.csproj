@@ -36,6 +36,7 @@
     <None Remove="Resources\Icons\map_black.png" />
     <None Remove="Resources\Icons\minimize.png" />
     <None Remove="Resources\Icons\mod.png" />
+    <None Remove="Resources\Icons\mod_black.png" />
     <None Remove="Resources\Icons\save.png" />
     <None Remove="Resources\Imgs\back_image.png" />
     <None Remove="Resources\Imgs\cslbbs_logo.png" />
@@ -60,6 +61,7 @@
     <Resource Include="Resources\Icons\map_black.png" />
     <Resource Include="Resources\Icons\minimize.png" />
     <Resource Include="Resources\Icons\mod.png" />
+    <Resource Include="Resources\Icons\mod_black.png" />
     <Resource Include="Resources\Icons\save.png" />
     <Resource Include="Resources\Imgs\back_image.png" />
     <Resource Include="Resources\Imgs\csl_logo.png" />

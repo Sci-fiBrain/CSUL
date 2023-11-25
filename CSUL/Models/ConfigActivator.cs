@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace CSUL.Models
 {
@@ -52,18 +50,20 @@ namespace CSUL.Models
 
         #region ---私有方法---
 
+        private static readonly JsonSerializerOptions options = new() { Converters = { new DirectoryInfoConverter() } };
+
         private static void Save(object obj, string configPath, bool incPrivate = false)
         {   //保存配置文件
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             if (incPrivate) flags |= BindingFlags.NonPublic;
             var properties = from pro in obj.GetType().GetProperties(flags) where Attribute.IsDefined(pro, typeof(ConfigAttribute)) select pro;
-            using Utf8JsonWriter writer = new(new FileStream(configPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite), new() { Indented = true });
+            using Utf8JsonWriter writer = new(new FileStream(configPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite), new() { Indented = true });
             writer.WriteStartObject();
             foreach (var pro in properties)
             {
                 writer.WriteStartObject(pro.Name);
                 writer.WriteString("Type", pro.PropertyType.AssemblyQualifiedName);
-                writer.WriteString("Value", JsonSerializer.Serialize(obj));
+                writer.WriteString("Value", JsonSerializer.Serialize(pro.GetValue(obj), pro.PropertyType, options));
                 writer.WriteEndObject();
             }
             writer.WriteEndObject();
@@ -84,7 +84,7 @@ namespace CSUL.Models
                     content.MoveNext();
                     Type type = Type.GetType(content.Current.Value.GetString()!)!;
                     content.MoveNext();
-                    object? proValue = JsonSerializer.Deserialize(content.Current.Value.GetString()!, type);
+                    object? proValue = JsonSerializer.Deserialize(content.Current.Value.GetString()!, type, options);
                     value.SetValue(obj, proValue);
                 }
             }
@@ -99,4 +99,19 @@ namespace CSUL.Models
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class ConfigAttribute : Attribute
     { }
+
+    public class DirectoryInfoConverter : JsonConverter<DirectoryInfo>
+    {
+        public override DirectoryInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            string read = reader.GetString()!;
+            return new(read);
+        }
+
+        public override void Write(Utf8JsonWriter writer, DirectoryInfo value, JsonSerializerOptions options)
+        {
+            string path = value.FullName;
+            writer.WriteStringValue(path);
+        }
+    }
 }

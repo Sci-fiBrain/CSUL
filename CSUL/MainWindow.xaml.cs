@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSUL.Models;
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -46,6 +47,7 @@ namespace CSUL
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
             if (ret == MessageBoxResult.OK)
             {
+                FileManager.Instance.SaveConfig(FileManager.ConfigPath);
                 Environment.Exit(exitCode);
             }
         }

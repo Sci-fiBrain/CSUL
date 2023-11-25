@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -16,12 +12,11 @@ namespace CSUL.ExControls
     public class ContentControlEx
     {
         public static readonly DependencyProperty ContentChangedAnimationProperty = DependencyProperty.RegisterAttached(
-    "ContentChangedAnimation", typeof(Storyboard), typeof(ContentControlEx), 
+    "ContentChangedAnimation", typeof(Storyboard), typeof(ContentControlEx),
     new PropertyMetadata(default(Storyboard), ContentChangedAnimationPropertyChangedCallback));
 
         public static void SetContentChangedAnimation(DependencyObject element, Storyboard value)
             => element.SetValue(ContentChangedAnimationProperty, value);
-
 
         public static Storyboard GetContentChangedAnimation(DependencyObject element)
             => (Storyboard)element.GetValue(ContentChangedAnimationProperty);

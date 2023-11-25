@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSUL.Models
 {
@@ -14,6 +12,7 @@ namespace CSUL.Models
     public static class SteamGame
     {
         #region ---私有量---
+
         /// <summary>
         /// Steam注册表路径
         /// </summary>
@@ -32,9 +31,11 @@ namespace CSUL.Models
             get => Registry.GetValue(SteamRegistryKey, "InstallPath", null) as string
                 ?? throw new RegistryNotFoundException("steam");
         }
-        #endregion
+
+        #endregion ---私有量---
 
         #region ---公共方法---
+
         /// <summary>
         /// 获取游戏安装路径
         /// </summary>
@@ -65,9 +66,11 @@ namespace CSUL.Models
             path = null;
             return false;
         }
-        #endregion
+
+        #endregion ---公共方法---
 
         #region ---私有方法---
+
         /// <summary>
         /// 获取Steam游戏库文件夹路径
         /// </summary>
@@ -86,7 +89,8 @@ namespace CSUL.Models
             }
             return paths;
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 
     /// <summary>
@@ -94,6 +98,8 @@ namespace CSUL.Models
     /// </summary>
     public class RegistryNotFoundException : Exception
     {
-        public RegistryNotFoundException(string? name) : base($"Couldn't fint {name}") { }
+        public RegistryNotFoundException(string? name) : base($"Couldn't fint {name}")
+        {
+        }
     }
 }

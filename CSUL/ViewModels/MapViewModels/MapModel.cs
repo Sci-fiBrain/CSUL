@@ -1,12 +1,11 @@
 ﻿using CSUL.Models;
-using Microsoft.Win32;
+using CSUL.UserControls.DragFiles;
 using SevenZip;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -46,24 +45,6 @@ namespace CSUL.ViewModels.MapViewModels
             RefreshData();
 
             //设定命令处理方法
-            DropCommand = new RelayCommand((sender) =>
-            {
-                string[] files = EventArgsHandels.DragHandel(sender as DragEventArgs, ".zip", ".rar", ".7z");
-                InstallFile(files);
-            });
-            ClickCommand = new RelayCommand((sender) =>
-            {
-                OpenFileDialog dialog = new()
-                {
-                    Title = "选择地图文件",
-                    Multiselect = true,
-                    Filter = "压缩文件|*.zip;*.rar;*.7z"
-                };
-                if (dialog.ShowDialog() is true)
-                {
-                    InstallFile(dialog.FileNames);
-                }
-            });
             DeleteCommand = new RelayCommand((sender) =>
             {
                 if (sender is not ItemData data) return;
@@ -80,13 +61,17 @@ namespace CSUL.ViewModels.MapViewModels
                     RefreshData();
                 }
             });
+            AddCommand = new RelayCommand((sender) =>
+            {
+                InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
+            });
         }
 
-        public ICommand DropCommand { get; }
-        public ICommand ClickCommand { get; }
+        public ICommand AddCommand { get; }
         public ICommand DeleteCommand { get; }
 
         private List<ItemData> mapData = default!;
+
         public List<ItemData> MapData
         {
             get => mapData;
@@ -99,6 +84,7 @@ namespace CSUL.ViewModels.MapViewModels
         }
 
         #region ---私有方法---
+
         /// <summary>
         /// 将地图文件夹转为条目信息
         /// </summary>
@@ -157,6 +143,7 @@ namespace CSUL.ViewModels.MapViewModels
             }
             RefreshData();
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

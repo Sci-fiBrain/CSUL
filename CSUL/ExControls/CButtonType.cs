@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSUL.ExControls
+﻿namespace CSUL.ExControls
 {
     /// <summary>
     /// <see cref="CButton"/>的类型枚举

@@ -15,16 +15,16 @@
                                             Source="{TemplateBinding Icon}" Stretch="None"
                                             RenderTransformOrigin="0.5,0.5">
                                         <Image.RenderTransform>
-                                            <RotateTransform x:Name="rotate" Angle="0"/>
+                                            <RotateTransform x:Name="rotate" Angle="0" />
                                         </Image.RenderTransform>
                                         <Image.Triggers>
                                             <EventTrigger RoutedEvent="MouseEnter">
                                                 <EventTrigger.Actions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.6"/>
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.6" />
                                                             <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="45" Duration="0:0:0.200"/>
+                                                                             To="45" Duration="0:0:0.200" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>
@@ -33,9 +33,9 @@
                                                 <EventTrigger.Actions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <DoubleAnimation Duration="0:0:0.300" Storyboard.TargetProperty="Opacity" To="1"/>
+                                                            <DoubleAnimation Duration="0:0:0.300" Storyboard.TargetProperty="Opacity" To="1" />
                                                             <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="0" Duration="0:0:0.200"/>
+                                                                             To="0" Duration="0:0:0.200" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>
@@ -44,9 +44,9 @@
                                                 <EventTrigger.Actions>
                                                     <BeginStoryboard>
                                                         <Storyboard>
-                                                            <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9"/>
+                                                            <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9" />
                                                             <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="45" Duration="0:0:0.100"/>
+                                                                             To="45" Duration="0:0:0.100" />
                                                         </Storyboard>
                                                     </BeginStoryboard>
                                                 </EventTrigger.Actions>
@@ -66,11 +66,11 @@
                         <ControlTemplate TargetType="{x:Type ec:CButton}">
                             <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{DynamicResource DefaultBrush}">
                                 <Border.Effect>
-                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="15" Opacity="0.5" Direction="-10"/>
+                                    <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="15" Opacity="0.5" Direction="-10" />
                                 </Border.Effect>
-                                <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" 
+                                <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
                                        FontStyle="{TemplateBinding FontStyle}" Foreground="{TemplateBinding Foreground}"
-                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
@@ -88,16 +88,16 @@
                                            StrokeThickness="{TemplateBinding FontSize}">
                                     </Path>
                                     <Viewbox.RenderTransform>
-                                        <RotateTransform x:Name="rotate" Angle="0"/>
+                                        <RotateTransform x:Name="rotate" Angle="0" />
                                     </Viewbox.RenderTransform>
                                     <Viewbox.Triggers>
                                         <EventTrigger RoutedEvent="MouseEnter">
                                             <EventTrigger.Actions>
                                                 <BeginStoryboard>
                                                     <Storyboard>
-                                                        <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.6"/>
+                                                        <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.6" />
                                                         <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="45" Duration="0:0:0.200"/>
+                                                                             To="45" Duration="0:0:0.200" />
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </EventTrigger.Actions>
@@ -106,9 +106,9 @@
                                             <EventTrigger.Actions>
                                                 <BeginStoryboard>
                                                     <Storyboard>
-                                                        <DoubleAnimation Duration="0:0:0.300" Storyboard.TargetProperty="Opacity" To="1"/>
+                                                        <DoubleAnimation Duration="0:0:0.300" Storyboard.TargetProperty="Opacity" To="1" />
                                                         <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="0" Duration="0:0:0.200"/>
+                                                                             To="0" Duration="0:0:0.200" />
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </EventTrigger.Actions>
@@ -117,9 +117,9 @@
                                             <EventTrigger.Actions>
                                                 <BeginStoryboard>
                                                     <Storyboard>
-                                                        <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9"/>
+                                                        <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9" />
                                                         <DoubleAnimation Storyboard.TargetProperty="(RotateTransform.Angle)" Storyboard.TargetName="rotate"
-                                                                             To="45" Duration="0:0:0.100"/>
+                                                                             To="45" Duration="0:0:0.100" />
                                                     </Storyboard>
                                                 </BeginStoryboard>
                                             </EventTrigger.Actions>
@@ -132,6 +132,6 @@
                 </Setter>
             </Trigger>
         </Style.Triggers>
-        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 </ResourceDictionary>

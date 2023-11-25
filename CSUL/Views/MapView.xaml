@@ -1,65 +1,53 @@
 ﻿<UserControl x:Class="CSUL.Views.MapView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:vm="clr-namespace:CSUL.ViewModels.MapViewModels"
-             xmlns:local="clr-namespace:CSUL.Views"
-             mc:Ignorable="d" 
+             xmlns:u="clr-namespace:CSUL.UserControls.DragFiles"
+             mc:Ignorable="d"
              d:DesignHeight="570" d:DesignWidth="1078">
     <UserControl.DataContext>
-        <vm:MapModel/>
+        <vm:MapModel />
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Margin="0,0,0,10" AllowDrop="True">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Grid VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Source="/Resources/Icons/earth_black.png" Height="70"/>
-                    <Image Grid.Column="1" Source="/Resources/Icons/save.png" Height="70"/>
-                </Grid>
-                <Label Content="将地图拖入此处导入，或点击导入存档" FontSize="15px" Foreground="{DynamicResource BlackBrush}"/>
-            </StackPanel>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Drop">
-                    <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseLeftButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ClickCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+        <Border Grid.Row="0" Margin="0,0,0,10">
+            <u:DragFile Icon="/Resources/Icons/earth_black.png" x:Name="DragFile" FileName="地图">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="DragEvent">
+                        <i:InvokeCommandAction Command="{Binding AddCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </u:DragFile>
         </Border>
         <Border Grid.Row="1" Margin="0,10,0,0">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding MapData}" x:Name="listView">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Height" Value="30" />
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Center"/>
-                            <Label Grid.Column="1" Content="{Binding Id}" HorizontalAlignment="Center"/>
-                            <Label Grid.Column="2" Content="{Binding LastWriteTime}" HorizontalAlignment="Center"/>
-                            <Button Grid.Column="3" Content="删除" 
+                            <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Center" />
+                            <Label Grid.Column="1" Content="{Binding Id}" HorizontalAlignment="Center" />
+                            <Label Grid.Column="2" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
+                            <Button Grid.Column="3" Content="删除"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"/>
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

@@ -1,11 +1,6 @@
 ﻿using CSUL.Views;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -14,7 +9,7 @@ namespace CSUL.ViewModels
     /// <summary>
     /// MainWindow的ViewModel
     /// </summary>
-    class MainModel : BaseViewModel
+    internal class MainModel : BaseViewModel
     {
         public MainModel()
         {
@@ -36,7 +31,9 @@ namespace CSUL.ViewModels
         }
 
         #region ---公共属性---
+
         private UserControl viewContent;
+
         /// <summary>
         /// 当前显示的页面
         /// </summary>
@@ -57,9 +54,10 @@ namespace CSUL.ViewModels
 
         public ICommand ViewCommand { get; }
 
-        #endregion
+        #endregion ---公共属性---
 
         #region ---私有方法---
+
         /// <summary>
         /// 改变当前显示的页面
         /// </summary>
@@ -68,6 +66,7 @@ namespace CSUL.ViewModels
         {
             ViewContent = ViewContents[index];
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels
@@ -10,12 +6,13 @@ namespace CSUL.ViewModels
     /// <summary>
     /// Command调用类
     /// </summary>
-    class RelayCommand : ICommand
+    internal class RelayCommand : ICommand
     {
         //命令执行时要调用的方法
         private readonly Action<object?> action;
+
         //判断是否能调用方法的方法
-        private readonly Func<object?,bool>? canExecute;
+        private readonly Func<object?, bool>? canExecute;
 
         /// <summary>
         /// 实例化<see cref="RelayCommand"/实例>

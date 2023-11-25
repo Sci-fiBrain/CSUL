@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CSUL.ExControls
 {
@@ -27,6 +16,7 @@ namespace CSUL.ExControls
 
         public static readonly DependencyProperty IconProperty =
             DependencyProperty.Register("Icon", typeof(ImageSource), typeof(CButton), new PropertyMetadata(null));
+
         public ImageSource Icon
         {   //图标属性
             get => (ImageSource)GetValue(IconProperty);
@@ -35,6 +25,7 @@ namespace CSUL.ExControls
 
         public static readonly DependencyProperty ButtonTypeProperty =
             DependencyProperty.Register("ButtonType", typeof(CButtonType), typeof(CButton), new PropertyMetadata(CButtonType.Icon));
+
         public CButtonType ButtonType
         {   //按钮类型属性
             get => (CButtonType)GetValue(ButtonTypeProperty);
@@ -43,6 +34,7 @@ namespace CSUL.ExControls
 
         public static readonly DependencyProperty PathDataProperty =
             DependencyProperty.Register("PathData", typeof(Geometry), typeof(CButton), new PropertyMetadata(null));
+
         public Geometry PathData
         {   //Path类型下的绘制内容
             get => (Geometry)GetValue(PathDataProperty);
@@ -53,7 +45,7 @@ namespace CSUL.ExControls
         //    DependencyProperty.Register("Rotate", typeof(bool), typeof(CButton), new PropertyMetadata(true));
         //public bool Rotate
         //{   //是否旋转
-        //    get => (bool)GetValue(RotateProperty); 
+        //    get => (bool)GetValue(RotateProperty);
         //    set => SetValue(RotateProperty, value);
         //}
     }

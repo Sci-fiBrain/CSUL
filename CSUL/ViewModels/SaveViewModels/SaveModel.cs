@@ -1,5 +1,6 @@
 ﻿using CSUL.Models;
 using Microsoft.Win32;
+using SevenZip;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using static System.Net.WebRequestMethods;
 
 namespace CSUL.ViewModels.SaveViewModels
 {
@@ -46,9 +46,10 @@ namespace CSUL.ViewModels.SaveViewModels
             RefreshData();
 
             //设定命令处理方法
-            DropCommand = new RelayCommand((sender) => { 
-                string[] files = EventArgsHandels.DragHandel(sender as DragEventArgs, ".zip", ".rar");
-                //SaveData = (from file in files select ConvertToItemData(file)).ToList();
+            DropCommand = new RelayCommand((sender) =>
+            {
+                string[] files = EventArgsHandels.DragHandel(sender as DragEventArgs, ".zip", ".rar", ".7z");
+                InstallFile(files);
             });
             ClickCommand = new RelayCommand((sender) =>
             {
@@ -56,11 +57,11 @@ namespace CSUL.ViewModels.SaveViewModels
                 {
                     Title = "选择存档文件",
                     Multiselect = true,
-                    Filter = "压缩文件|*.zip;*.rar"
+                    Filter = "压缩文件|*.zip;*.rar;.7z"
                 };
                 if (dialog.ShowDialog() is true)
                 {
-                    //SaveData = (from file in dialog.FileNames select ConvertToItemData(file)).ToList();
+                    InstallFile(dialog.FileNames);
                 }
             });
             DeleteCommand = new RelayCommand((sender) =>
@@ -72,7 +73,7 @@ namespace CSUL.ViewModels.SaveViewModels
                 sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
                 sb.Append("存档路径: ").AppendLine().Append(data.Path).AppendLine();
                 var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if(ret == MessageBoxResult.OK)
+                if (ret == MessageBoxResult.OK)
                 {
                     Directory.Delete(data.Path, true);
                     MessageBox.Show("删除成功");
@@ -86,7 +87,8 @@ namespace CSUL.ViewModels.SaveViewModels
         public ICommand DeleteCommand { get; }
 
         private List<ItemData> saveData = default!;
-        public List<ItemData> SaveData {
+        public List<ItemData> SaveData
+        {
             get => saveData;
             set
             {
@@ -107,7 +109,8 @@ namespace CSUL.ViewModels.SaveViewModels
             ItemData data = new()
             {
                 Id = info.Name,
-                Name = info.GetFiles().FirstOrDefault(x => x.Name.EndsWith(".cok"))?.Name.Split('.')[0],
+                Name = info.GetFiles().FirstOrDefault(x => x.Name.EndsWith(".cok"))?.Name.Split('.')[0]
+                    ?? "*可能不是地图文件*",
                 Path = path,
                 LastWriteTime = info.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
             };
@@ -118,6 +121,42 @@ namespace CSUL.ViewModels.SaveViewModels
         /// 刷新存档数据
         /// </summary>
         private void RefreshData() => SaveData = (from dir in FileManager.Instance.SaveDir.GetDirectories() select ConvertToItemData(dir.FullName)).ToList();
+
+        /// <summary>
+        /// 安装文件
+        /// </summary>
+        /// <param name="paths"></param>
+        private void InstallFile(string[] paths)
+        {
+            foreach (string path in paths)
+            {
+                try
+                {
+                    if (!File.Exists(path)) continue;
+                    SevenZipExtractor zip = new(path);
+                    string firstFile = zip.ArchiveFileNames.FirstOrDefault()
+                        ?? throw new Exception("该压缩包不含任何文件");
+                    string? testFile = zip.ArchiveFileNames.FirstOrDefault(x => x.EndsWith(".cok"));
+                    if (testFile is null)
+                    {
+                        if (MessageBox.Show("该文件可能不是存档文件，是否继续安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                            == MessageBoxResult.No) continue;
+                    }
+                    if (FileManager.Instance.SaveDir.GetDirectories().Any(x => x.Name == firstFile.Split('\\')[0]))
+                    {
+                        if (MessageBox.Show("已存在该文件，是否覆盖安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
+                            == MessageBoxResult.No) continue;
+                    }
+                    zip.ExtractArchive(FileManager.Instance.SaveDir.FullName);
+                    MessageBox.Show("安装完成");
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"存档{path}安装失败，原因: \n{e.Message}", "安装出错");
+                }
+            }
+            RefreshData();
+        }
         #endregion
     }
 }

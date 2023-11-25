@@ -113,14 +113,7 @@ namespace CSUL.Models
         #endregion
 
         #region ---公共方法---
-        /// <summary>
-        /// 获取所有模组文件
-        /// </summary>
-        /// <returns>包含模组文件夹的数组</returns>
-        public DirectoryInfo[] GetMods()
-        {
-            return ModDir.GetDirectories();
-        }
+
         #endregion
 
         #region ---私有方法---

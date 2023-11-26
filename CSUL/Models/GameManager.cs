@@ -21,7 +21,8 @@ namespace CSUL.Models
             {
                 throw new FileNotFoundException($"游戏路径{gamePath}不存在，请检查路径设置", gamePath);
             }
-            Process.Start(gamePath);
+            //Process.Start(gamePath);
+            Process.Start(gamePath, "");
         }
     }
 }

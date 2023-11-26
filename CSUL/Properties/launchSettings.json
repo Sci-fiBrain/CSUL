@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CSUL": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false,
+      "remoteDebugMachine": "WIN-DRO4QEGBMKF:4026",
+      "authenticationMode": "Windows"
+    }
+  }
+}

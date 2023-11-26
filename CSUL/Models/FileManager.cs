@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 
 namespace CSUL.Models
 {
@@ -41,16 +42,30 @@ namespace CSUL.Models
                 }
                 catch { }
             }
-            //得到游戏数据文件路径
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string localLow = Path.Combine(appData[0..appData.LastIndexOf('\\')], "LocalLow");
-            if (!Directory.Exists(localLow)) throw new IOException("LocalLow is not existed");
-            string game = Path.Combine(localLow, "Colossal Order", "Cities Skylines II");
-            if (!Directory.Exists(game)) throw new IOException("Cities Skylines II is not existed");
-
-            //初始化各文件夹信息对象
-            GameRootDir = new(SteamGame.GetGameInstallPath("Cities Skylines II"));
-            GameDataDir = new(game);
+            try
+            {
+                //得到游戏数据文件路径
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string localLow = Path.Combine(appData[0..appData.LastIndexOf('\\')], "LocalLow");
+                if (!Directory.Exists(localLow))/* throw new IOException("LocalLow is not existed");*/
+                {
+                    MessageBox.Show("未找到LocalLow文件夹，请在CSUL调整配置");
+                    return;
+                }
+                string game = Path.Combine(localLow, "Colossal Order", "Cities Skylines II");
+                if (!Directory.Exists(game)) /*throw new IOException("Cities Skylines II is not existed");*/
+                {
+                    MessageBox.Show("未找到天际线2数据根目录，请在CSUL调整配置");
+                    return;
+                }
+                //初始化各文件夹信息对象
+                GameRootDir = new(SteamGame.GetGameInstallPath("Cities Skylines II"));
+                GameDataDir = new(game);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ExceptionManager.GetExMeg(ex), "FileManager加载错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion ---构造函数---

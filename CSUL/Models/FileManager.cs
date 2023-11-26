@@ -45,24 +45,38 @@ namespace CSUL.Models
             try
             {
                 //得到游戏数据文件路径
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string localLow = Path.Combine(appData[0..appData.LastIndexOf('\\')], "LocalLow");
-                if (!Directory.Exists(localLow))/* throw new IOException("LocalLow is not existed");*/
-                {
-                    MessageBox.Show("未找到LocalLow文件夹，请在CSUL调整配置");
-                    return;
+                string gameData, gameRoot;
+                try
+                {   //尝试自动获取数据路径
+                    string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                    string localLow = Path.Combine(appData[0..appData.LastIndexOf('\\')], "LocalLow");
+                    gameData = Path.Combine(localLow, "Colossal Order", "Cities Skylines II");
+                    if (!Directory.Exists(gameData)) throw new IOException("Cities Skylines II is not existed");
                 }
-                string game = Path.Combine(localLow, "Colossal Order", "Cities Skylines II");
-                if (!Directory.Exists(game)) /*throw new IOException("Cities Skylines II is not existed");*/
-                {
-                    MessageBox.Show("未找到天际线2数据根目录，请在CSUL调整配置");
-                    return;
+                catch (Exception e)
+                {   //获取失败，创建虚假目录，防止程序崩溃
+                    MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏数据目录获取失败",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    gameData = Path.Combine(TempDirPath, "fakeData");
+                    if(!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
+                }
+
+                try
+                {   //尝试自动获取游戏根目录
+                    gameRoot = SteamGame.GetGameInstallPath("Cities Skylines II");
+                }
+                catch(Exception e)
+                {   //获取失败，创建虚假目录，防止程序崩溃
+                    MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏安装目录获取失败",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    gameRoot = Path.Combine(TempDirPath, "fakeRoot");
+                    if (!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
                 }
                 //初始化各文件夹信息对象
-                GameRootDir = new(SteamGame.GetGameInstallPath("Cities Skylines II"));
-                GameDataDir = new(game);
+                GameRootDir = new(gameRoot);
+                GameDataDir = new(gameData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ExceptionManager.GetExMeg(ex), "FileManager加载错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -89,7 +103,7 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameRootDir
         {
-            get => gameRootDir;
+            get => gameRootDir = new(gameRootDir.FullName);
             set
             {
                 SetDirInfo(ref gameRootDir, value);
@@ -103,7 +117,7 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameDataDir
         {
-            get => gameDataDir;
+            get => gameDataDir = new(gameDataDir.FullName);
             set
             {
                 SetDirInfo(ref gameDataDir, value);
@@ -116,7 +130,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo MapDir
         {
-            get => mapDir;
+            get => mapDir = new(mapDir.FullName);
             set => SetDirInfo(ref mapDir, value);
         }
 
@@ -125,7 +139,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo SaveDir
         {
-            get => saveDir;
+            get => saveDir = new(saveDir.FullName);
             set => SetDirInfo(ref saveDir, value);
         }
 
@@ -134,7 +148,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo BepInExDir
         {
-            get => bepInExDir;
+            get => bepInExDir = new(bepInExDir.FullName);
             set => SetDirInfo(ref bepInExDir, value);
         }
 
@@ -143,7 +157,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo ModDir
         {
-            get => modDir;
+            get => modDir = new(modDir.FullName);
             set => SetDirInfo(ref modDir, value);
         }
 

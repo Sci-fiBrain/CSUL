@@ -28,7 +28,7 @@
         </Border>
         <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="50" Width="50" Margin="0,5,10,0"
                     HorizontalAlignment="Right" VerticalAlignment="Top" ButtonType="IconUnRotate"
-                    Command="{Binding OpenFolder}"/>
+                    Command="{Binding OpenFolder}" ToolTip="打开存档文件夹"/>
         <Border Grid.Row="1" Margin="0,10,0,0">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SaveData}" x:Name="listView">
                 <ListView.ItemContainerStyle>

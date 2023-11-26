@@ -50,8 +50,9 @@ namespace CSUL.ViewModels.ModViewModels
             public Brush BackBrush { get; set; } = default!;
 
             public string Uri { get; set; } = default!;
-            #endregion
+
         }
+        #endregion
 
         public ModModel()
         {
@@ -98,6 +99,33 @@ namespace CSUL.ViewModels.ModViewModels
                     MessageBox.Show(ExceptionManager.GetExMeg(ex), "安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }) : default!;
+            RemoveCommand = new RelayCommand((sender) =>
+            {
+                MessageBoxResult ret = MessageBox.Show("确认移除BepInEx?\n插件将会临时备份至tempFile文件夹", "警告",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                if (ret == MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        RemoveBepInEx();
+                        MessageBoxResult ret2 = MessageBox.Show("BepInEx移除成功\n是否打开插件备份文件夹", "提示",
+                            MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        if (ret2 == MessageBoxResult.Yes)
+                        {
+                            Process.Start("Explorer.exe", FileManager.TempDirPath);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(ExceptionManager.GetExMeg(e), "移除失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    finally
+                    {
+                        ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+                        BepData = GetBepDownloadData();
+                    }
+                }
+            });
             RefreshData();
         }
 
@@ -107,25 +135,26 @@ namespace CSUL.ViewModels.ModViewModels
             get => showNoEx;
             set
             {
-                if(showNoEx == value) return;
+                if (showNoEx == value) return;
                 showNoEx = value;
                 OnPropertyChanged();
             }
         }
-        public ICommand AddCommand { get; }
-        public ICommand DeleteCommand { get; }
-        public ICommand DownloadCommand { get; }
-        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
 
-        public List<BepItemData>? BepData { get; } = FileManager.Instance.NoBepInEx ?
-            (from item in WebManager.GetBepinexInfos()
-             select new BepItemData
-             {
-                 Uri = item.Uri,
-                 Version = $"安装 {item.Version} {(item.IsBeta ? "测试版" : "正式版")}",
-                 Name = item.FileName,
-                 BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
-             }).ToList() : null;
+        //添加新插件
+        public ICommand AddCommand { get; }
+        //删除插件
+        public ICommand DeleteCommand { get; }
+        //下载BepInEx
+        public ICommand DownloadCommand { get; }
+        //打开文件夹
+        public ICommand OpenFolder { get; } = new RelayCommand((sender)
+            => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
+        //移除BepInEx
+        public ICommand RemoveCommand { get; }
+
+        public List<BepItemData>? BepData { get; private set; } = FileManager.Instance.NoBepInEx ?
+            GetBepDownloadData() : null;
 
         private List<ItemData> modData = default!;
 
@@ -204,14 +233,32 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private static void RemoveBepInEx()
         {
-            if (!FileManager.Instance.GameDataDir.Exists) return;
+            if (!FileManager.Instance.GameRootDir.Exists) return;
             if (FileManager.Instance.ModDir.Exists)
             {   //备份插件 防止误删
                 FileManager.Instance.ModDir.CopyTo(Path.Combine(FileManager.TempDirPath, FileManager.Instance.ModDir.Name));
             }
-            FileManager.Instance.BepInExDir.Delete(true);
-            FileInfo dll = new(Path.Combine(FileManager.Instance.GameDataDir.FullName, "winhttp.dll"));
+            if (FileManager.Instance.BepInExDir.Exists)
+            {
+                FileManager.Instance.BepInExDir.Delete(true);
+            }
+            FileInfo dll = new(Path.Combine(FileManager.Instance.GameRootDir.FullName, "winhttp.dll"));
             if (dll.Exists) dll.Delete();
+        }
+
+        /// <summary>
+        /// 获取Bep下载数据
+        /// </summary>
+        private static List<BepItemData> GetBepDownloadData()
+        {
+            return (from item in WebManager.GetBepinexInfos()
+             select new BepItemData
+             {
+                 Uri = item.Uri,
+                 Version = $"安装 {item.Version} {(item.IsBeta ? "测试版" : "正式版")}",
+                 Name = item.FileName,
+                 BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
+             }).ToList();
         }
     }
 }

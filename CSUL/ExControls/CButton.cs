@@ -40,13 +40,5 @@ namespace CSUL.ExControls
             get => (Geometry)GetValue(PathDataProperty);
             set => SetValue(PathDataProperty, value);
         }
-
-        //public static readonly DependencyProperty RotateProperty =
-        //    DependencyProperty.Register("Rotate", typeof(bool), typeof(CButton), new PropertyMetadata(true));
-        //public bool Rotate
-        //{   //是否旋转
-        //    get => (bool)GetValue(RotateProperty);
-        //    set => SetValue(RotateProperty, value);
-        //}
     }
 }

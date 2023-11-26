@@ -6,6 +6,7 @@
     public enum CButtonType
     {
         Icon,
+        IconUnRotate,
         Text,
         IconText,
         Path

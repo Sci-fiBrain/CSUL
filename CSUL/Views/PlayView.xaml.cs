@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace CSUL.Views
 {
@@ -10,6 +11,11 @@ namespace CSUL.Views
         public PlayView()
         {
             InitializeComponent();
+        }
+
+        private void CButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window.GetWindow(this).WindowState = WindowState.Minimized;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using CSUL.Models;
+using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels.PlayViewModels
@@ -10,7 +12,18 @@ namespace CSUL.ViewModels.PlayViewModels
     {
         public PlayModel()
         {
-            PlayGameCommand = new RelayCommand((sender) => GameManager.StartGame(FileManager.Instance.GamePath!));
+            PlayGameCommand = new RelayCommand(
+                (sender) =>
+                {
+                    try
+                    {
+                        GameManager.StartGame(FileManager.Instance.GamePath!);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "游戏启动出现错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
         }
 
         public ICommand PlayGameCommand { get; }

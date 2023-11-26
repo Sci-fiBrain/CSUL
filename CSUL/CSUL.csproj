@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <FileVersion>0.0.1.0</FileVersion>
+    <AssemblyVersion>0.0.1.1</AssemblyVersion>
+    <FileVersion>0.0.1.1</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Imgs\win_logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -33,6 +33,7 @@
     <None Remove="Resources\Icons\cog.png" />
     <None Remove="Resources\Icons\earth.png" />
     <None Remove="Resources\Icons\earth_black.png" />
+    <None Remove="Resources\Icons\folder_black.png" />
     <None Remove="Resources\Icons\map.png" />
     <None Remove="Resources\Icons\map_black.png" />
     <None Remove="Resources\Icons\minimize.png" />
@@ -66,6 +67,7 @@
     <Resource Include="Resources\Icons\cog.png" />
     <Resource Include="Resources\Icons\earth.png" />
     <Resource Include="Resources\Icons\earth_black.png" />
+    <Resource Include="Resources\Icons\folder_black.png" />
     <Resource Include="Resources\Icons\map.png" />
     <Resource Include="Resources\Icons\map_black.png" />
     <Resource Include="Resources\Icons\minimize.png" />

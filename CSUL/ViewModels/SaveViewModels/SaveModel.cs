@@ -3,6 +3,7 @@ using CSUL.UserControls.DragFiles;
 using SevenZip;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,7 @@ namespace CSUL.ViewModels.SaveViewModels
 
         public ICommand DeleteCommand { get; }
         public ICommand AddCommand { get; }
+        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", FileManager.Instance.SaveDir.FullName));
 
         private List<ItemData> saveData = default!;
 
@@ -138,7 +140,7 @@ namespace CSUL.ViewModels.SaveViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"存档{path}安装失败，原因: \n{e.Message}", "安装出错");
+                    MessageBox.Show($"存档{path}安装失败，原因: \n{ExceptionManager.GetExMeg(e)}", "安装出错");
                 }
             }
             RefreshData();

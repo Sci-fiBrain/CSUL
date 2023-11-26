@@ -16,7 +16,7 @@
                 Source="/Resources/Imgs/csl_logo.png"
                 HorizontalAlignment="Left" VerticalAlignment="Top" />
         <ec:CButton Margin="30" ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
-                Height="80" Width="255" Content="开始游戏" FontSize="40px"
+                Height="80" Width="255" Content="开始游戏" FontSize="40px" Click="CButton_Click"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding PlayGameCommand}" />
     </Grid>
 </UserControl>

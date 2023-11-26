@@ -59,6 +59,60 @@
                     </Setter.Value>
                 </Setter>
             </Trigger>
+            <Trigger Property="ButtonType" Value="IconUnRotate">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ec:CButton}">
+                            <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                                <Viewbox RenderTransformOrigin="0.5,0.5">
+                                    <Viewbox.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform x:Name="st" ScaleX="1" ScaleY="1"/>
+                                        </TransformGroup>
+                                    </Viewbox.RenderTransform>
+                                    <Image  VerticalAlignment="Center" HorizontalAlignment="Center"
+                                            Source="{TemplateBinding Icon}" Stretch="None"
+                                            RenderTransformOrigin="0.5,0.5">
+                                        <Image.Triggers>
+                                            <EventTrigger RoutedEvent="MouseEnter">
+                                                <EventTrigger.Actions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.6" />
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="ScaleX" To="1.1" Storyboard.TargetName="st"/>
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="ScaleY" To="1.1" Storyboard.TargetName="st"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger.Actions>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="MouseLeave">
+                                                <EventTrigger.Actions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="1" />
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="ScaleX" To="1" Storyboard.TargetName="st"/>
+                                                            <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="ScaleY" To="1" Storyboard.TargetName="st"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger.Actions>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                                <EventTrigger.Actions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger.Actions>
+                                            </EventTrigger>
+                                        </Image.Triggers>
+                                    </Image>
+                                </Viewbox>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
             <!--CButtonType==Text-->
             <Trigger Property="ButtonType" Value="Text">
                 <Setter Property="Template">

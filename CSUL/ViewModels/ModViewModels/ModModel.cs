@@ -3,6 +3,7 @@ using CSUL.UserControls.DragFiles;
 using SevenZip;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -94,7 +95,7 @@ namespace CSUL.ViewModels.ModViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex), "安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }) : default!;
             RefreshData();
@@ -114,6 +115,7 @@ namespace CSUL.ViewModels.ModViewModels
         public ICommand AddCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand DownloadCommand { get; }
+        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
 
         public List<BepItemData>? BepData { get; } = FileManager.Instance.NoBepInEx ?
             (from item in WebManager.GetBepinexInfos()
@@ -191,7 +193,7 @@ namespace CSUL.ViewModels.ModViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"插件{path}安装失败，原因: \n{e.Message}", "安装出错");
+                    MessageBox.Show($"插件{path}安装失败，原因: \n{ExceptionManager.GetExMeg(e)}", "安装出错");
                 }
             }
             RefreshData();

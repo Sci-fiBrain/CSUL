@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
 
 namespace CSUL.Models
 {
@@ -15,6 +17,10 @@ namespace CSUL.Models
         public static void StartGame(string gamePath)
         {
             if (string.IsNullOrEmpty(gamePath)) throw new ArgumentNullException(nameof(gamePath));
+            if (!File.Exists(gamePath))
+            {
+                throw new FileNotFoundException($"游戏路径{gamePath}不存在，请检查路径设置", gamePath);
+            }
             Process.Start(gamePath);
         }
     }

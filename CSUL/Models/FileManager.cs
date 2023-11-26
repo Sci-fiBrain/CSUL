@@ -36,6 +36,7 @@ namespace CSUL.Models
                 {
                     this.LoadConfig(ConfigPath);
                     SetOtherDataDir();
+                    SetOtherRootDir();
                     return;
                 }
                 catch { }
@@ -49,7 +50,6 @@ namespace CSUL.Models
 
             //初始化各文件夹信息对象
             GameRootDir = new(SteamGame.GetGameInstallPath("Cities Skylines II"));
-            GamePath = Path.Combine(gameRootDir.FullName, "Cities2.exe");
             GameDataDir = new(game);
         }
 
@@ -179,6 +179,7 @@ namespace CSUL.Models
         private void SetOtherRootDir()
         {
             BepInExDir = new(Path.Combine(GameRootDir.FullName, "BepInEx"));
+            GamePath = Path.Combine(GameRootDir.FullName, "Cities2.exe");
             ModDir = new(Path.Combine(BepInExDir.FullName, "plugins"));
         }
 

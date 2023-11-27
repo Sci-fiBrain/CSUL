@@ -57,8 +57,16 @@ namespace CSUL.ViewModels.SaveViewModels
                 var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (ret == MessageBoxResult.OK)
                 {
-                    Directory.Delete(data.Path, true);
-                    MessageBox.Show("删除成功");
+                    try
+                    {
+                        Directory.Delete(data.Path, true);
+                        MessageBox.Show("删除成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     RefreshData();
                 }
             });
@@ -98,7 +106,7 @@ namespace CSUL.ViewModels.SaveViewModels
             {
                 Id = info.Name,
                 Name = info.GetFiles().FirstOrDefault(x => x.Name.EndsWith(".cok"))?.Name.Split('.')[0]
-                    ?? "*可能不是地图文件*",
+                    ?? "*可能不是存档文件*",
                 Path = path,
                 LastWriteTime = info.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
             };

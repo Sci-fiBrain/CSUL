@@ -57,8 +57,16 @@ namespace CSUL.ViewModels.MapViewModels
                 var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (ret == MessageBoxResult.OK)
                 {
-                    Directory.Delete(data.Path, true);
-                    MessageBox.Show("删除成功");
+                    try
+                    {
+                        Directory.Delete(data.Path, true);
+                        MessageBox.Show("删除成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     RefreshData();
                 }
             });

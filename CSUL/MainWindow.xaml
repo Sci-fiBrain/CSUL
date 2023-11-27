@@ -68,7 +68,7 @@
                             </StackPanel>
                             <StackPanel Grid.Row="1">
                                 <Label Foreground="{DynamicResource WhiteBrush}"
-                                       Content="1.2" FontSize="15" Padding="1"
+                                       Content="Beta 1.3" FontSize="15" Padding="1"
                                        HorizontalAlignment="Center" />
                                 <Label Foreground="{DynamicResource WhiteBrush}"
                                        Content="CSUL" FontSize="20" Padding="1"

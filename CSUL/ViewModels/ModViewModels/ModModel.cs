@@ -16,6 +16,7 @@ namespace CSUL.ViewModels.ModViewModels
     public class ModModel : BaseViewModel
     {
         #region ---模组信息条目---
+
         public class ItemData
         {
             /// <summary>
@@ -38,9 +39,11 @@ namespace CSUL.ViewModels.ModViewModels
             /// </summary>
             public Action Delete { get; set; } = default!;
         }
-        #endregion
+
+        #endregion ---模组信息条目---
 
         #region ---BepInEx信息条目---
+
         public class BepItemData
         {
             public string Name { get; set; } = default!;
@@ -50,9 +53,9 @@ namespace CSUL.ViewModels.ModViewModels
             public Brush BackBrush { get; set; } = default!;
 
             public string Uri { get; set; } = default!;
-
         }
-        #endregion
+
+        #endregion ---BepInEx信息条目---
 
         public ModModel()
         {
@@ -66,8 +69,16 @@ namespace CSUL.ViewModels.ModViewModels
                 var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (ret == MessageBoxResult.OK)
                 {
-                    data.Delete();
-                    MessageBox.Show("删除成功");
+                    try
+                    {
+                        data.Delete();
+                        MessageBox.Show("删除成功");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     RefreshData();
                 }
             });
@@ -92,6 +103,7 @@ namespace CSUL.ViewModels.ModViewModels
                     RemoveBepInEx();
                     await zip.ExtractArchiveAsync(FileManager.Instance.GameRootDir.FullName);
                     ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+                    BepVersion = FileManager.Instance.BepVersion;
                     MessageBox.Show("安装完成");
                 }
                 catch (Exception ex)
@@ -122,6 +134,7 @@ namespace CSUL.ViewModels.ModViewModels
                     finally
                     {
                         ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+                        BepVersion = FileManager.Instance.BepVersion;
                         BepData = GetBepDownloadData();
                     }
                 }
@@ -130,6 +143,7 @@ namespace CSUL.ViewModels.ModViewModels
         }
 
         private Visibility showNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+
         public Visibility ShowNoEx
         {
             get => showNoEx;
@@ -141,15 +155,32 @@ namespace CSUL.ViewModels.ModViewModels
             }
         }
 
+        private Version? bepVersion = FileManager.Instance.BepVersion;
+
+        public Version? BepVersion
+        {
+            get => bepVersion;
+            set
+            {
+                if (bepVersion == value) return;
+                bepVersion = value;
+                OnPropertyChanged();
+            }
+        }
+
         //添加新插件
         public ICommand AddCommand { get; }
+
         //删除插件
         public ICommand DeleteCommand { get; }
+
         //下载BepInEx
         public ICommand DownloadCommand { get; }
+
         //打开文件夹
         public ICommand OpenFolder { get; } = new RelayCommand((sender)
             => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
+
         //移除BepInEx
         public ICommand RemoveCommand { get; }
 
@@ -201,8 +232,7 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private void InstallFile(string[] paths)
         {
-            //下面不用FileManager.Instance.ModDir.Exists的原因是防止数据更新不及时
-            if (!Directory.Exists(FileManager.Instance.ModDir.FullName)) FileManager.Instance.ModDir.Create();
+            if (!FileManager.Instance.ModDir.Exists) FileManager.Instance.ModDir.Create();
             foreach (string path in paths)
             {
                 try
@@ -216,13 +246,45 @@ namespace CSUL.ViewModels.ModViewModels
                         if (MessageBox.Show("已存在该文件，是否覆盖安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
                             == MessageBoxResult.No) continue;
                     }
+                    //得到压缩包的文件名 mod文件夹的路径
                     string targetName = path.Split('\\').Last().Split('.')[0];
-                    zip.ExtractArchive(Path.Combine(FileManager.Instance.ModDir.FullName, targetName));
-                    MessageBox.Show($"{targetName}安装完成");
+                    string modPath = Path.Combine(FileManager.Instance.ModDir.FullName, targetName);
+                    zip.ExtractArchive(modPath);
+                    Version? version = ExFileManager.GetBepModVersion(modPath);
+                    if (version is null)
+                    {
+                        MessageBox.Show($"文件 {targetName} 已安装\n" +
+                            "但未能成功获取模组BepInEx版本\n" +
+                            "请检查该文件是否为模组文件", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                    else
+                    {
+                        Version? bepVersion = FileManager.Instance.BepVersion;
+                        if (bepVersion is null)
+                        {
+                            MessageBox.Show($"模组 {targetName} 已安装\n" +
+                                "但未能获取已安装BepInEx的版本信息\n" +
+                                "请自行检查模组兼容性", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else if (version.Major != bepVersion.Major)
+                        {
+                            MessageBox.Show($"模组 {targetName} 已安装" +
+                                $"但模组版本与BepInEx不符\n" +
+                                $"BepInEx版本: {bepVersion}\n" +
+                                $"插件版本: {version}\n" +
+                                $"该情况可能会引发兼容性问题", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"模组 {targetName} 安装完成\n" +
+                                $"版本兼容性已检查", "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"插件{path}安装失败，原因: \n{ExceptionManager.GetExMeg(e)}", "安装出错");
+                    MessageBox.Show($"插件{path}安装失败，原因: \n{ExceptionManager.GetExMeg(e)}", "安装出错",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             RefreshData();
@@ -252,13 +314,13 @@ namespace CSUL.ViewModels.ModViewModels
         private static List<BepItemData> GetBepDownloadData()
         {
             return (from item in WebManager.GetBepinexInfos()
-             select new BepItemData
-             {
-                 Uri = item.Uri,
-                 Version = $"安装 {item.Version} {(item.IsBeta ? "测试版" : "正式版")}",
-                 Name = item.FileName,
-                 BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
-             }).ToList();
+                    select new BepItemData
+                    {
+                        Uri = item.Uri,
+                        Version = $"安装 {item.Version} {(item.IsBeta ? "测试版" : "正式版")}",
+                        Name = item.FileName,
+                        BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
+                    }).ToList();
         }
     }
 }

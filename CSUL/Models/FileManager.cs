@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace CSUL.Models
@@ -58,14 +60,14 @@ namespace CSUL.Models
                     MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏数据目录获取失败",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     gameData = Path.Combine(TempDirPath, "fakeData");
-                    if(!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
+                    if (!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
                 }
 
                 try
                 {   //尝试自动获取游戏根目录
                     gameRoot = SteamGame.GetGameInstallPath("Cities Skylines II");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {   //获取失败，创建虚假目录，防止程序崩溃
                     MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏安装目录获取失败",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -169,6 +171,37 @@ namespace CSUL.Models
             get
             {
                 return !File.Exists(Path.Combine(GameRootDir.FullName, "winhttp.dll"));
+            }
+        }
+
+        /// <summary>
+        /// 获取BepInEx的版本号
+        /// </summary>
+        public Version? BepVersion
+        {
+            get
+            {
+                try
+                {
+                    DirectoryInfo coreDir = new(Path.Combine(BepInExDir.FullName, "core"));
+                    if (!coreDir.Exists) return null;
+                    FileInfo? bepFile = coreDir.GetFiles().FirstOrDefault(x =>
+                        x.Name.StartsWith("BepInEx") && x.Name.EndsWith(".dll"));
+                    if (bepFile == null) return null;
+                    //Assembly assembly = Assembly.LoadFrom(bepFile.FullName);
+                    //AssemblyName? bep = assembly.GetReferencedAssemblies().FirstOrDefault(x =>
+                    //    x.Name?.Contains("BepInEx") is true);
+                    //Version? version = bep?.Version;
+
+                    //下面这种方法比较高效
+                    FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(bepFile.FullName);
+                    string? version = fileVersion.FileVersion;
+                    return version is null ? null : new Version(version);
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 

@@ -22,6 +22,7 @@ namespace CSUL
             };
 
             #region ---异常处理---
+
             //全局异常捕获
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
@@ -60,7 +61,8 @@ namespace CSUL
                     , "未捕获Filter异常", MessageBoxButton.OK, MessageBoxImage.Error);
                 e.RequestCatch = false;
             };
-            #endregion
+
+            #endregion ---异常处理---
 
             try
             {

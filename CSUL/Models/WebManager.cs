@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CSUL.Models
@@ -40,7 +36,7 @@ namespace CSUL.Models
     /// </summary>
     public class WebManager
     {
-        const string versionUri = "https://minebbs-1251544790.file.myqcloud.com/bepinex.html";
+        private const string versionUri = "https://minebbs-1251544790.file.myqcloud.com/bepinex.html";
 
         /// <summary>
         /// 获取Bepinex版本列表

@@ -19,7 +19,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     {
                         GameManager.StartGame(FileManager.Instance.GamePath!);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show(ExceptionManager.GetExMeg(ex), "游戏启动出现错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }

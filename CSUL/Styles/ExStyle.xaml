@@ -118,13 +118,52 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ec:CButton}">
-                            <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}">
+                            <Border Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}"
+                                            RenderTransformOrigin="0.5,0.5">
+                                <Border.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="st" ScaleX="1" ScaleY="1" />
+                                    </TransformGroup>
+                                </Border.RenderTransform>
                                 <Border.Effect>
                                     <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="10" Opacity="0.5" Direction="-10" />
                                 </Border.Effect>
+                                <Border.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="0.9" />
+                                                    <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="ScaleX" To="1.05" Storyboard.TargetName="st" />
+                                                    <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="ScaleY" To="1.05" Storyboard.TargetName="st" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0:0:0.100" Storyboard.TargetProperty="Opacity" To="1" />
+                                                    <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="ScaleX" To="1" Storyboard.TargetName="st" />
+                                                    <DoubleAnimation Duration="0:0:0.200" Storyboard.TargetProperty="ScaleY" To="1" Storyboard.TargetName="st" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation Duration="0:0:0.010" Storyboard.TargetProperty="Opacity" To="0.9" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                </Border.Triggers>
                                 <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
                                        FontStyle="{TemplateBinding FontStyle}" Foreground="{TemplateBinding Foreground}"
-                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>

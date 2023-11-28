@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace CSUL.Models
 {
@@ -51,11 +52,8 @@ namespace CSUL.Models
                 {   //搜索BepInEx版本信息
                     try
                     {
-                        Assembly assembly = Assembly.LoadFrom(file.FullName);
-                        AssemblyName? bep = assembly.GetReferencedAssemblies().FirstOrDefault(x =>
-                            x.Name?.Contains("BepInEx") is true);
-                        version = bep?.Version;
-                        break;
+                        version = GetFileModVersion(file.FullName);
+                        if (version is not null) break;
                     }
                     catch { }
                 }
@@ -71,6 +69,53 @@ namespace CSUL.Models
             }
             Version? ret = RecursionSearch(path);
             return ret;
+        }
+
+        /// <summary>
+        /// 获取单个模组文件的BepInEx版本信息
+        /// </summary>
+        /// <param name="filePath">模组文件*.dll路径</param>
+        /// <returns>模组BepInEx版本</returns>
+        public static Version? GetFileModVersion(string filePath)
+        {
+            Version? version = null;
+            try
+            {
+                AssemblyLoadContext custom = new(null, true);
+                using Stream stream = File.OpenRead(filePath);
+                Assembly assembly = custom.LoadFromStream(stream);
+                AssemblyName? bep = assembly.GetReferencedAssemblies().FirstOrDefault(x =>
+                    x.Name?.Contains("BepInEx") is true);
+                version = bep?.Version;
+                custom.Unload();
+            }
+            catch { }
+            return version;
+        }
+
+        /// <summary>
+        /// 检查Mod的BepInEx版本
+        /// </summary>
+        /// <param name="path">mod路径</param>
+        /// <param name="modVerison">mod的BepInEx版本</param>
+        /// <param name="bepInExVersion">BepInEx的版本</param>
+        /// <param name="isFile">是否为单个文件</param>
+        /// <param name="knowBepVersion">已知的BepInEx版本号</param>
+        /// <returns></returns>
+        public static BepInExCheckResult ChickModBepInExVersioin(string path, out Version? modVerison, out Version? bepInExVersion, bool isFile = false, Version? knowBepVersion = null)
+        {
+            //区分单文件和子文件夹模组
+            if (isFile) modVerison = GetFileModVersion(path);
+            else modVerison = GetBepModVersion(path);
+
+            //已知版本，加快检查速度
+            if (knowBepVersion is not null) bepInExVersion = knowBepVersion;
+            else bepInExVersion = FileManager.Instance.BepVersion;
+
+            if (modVerison is null) return BepInExCheckResult.UnkownMod;
+            if (bepInExVersion is null) return BepInExCheckResult.UnknowBepInEx;
+            if (modVerison.Major != bepInExVersion.Major) return BepInExCheckResult.WrongVersion;
+            return BepInExCheckResult.Passed;
         }
     }
 }

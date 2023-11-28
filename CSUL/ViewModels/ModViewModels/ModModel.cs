@@ -38,6 +38,11 @@ namespace CSUL.ViewModels.ModViewModels
             /// 删除插件的方法
             /// </summary>
             public Action Delete { get; set; } = default!;
+
+            /// <summary>
+            /// 是否为单文件
+            /// </summary>
+            public bool IsFile { get; set; } = false;
         }
 
         #endregion ---模组信息条目---
@@ -139,6 +144,60 @@ namespace CSUL.ViewModels.ModViewModels
                     }
                 }
             });
+            CheckMods = new RelayCommand((sender) =>
+            {
+                if (ModData is null)
+                {
+                    MessageBox.Show("模组安装信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                if ( ModData.Count < 1)
+                {
+                    MessageBox.Show("还没有安装模组", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                Version? knownBepVersion = FileManager.Instance.BepVersion;
+                if (knownBepVersion is null)
+                {
+                    MessageBox.Show("BepInEx版本信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                StringBuilder total = new(), wrong = new(), unknow = new();
+                int wrongCount = 0, unknowCount = 0, passedCount = 0;
+                foreach (ItemData item in ModData)
+                {
+                    try
+                    {
+                        //检查单个模组
+                        BepInExCheckResult ret = ExFileManager.ChickModBepInExVersioin(item.Path,
+                            out Version? modVersion, out Version? bepVersion, item.IsFile, knownBepVersion);
+                        switch (ret)
+                        {
+                            case BepInExCheckResult.WrongVersion:
+                                wrong.Append(item.Name).Append('(').Append(modVersion).Append(')').AppendLine();
+                                wrongCount++;
+                                break;
+                            case BepInExCheckResult.UnkownMod: throw new Exception();
+                            case BepInExCheckResult.Passed:
+                                passedCount++;
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                        unknow.Append(item.Name).AppendLine();
+                        unknowCount++;
+                    }
+                }
+                total.Append("BepInEx版本: ").Append(knownBepVersion).AppendLine();
+                total.Append("模组总数: ").Append(ModData.Count).AppendLine();
+                total.Append("通过数: ").Append(passedCount).AppendLine();
+                total.Append("错误数: ").Append(wrongCount).AppendLine();
+                total.Append("未知数: ").Append(unknowCount).AppendLine();
+                if(wrongCount > 0) total.AppendLine().Append("未兼容模组: ").AppendLine().Append(wrong).AppendLine();
+                if (unknowCount > 0) total.AppendLine().Append("未知模组: ").AppendLine().Append(wrong).AppendLine();
+                MessageBox.Show(total.ToString(), "检查完成", MessageBoxButton.OK);
+            });
             RefreshData();
         }
 
@@ -177,6 +236,9 @@ namespace CSUL.ViewModels.ModViewModels
         //下载BepInEx
         public ICommand DownloadCommand { get; }
 
+        //检查mod的版本兼容性
+        public ICommand CheckMods { get; }
+
         //打开文件夹
         public ICommand OpenFolder { get; } = new RelayCommand((sender)
             => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
@@ -213,7 +275,8 @@ namespace CSUL.ViewModels.ModViewModels
                                Name = file.Name,
                                Path = file.FullName,
                                LastWriteTime = file.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
-                               Delete = file.Delete
+                               Delete = file.Delete,
+                               IsFile = true,
                            });
             DirectoryInfo[] dirs = FileManager.Instance.ModDir.GetDirectories();
             items.AddRange(from dir in dirs
@@ -222,7 +285,8 @@ namespace CSUL.ViewModels.ModViewModels
                                Name = dir.Name,
                                Path = dir.FullName,
                                LastWriteTime = dir.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
-                               Delete = () => dir.Delete(true)
+                               Delete = () => dir.Delete(true),
+                               IsFile = false
                            });
             ModData = items;
         }
@@ -247,38 +311,38 @@ namespace CSUL.ViewModels.ModViewModels
                             == MessageBoxResult.No) continue;
                     }
                     //得到压缩包的文件名 mod文件夹的路径
-                    string targetName = path.Split('\\').Last().Split('.')[0];
+                    string targetName = path.Split('\\').Last();
+                    targetName = targetName[..targetName.LastIndexOf('.')];
                     string modPath = Path.Combine(FileManager.Instance.ModDir.FullName, targetName);
                     zip.ExtractArchive(modPath);
-                    Version? version = ExFileManager.GetBepModVersion(modPath);
-                    if (version is null)
+                    switch (ExFileManager.ChickModBepInExVersioin(modPath, out Version? modVersion, out Version? bepVersion))
                     {
-                        MessageBox.Show($"文件 {targetName} 已安装\n" +
-                            "但未能成功获取模组BepInEx版本\n" +
-                            "请检查该文件是否为模组文件", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                    else
-                    {
-                        Version? bepVersion = FileManager.Instance.BepVersion;
-                        if (bepVersion is null)
-                        {
+                        case BepInExCheckResult.Passed:
+                            MessageBox.Show($"模组 {targetName} 安装完成\n" +
+                                $"版本兼容性已检查", "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                            break;
+                        case BepInExCheckResult.UnkownMod:
+                            MessageBox.Show($"文件 {targetName} 已安装\n" +
+                                $"BepInEx版本: {bepVersion}\n" +
+                                "但未能成功获取模组BepInEx版本\n" +
+                                "请检查该文件是否为模组文件", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            break;
+                        case BepInExCheckResult.UnknowBepInEx:
                             MessageBox.Show($"模组 {targetName} 已安装\n" +
+                                $"插件版本: {modVersion}\n" +
                                 "但未能获取已安装BepInEx的版本信息\n" +
                                 "请自行检查模组兼容性", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                        else if (version.Major != bepVersion.Major)
-                        {
+                            break;
+                        case BepInExCheckResult.WrongVersion:
                             MessageBox.Show($"模组 {targetName} 已安装" +
                                 $"但模组版本与BepInEx不符\n" +
                                 $"BepInEx版本: {bepVersion}\n" +
-                                $"插件版本: {version}\n" +
+                                $"插件版本: {modVersion}\n" +
                                 $"该情况可能会引发兼容性问题", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-                        else
-                        {
-                            MessageBox.Show($"模组 {targetName} 安装完成\n" +
-                                $"版本兼容性已检查", "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+                            break;
+                        default:
+                            MessageBox.Show("未知兼容性检查结果");
+                            break;
                     }
                 }
                 catch (Exception e)

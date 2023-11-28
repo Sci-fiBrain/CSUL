@@ -28,6 +28,9 @@
                 </u:DragFile>
             </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0">
+                <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="50" Width="50" Margin="0,0,10,0"
+                            ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
+                            Command="{Binding CheckMods}" />
                 <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="50" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="卸载BepInEx"
                             Command="{Binding RemoveCommand}" />

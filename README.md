@@ -9,7 +9,7 @@ Cities: Skylines II Universal Launcher 天际线2万能启动器 
 - [ ] 可选“以开发者模式启动游戏”（记录选择状态，下次启动时保持上次选择）
 - [x] 选择BepInEx版本，下载安装（由CSLBBS提供下载源）
 - [x] 模组（Mods）导入、删除
-- [ ] 检测模组与BepInEx版本是否相符
+- [x] 检测模组与BepInEx版本是否相符
 - [x] 存档（Saves）导入、删除
 - [x] 地图（Maps）导入、删除
 - [ ] 自定义启动器主题色、背景图

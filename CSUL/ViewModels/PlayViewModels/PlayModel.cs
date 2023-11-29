@@ -17,7 +17,8 @@ namespace CSUL.ViewModels.PlayViewModels
                 {
                     try
                     {
-                        GameManager.StartGame(FileManager.Instance.GamePath!);
+                        string arg = $"{(OpenDeveloper ? "-developerMode " : null)} {GameManager.Instance.StartArguemnt}";
+                        GameManager.StartGame(FileManager.Instance.GamePath!, arg);
                     }
                     catch (Exception ex)
                     {
@@ -27,5 +28,15 @@ namespace CSUL.ViewModels.PlayViewModels
         }
 
         public ICommand PlayGameCommand { get; }
+
+        public bool OpenDeveloper
+        {
+            get => GameManager.Instance.OpenDeveloper;
+            set
+            {
+                GameManager.Instance.OpenDeveloper = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

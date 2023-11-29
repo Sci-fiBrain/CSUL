@@ -25,5 +25,15 @@ namespace CSUL.ViewModels.SetViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string StartArgument
+        {
+            get => GameManager.Instance.StartArguemnt;
+            set
+            {
+                GameManager.Instance.StartArguemnt = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

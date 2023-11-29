@@ -28,15 +28,17 @@
                 </u:DragFile>
             </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0">
-                <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="50" Width="50" Margin="0,0,10,0"
+                <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="auto" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
-                            Command="{Binding CheckMods}" />
-                <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="50" Width="50" Margin="0,0,10,0"
+                            Command="{Binding CheckMods}"
+                            Content="检查" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible"/>
+                <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="auto" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="卸载BepInEx"
-                            Command="{Binding RemoveCommand}" />
-                <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="50" Width="50"
+                            Command="{Binding RemoveCommand}" 
+                            Content="卸载" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible"/>
+                <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
                      ButtonType="IconUnRotate" ToolTip="打开插件文件夹"
-                    Command="{Binding OpenFolder}" />
+                    Command="{Binding OpenFolder}" LabelVisibility="Hidden"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,5,10"
                         HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -67,9 +69,11 @@
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Left" Margin="20,0,0,0" />
                                 <Label Grid.Column="1" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
-                                <Button Grid.Column="2" Content="删除"
+                                <Grid Grid.Column="2">
+                                    <Button Content="删除"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
+                                </Grid>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

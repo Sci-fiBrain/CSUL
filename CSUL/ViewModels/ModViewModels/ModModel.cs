@@ -164,8 +164,9 @@ namespace CSUL.ViewModels.ModViewModels
                 }
                 StringBuilder total = new(), wrong = new(), unknow = new();
                 int wrongCount = 0, unknowCount = 0, passedCount = 0;
-                foreach (ItemData item in ModData)
+                for (int i = 0; i < ModData.Count; i++)
                 {
+                    ItemData item = ModData[i];
                     try
                     {
                         //检查单个模组
@@ -174,7 +175,7 @@ namespace CSUL.ViewModels.ModViewModels
                         switch (ret)
                         {
                             case BepInExCheckResult.WrongVersion:
-                                wrong.Append(item.Name).Append('(').Append(modVersion).Append(')').AppendLine();
+                                wrong.AppendLine($"{i}. {item.Name} ({modVersion})");
                                 wrongCount++;
                                 break;
                             case BepInExCheckResult.UnkownMod: throw new Exception();
@@ -183,9 +184,9 @@ namespace CSUL.ViewModels.ModViewModels
                                 break;
                         }
                     }
-                    catch
+                    catch(Exception ex)
                     {
-                        unknow.Append(item.Name).AppendLine();
+                        unknow.AppendLine($"{i}. {item.Name} [{ex.Message}]");
                         unknowCount++;
                     }
                 }

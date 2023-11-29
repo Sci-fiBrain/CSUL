@@ -100,7 +100,8 @@ namespace CSUL
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
             if (ret == MessageBoxResult.OK)
             {
-                FileManager.Instance.SaveConfig(FileManager.ConfigPath);
+                FileManager.Instance.Dispose();
+                GameManager.Instance.Dispose();
                 Environment.Exit(exitCode);
             }
         }

@@ -9,7 +9,7 @@ namespace CSUL.Models
     /// <summary>
     /// 天际线2相关文件管理器
     /// </summary>
-    public class FileManager
+    public class FileManager : IDisposable
     {
         /// <summary>
         /// 配置文件路径
@@ -82,6 +82,12 @@ namespace CSUL.Models
             {
                 MessageBox.Show(ExceptionManager.GetExMeg(ex), "FileManager加载错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            this.SaveConfig(ConfigPath);
         }
 
         #endregion ---构造函数---

@@ -32,6 +32,15 @@ namespace CSUL.ExControls
             set => SetValue(ButtonTypeProperty, value);
         }
 
+        public static readonly DependencyProperty LabelVisibilityProperty =
+            DependencyProperty.Register("LabelVisibility", typeof(Visibility), typeof(CButton), new PropertyMetadata(Visibility.Collapsed));
+
+        public Visibility LabelVisibility
+        {   //按钮类型属性
+            get => (Visibility)GetValue(LabelVisibilityProperty);
+            set => SetValue(LabelVisibilityProperty, value);
+        }
+
         public static readonly DependencyProperty PathDataProperty =
             DependencyProperty.Register("PathData", typeof(Geometry), typeof(CButton), new PropertyMetadata(null));
 

@@ -15,8 +15,12 @@
         <Image  Height="280" Width="auto" Margin="0,-20,0,0"
                 Source="/Resources/Imgs/csl_logo.png"
                 HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <ec:CButton Margin="30" ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
+        <StackPanel Margin="30" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <CheckBox Content="是否以开发者模式启动" IsChecked="{Binding OpenDeveloper}" 
+                          Margin="10" FontSize="15" Foreground="{DynamicResource WhiteBrush}"/>
+            <ec:CButton ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
                 Height="80" Width="255" Content="开始游戏" FontSize="40px" Click="CButton_Click"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding PlayGameCommand}" />
+                Command="{Binding PlayGameCommand}" />
+        </StackPanel>
     </Grid>
 </UserControl>

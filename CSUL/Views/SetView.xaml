@@ -36,6 +36,8 @@
                 <TextBox Text="{Binding GamePath}" />
                 <Label>游戏数据根目录</Label>
                 <TextBox Text="{Binding GameData}" />
+                <Label>启动参数</Label>
+                <TextBox Text="{Binding StartArgument}" />
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">

@@ -14,6 +14,7 @@
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}" />
         <Style TargetType="Border" x:Key="ChoseBorder">
+            <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="RenderTransform">
                 <Setter.Value>
                     <TranslateTransform/>

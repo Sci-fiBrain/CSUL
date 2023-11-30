@@ -43,10 +43,10 @@ namespace CSUL.Windows
             unknowLabel.Content = unknowIndex.Count;
             modData = new List<ItemData>[4]
             {
-                allData.Select(x => new ItemData{Index = x.Key, Name = x.Value.name, Version = x.Value.version}).ToList(),
-                passIndex.Select(x => new ItemData{Index = x, Name = allData[x].name, Version = allData[x].version}).ToList(),
-                wrongIndex.Select(x => new ItemData { Index = x, Name = allData[x].name, Version = allData[x].version}).ToList(),
-                unknowIndex.Select(x => new ItemData { Index = x, Name = allData[x].name, Version = allData[x].version }).ToList()
+                allData.Select(x => new ItemData{Index = x.Key + 1, Name = x.Value.name, Version = x.Value.version}).ToList(),
+                passIndex.Select(x => new ItemData{Index = x + 1, Name = allData[x].name, Version = allData[x].version}).ToList(),
+                wrongIndex.Select(x => new ItemData { Index = x + 1, Name = allData[x].name, Version = allData[x].version}).ToList(),
+                unknowIndex.Select(x => new ItemData { Index = x + 1, Name = allData[x].name, Version = allData[x].version }).ToList()
             };
             listView.ItemsSource = modData[0];
         }

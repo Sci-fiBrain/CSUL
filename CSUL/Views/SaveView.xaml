@@ -26,9 +26,9 @@
                 </i:Interaction.Triggers>
             </u:DragFile>
         </Border>
-        <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="50" Width="50" Margin="0,5,10,0"
+        <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50" Margin="0,5,10,0"
                     HorizontalAlignment="Right" VerticalAlignment="Top" ButtonType="IconUnRotate"
-                    Command="{Binding OpenFolder}" ToolTip="打开存档文件夹" />
+                    Command="{Binding OpenFolder}" ToolTip="打开存档文件夹" LabelVisibility="Visible" Content="文件"/>
         <Border Grid.Row="1" Margin="0,10,0,0">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SaveData}" x:Name="listView">
                 <ListView.ItemContainerStyle>

@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>0.1.5.0</AssemblyVersion>
-    <FileVersion>0.1.5.0</FileVersion>
+    <AssemblyVersion>0.1.6.0</AssemblyVersion>
+    <FileVersion>0.1.6.0</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Imgs\win_logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -78,7 +78,9 @@
     <Resource Include="Resources\Icons\mod_black.png" />
     <Resource Include="Resources\Icons\remove_black.png" />
     <Resource Include="Resources\Icons\save.png" />
-    <Resource Include="Resources\Imgs\back_image.png" />
+    <Resource Include="Resources\Imgs\back_image.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Imgs\csl_logo.png" />
     <Resource Include="Resources\Imgs\csul_logo.png" />
     <Resource Include="Resources\Imgs\logo1.png" />

@@ -70,7 +70,7 @@
                             </StackPanel>
                             <StackPanel Grid.Row="1">
                                 <Label Foreground="{DynamicResource WhiteBrush}"
-                                       Content="Beta 1.5" FontSize="15" Padding="1"
+                                       Content="Beta 1.6" FontSize="15" Padding="1"
                                        HorizontalAlignment="Center" />
                                 <Label Foreground="{DynamicResource WhiteBrush}"
                                        Content="CSUL" FontSize="20" Padding="1"
@@ -98,7 +98,7 @@
                                 </Grid>
                             </Border>
                         </Grid>
-                        <Grid Grid.Row="1" Margin="15,5,0,0">
+                        <Grid Grid.Row="1" Margin="15,15,0,0">
                             <ContentControl Content="{Binding ViewContent, Mode=OneWay}">
                                 <ec:ContentControlEx.ContentChangedAnimation>
                                     <Storyboard>

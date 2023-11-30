@@ -17,7 +17,7 @@ namespace CSUL.ViewModels.PlayViewModels
                 {
                     try
                     {
-                        string arg = $"{(OpenDeveloper ? "-developerMode " : null)} {GameManager.Instance.StartArguemnt}";
+                        string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{GameManager.Instance.StartArguemnt}";
                         GameManager.StartGame(FileManager.Instance.GamePath!, arg);
                     }
                     catch (Exception ex)

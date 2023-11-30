@@ -8,12 +8,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace CSUL.ViewModels.ModViewModels
-{
-    public class ModModel : BaseViewModel
+{   //ModModel 构造函数、方法、子类
+    public partial class ModModel : BaseViewModel
     {
         #region ---模组信息条目---
 
@@ -62,206 +61,177 @@ namespace CSUL.ViewModels.ModViewModels
 
         #endregion ---BepInEx信息条目---
 
+        #region ---构造函数---
+
         public ModModel()
         {
-            DeleteCommand = new RelayCommand((sender) =>
-            {
-                if (sender is not ItemData data) return;
-                StringBuilder sb = new();
-                sb.Append("模组名称: ").Append(data.Name).AppendLine();
-                sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
-                sb.Append("模组路径: ").AppendLine().Append(data.Path).AppendLine();
-                var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (ret == MessageBoxResult.OK)
-                {
-                    try
-                    {
-                        data.Delete();
-                        MessageBox.Show("删除成功");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    RefreshData();
-                }
-            });
+            DeleteCommand = new RelayCommand(DeleteModFile);
             AddCommand = new RelayCommand((sender) =>
             {
                 InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
             });
-            DownloadCommand = FileManager.Instance.NoBepInEx ?
-            new RelayCommand(async (sender) =>
-            {
-                try
-                {
-                    if (sender is not BepItemData data) return;
-                    if (MessageBox.Show(data.Version, "确认", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
-                    string path = Path.Combine(FileManager.TempDirPath, data.Name);
-                    FileInfo file = new(path);
-                    if (file.Directory?.Exists is true) file.Directory.Delete(true);
-                    if (file.Exists) file.Delete();
-                    if (file.Directory?.Exists is false) file.Directory?.Create();
-                    await WebManager.DownloadFromUri(data.Uri, path);
-                    SevenZipExtractor zip = new(path);
-                    RemoveBepInEx();
-                    await zip.ExtractArchiveAsync(FileManager.Instance.GameRootDir.FullName);
-                    ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
-                    BepVersion = FileManager.Instance.BepVersion;
-                    MessageBox.Show("安装完成");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ExceptionManager.GetExMeg(ex), "安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }) : default!;
-            RemoveCommand = new RelayCommand((sender) =>
-            {
-                MessageBoxResult ret = MessageBox.Show("确认移除BepInEx?\n插件将会临时备份至tempFile文件夹", "警告",
-                    MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-                if (ret == MessageBoxResult.OK)
-                {
-                    try
-                    {
-                        RemoveBepInEx();
-                        MessageBoxResult ret2 = MessageBox.Show("BepInEx移除成功\n是否打开插件备份文件夹", "提示",
-                            MessageBoxButton.YesNo, MessageBoxImage.Information);
-                        if (ret2 == MessageBoxResult.Yes)
-                        {
-                            Process.Start("Explorer.exe", FileManager.TempDirPath);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(ExceptionManager.GetExMeg(e), "移除失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    finally
-                    {
-                        ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
-                        BepVersion = FileManager.Instance.BepVersion;
-                        BepData = GetBepDownloadData();
-                    }
-                }
-            });
-            CheckMods = new RelayCommand((sender) =>
-            {
-                if (ModData is null)
-                {
-                    MessageBox.Show("模组安装信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                if ( ModData.Count < 1)
-                {
-                    MessageBox.Show("还没有安装模组", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
-                    return;
-                }
-                Version? knownBepVersion = FileManager.Instance.BepVersion;
-                if (knownBepVersion is null)
-                {
-                    MessageBox.Show("BepInEx版本信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                StringBuilder total = new(), wrong = new(), unknow = new();
-                int wrongCount = 0, unknowCount = 0, passedCount = 0;
-                for (int i = 0; i < ModData.Count; i++)
-                {
-                    ItemData item = ModData[i];
-                    try
-                    {
-                        //检查单个模组
-                        BepInExCheckResult ret = ExFileManager.ChickModBepInExVersioin(item.Path,
-                            out Version? modVersion, out Version? bepVersion, item.IsFile, knownBepVersion);
-                        switch (ret)
-                        {
-                            case BepInExCheckResult.WrongVersion:
-                                wrong.AppendLine($"{i}. {item.Name} ({modVersion})");
-                                wrongCount++;
-                                break;
-                            case BepInExCheckResult.UnkownMod: throw new Exception();
-                            case BepInExCheckResult.Passed:
-                                passedCount++;
-                                break;
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        unknow.AppendLine($"{i}. {item.Name} [{ex.Message}]");
-                        unknowCount++;
-                    }
-                }
-                total.Append("BepInEx版本: ").Append(knownBepVersion).AppendLine();
-                total.Append("模组总数: ").Append(ModData.Count).AppendLine();
-                total.Append("通过数: ").Append(passedCount).AppendLine();
-                total.Append("错误数: ").Append(wrongCount).AppendLine();
-                total.Append("未知数: ").Append(unknowCount).AppendLine();
-                if(wrongCount > 0) total.AppendLine().Append("未兼容模组: ").AppendLine().Append(wrong).AppendLine();
-                if (unknowCount > 0) total.AppendLine().Append("未知模组: ").AppendLine().Append(wrong).AppendLine();
-                MessageBox.Show(total.ToString(), "检查完成", MessageBoxButton.OK);
-            });
+            DownloadCommand = new RelayCommand(DownloadBepInEx);
+            RemoveCommand = new RelayCommand(RemoveBepInEx);
+            CheckMods = new RelayCommand(CheckModCompatibility);
             RefreshData();
         }
 
-        private Visibility showNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+        #endregion ---构造函数---
 
-        public Visibility ShowNoEx
+        #region ---ICommand方法---
+
+        /// <summary>
+        /// 删除模组文件
+        /// </summary>
+        private void DeleteModFile(object? sender)
         {
-            get => showNoEx;
-            set
+            if (sender is not ItemData data) return;
+            StringBuilder sb = new();
+            sb.Append("模组名称: ").Append(data.Name).AppendLine();
+            sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
+            sb.Append("模组路径: ").AppendLine().Append(data.Path).AppendLine();
+            var ret = MessageBox.Show(sb.ToString(), "删除模组", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (ret == MessageBoxResult.OK)
             {
-                if (showNoEx == value) return;
-                showNoEx = value;
-                OnPropertyChanged();
+                try
+                {
+                    data.Delete();
+                    MessageBox.Show("删除成功");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                RefreshData();
             }
         }
 
-        private Version? bepVersion = FileManager.Instance.BepVersion;
-
-        public Version? BepVersion
+        /// <summary>
+        /// 下载并安装BepInEx
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <returns></returns>
+        private async void DownloadBepInEx(object? sender)
         {
-            get => bepVersion;
-            set
+            try
             {
-                if (bepVersion == value) return;
-                bepVersion = value;
-                OnPropertyChanged();
+                if (sender is not BepItemData data) return;
+                if (MessageBox.Show(data.Version, "确认", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+                string path = Path.Combine(FileManager.TempDirPath, data.Name);
+                FileInfo file = new(path);
+                if (file.Directory?.Exists is true) file.Directory.Delete(true);
+                if (file.Exists) file.Delete();
+                if (file.Directory?.Exists is false) file.Directory?.Create();
+                await WebManager.DownloadFromUri(data.Uri, path);
+                SevenZipExtractor zip = new(path);
+                RemoveBepInEx();
+                await zip.ExtractArchiveAsync(FileManager.Instance.GameRootDir.FullName);
+                ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+                BepVersion = FileManager.Instance.BepVersion;
+                MessageBox.Show("安装完成");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ExceptionManager.GetExMeg(ex), "安装失败", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        //添加新插件
-        public ICommand AddCommand { get; }
-
-        //删除插件
-        public ICommand DeleteCommand { get; }
-
-        //下载BepInEx
-        public ICommand DownloadCommand { get; }
-
-        //检查mod的版本兼容性
-        public ICommand CheckMods { get; }
-
-        //打开文件夹
-        public ICommand OpenFolder { get; } = new RelayCommand((sender)
-            => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
-
-        //移除BepInEx
-        public ICommand RemoveCommand { get; }
-
-        public List<BepItemData>? BepData { get; private set; } = FileManager.Instance.NoBepInEx ?
-            GetBepDownloadData() : null;
-
-        private List<ItemData> modData = default!;
-
-        public List<ItemData> ModData
+        /// <summary>
+        /// 移除BepInEx
+        /// </summary>
+        private void RemoveBepInEx(object? sender)
         {
-            get => modData;
-            set
+            MessageBoxResult ret = MessageBox.Show("确认移除BepInEx?\n插件将会临时备份至tempFile文件夹", "警告",
+                MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (ret == MessageBoxResult.OK)
             {
-                if (modData == value) return;
-                modData = value;
-                OnPropertyChanged();
+                try
+                {
+                    RemoveBepInEx();
+                    MessageBoxResult ret2 = MessageBox.Show("BepInEx移除成功\n是否打开插件备份文件夹", "提示",
+                        MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    if (ret2 == MessageBoxResult.Yes)
+                    {
+                        Process.Start("Explorer.exe", FileManager.TempDirPath);
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(ExceptionManager.GetExMeg(e), "移除失败", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+                    BepVersion = FileManager.Instance.BepVersion;
+                    BepData = GetBepDownloadData();
+                }
             }
         }
+
+        /// <summary>
+        /// 检查模组兼容性
+        /// </summary>
+        private void CheckModCompatibility(object? sender)
+        {
+            if (ModData is null)
+            {
+                MessageBox.Show("模组安装信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (ModData.Count < 1)
+            {
+                MessageBox.Show("还没有安装模组", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            Version? knownBepVersion = FileManager.Instance.BepVersion;
+            if (knownBepVersion is null)
+            {
+                MessageBox.Show("BepInEx版本信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            StringBuilder total = new(), wrong = new(), unknow = new();
+            int wrongCount = 0, unknowCount = 0, passedCount = 0;
+            for (int i = 0; i < ModData.Count; i++)
+            {
+                ItemData item = ModData[i];
+                try
+                {
+                    //检查单个模组
+                    BepInExCheckResult ret = ExFileManager.ChickModBepInExVersioin(item.Path,
+                        out Version? modVersion, out Version? bepVersion, item.IsFile, knownBepVersion);
+                    switch (ret)
+                    {
+                        case BepInExCheckResult.WrongVersion:
+                            wrong.AppendLine($"{i}. {item.Name} ({modVersion})");
+                            wrongCount++;
+                            break;
+
+                        case BepInExCheckResult.UnkownMod: throw new Exception();
+                        case BepInExCheckResult.Passed:
+                            passedCount++;
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    unknow.AppendLine($"{i}. {item.Name} [{ex.Message}]");
+                    unknowCount++;
+                }
+            }
+            total.Append("BepInEx版本: ").Append(knownBepVersion).AppendLine();
+            total.Append("模组总数: ").Append(ModData.Count).AppendLine();
+            total.Append("通过数: ").Append(passedCount).AppendLine();
+            total.Append("错误数: ").Append(wrongCount).AppendLine();
+            total.Append("未知数: ").Append(unknowCount).AppendLine();
+            if (wrongCount > 0) total.AppendLine().Append("未兼容模组: ").AppendLine().Append(wrong).AppendLine();
+            if (unknowCount > 0) total.AppendLine().Append("未知模组: ").AppendLine().Append(wrong).AppendLine();
+            MessageBox.Show(total.ToString(), "检查完成", MessageBoxButton.OK);
+        }
+
+        #endregion ---ICommand方法---
+
+        #region ---私有方法---
 
         /// <summary>
         /// 刷新数据
@@ -322,18 +292,21 @@ namespace CSUL.ViewModels.ModViewModels
                             MessageBox.Show($"模组 {targetName} 安装完成\n" +
                                 $"版本兼容性已检查", "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
                             break;
+
                         case BepInExCheckResult.UnkownMod:
                             MessageBox.Show($"文件 {targetName} 已安装\n" +
                                 $"BepInEx版本: {bepVersion}\n" +
                                 "但未能成功获取模组BepInEx版本\n" +
                                 "请检查该文件是否为模组文件", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                             break;
+
                         case BepInExCheckResult.UnknowBepInEx:
                             MessageBox.Show($"模组 {targetName} 已安装\n" +
                                 $"插件版本: {modVersion}\n" +
                                 "但未能获取已安装BepInEx的版本信息\n" +
                                 "请自行检查模组兼容性", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                             break;
+
                         case BepInExCheckResult.WrongVersion:
                             MessageBox.Show($"模组 {targetName} 已安装" +
                                 $"但模组版本与BepInEx不符\n" +
@@ -341,6 +314,7 @@ namespace CSUL.ViewModels.ModViewModels
                                 $"插件版本: {modVersion}\n" +
                                 $"该情况可能会引发兼容性问题", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                             break;
+
                         default:
                             MessageBox.Show("未知兼容性检查结果");
                             break;
@@ -387,5 +361,7 @@ namespace CSUL.ViewModels.ModViewModels
                         BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
                     }).ToList();
         }
+
+        #endregion ---私有方法---
     }
 }

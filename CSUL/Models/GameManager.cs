@@ -40,7 +40,7 @@ namespace CSUL.Models
         /// 启动参数
         /// </summary>
         [Config]
-        public string StartArguemnt { get; set; }
+        public string? StartArguemnt { get; set; }
 
         /// <summary>
         /// 是否以开发模式启动

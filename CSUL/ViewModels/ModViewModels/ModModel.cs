@@ -1,5 +1,6 @@
 ﻿using CSUL.Models;
 using CSUL.UserControls.DragFiles;
+using CSUL.Windows;
 using SevenZip;
 using System;
 using System.Collections.Generic;
@@ -190,8 +191,8 @@ namespace CSUL.ViewModels.ModViewModels
                 MessageBox.Show("BepInEx版本信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            StringBuilder total = new(), wrong = new(), unknow = new();
-            int wrongCount = 0, unknowCount = 0, passedCount = 0;
+            Dictionary<int, (string name, string version)> allData = new();
+            List<int> pass = new(), wrong = new(), unknow = new();
             for (int i = 0; i < ModData.Count; i++)
             {
                 ItemData item = ModData[i];
@@ -203,30 +204,23 @@ namespace CSUL.ViewModels.ModViewModels
                     switch (ret)
                     {
                         case BepInExCheckResult.WrongVersion:
-                            wrong.AppendLine($"{i}. {item.Name} ({modVersion})");
-                            wrongCount++;
+                            wrong.Add(i);
+                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
-
-                        case BepInExCheckResult.UnkownMod: throw new Exception();
                         case BepInExCheckResult.Passed:
-                            passedCount++;
+                            pass.Add(i);
+                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
+                        default: throw new Exception();
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    unknow.AppendLine($"{i}. {item.Name} [{ex.Message}]");
-                    unknowCount++;
+                    unknow.Add(i);
+                    allData[i] = (ModData[i].Name, "Unknow");
                 }
             }
-            total.Append("BepInEx版本: ").Append(knownBepVersion).AppendLine();
-            total.Append("模组总数: ").Append(ModData.Count).AppendLine();
-            total.Append("通过数: ").Append(passedCount).AppendLine();
-            total.Append("错误数: ").Append(wrongCount).AppendLine();
-            total.Append("未知数: ").Append(unknowCount).AppendLine();
-            if (wrongCount > 0) total.AppendLine().Append("未兼容模组: ").AppendLine().Append(wrong).AppendLine();
-            if (unknowCount > 0) total.AppendLine().Append("未知模组: ").AppendLine().Append(wrong).AppendLine();
-            MessageBox.Show(total.ToString(), "检查完成", MessageBoxButton.OK);
+            ModCompatibilityBox.ShowBox(allData, pass, wrong, unknow);
         }
 
         #endregion ---ICommand方法---

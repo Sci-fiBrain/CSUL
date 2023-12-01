@@ -32,11 +32,11 @@
                         <Setter Property="Margin" Value="5,10,5,0" />
                     </Style>
                 </StackPanel.Resources>
-                <Label>游戏安装根目录</Label>
+                <Label>游戏安装根目录（Cities2.exe所在的目录，目录不包含Cities2.exe）</Label>
                 <TextBox Text="{Binding GamePath}" />
-                <Label>游戏数据根目录</Label>
+                <Label>游戏数据根目录（存储游戏数据: Map、Save等数据的目录）</Label>
                 <TextBox Text="{Binding GameData}" />
-                <Label>启动参数</Label>
+                <Label>启动参数（请勿键入程序名 如: Cities2.exe 或 start.bat）</Label>
                 <TextBox Text="{Binding StartArgument}" />
             </StackPanel>
         </Border>

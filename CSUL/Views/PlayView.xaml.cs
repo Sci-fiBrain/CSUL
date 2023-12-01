@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using CSUL.ViewModels.PlayViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace CSUL.Views
@@ -13,9 +14,9 @@ namespace CSUL.Views
             InitializeComponent();
         }
 
-        private void CButton_Click(object sender, RoutedEventArgs e)
-        {
-            Window.GetWindow(this).WindowState = WindowState.Minimized;
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {   //加载完成后
+            (DataContext as PlayModel)?.SetWindow(Window.GetWindow(this));
         }
     }
 }

@@ -47,6 +47,12 @@ namespace CSUL.Models
         /// </summary>
         [Config]
         public bool OpenDeveloper { get; set; }
+
+        /// <summary>
+        /// 是否显示Steam提示信息
+        /// </summary>
+        [Config]
+        public bool ShowSteamInfo { get; set; } = true;
         #endregion
 
         #region ---静态方法---

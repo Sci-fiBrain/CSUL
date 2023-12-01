@@ -6,7 +6,7 @@
              xmlns:ec="clr-namespace:CSUL.ExControls"
              xmlns:vm="clr-namespace:CSUL.ViewModels.PlayViewModels"
              xmlns:local="clr-namespace:CSUL.Views"
-             mc:Ignorable="d"
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
              d:DesignHeight="570" d:DesignWidth="1078">
     <UserControl.DataContext>
         <vm:PlayModel />
@@ -19,8 +19,8 @@
             <CheckBox Content="以开发者模式启动" IsChecked="{Binding OpenDeveloper}" 
                           Margin="10" FontSize="15" Foreground="{DynamicResource WhiteBrush}"/>
             <ec:CButton ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
-                Height="80" Width="255" Content="开始游戏" FontSize="40px" Click="CButton_Click"
-                Command="{Binding PlayGameCommand}" />
+                Height="80" Width="255" Content="开始游戏" FontSize="40px"
+                Command="{Binding PlayGameCommand}" IsEnabled="{Binding ButtonEnabled}"/>
         </StackPanel>
     </Grid>
 </UserControl>

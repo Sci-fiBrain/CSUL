@@ -40,10 +40,13 @@
                 <TextBox Text="{Binding StartArgument}" />
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">
+        <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="160" VerticalAlignment="Bottom">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
                     <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png" />
+                    <Label Foreground="{DynamicResource WhiteBrush}"
+                                       Content="Version 1.0.0.0" FontSize="15" Padding="1"
+                                       HorizontalAlignment="Center" />
                     <Label FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource WhiteBrush}">By: 科幻大脑</Label>
                 </StackPanel>
             </Grid>

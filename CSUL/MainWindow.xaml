@@ -69,9 +69,9 @@
                                 <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="设定" Content="设定" />
                             </StackPanel>
                             <StackPanel Grid.Row="1">
-                                <Label Foreground="{DynamicResource WhiteBrush}"
+                                <!--<Label Foreground="{DynamicResource WhiteBrush}"
                                        Content="Beta 1.6" FontSize="15" Padding="1"
-                                       HorizontalAlignment="Center" />
+                                       HorizontalAlignment="Center" />-->
                                 <Label Foreground="{DynamicResource WhiteBrush}"
                                        Content="CSUL" FontSize="20" Padding="1"
                                        HorizontalAlignment="Center" />

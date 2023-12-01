@@ -207,10 +207,12 @@ namespace CSUL.ViewModels.ModViewModels
                             wrong.Add(i);
                             allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
+
                         case BepInExCheckResult.Passed:
                             pass.Add(i);
                             allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
+
                         default: throw new Exception();
                     }
                 }

@@ -57,8 +57,8 @@
                                     </Viewbox>
                                 </Grid>
                                 <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
-                                       Foreground="{TemplateBinding Foreground}" Visibility="{TemplateBinding LabelVisibility}" 
-                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                       Foreground="{TemplateBinding Foreground}" Visibility="{TemplateBinding LabelVisibility}"
+                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                             </StackPanel>
                         </ControlTemplate>
                     </Setter.Value>
@@ -116,8 +116,8 @@
                                     </Viewbox>
                                 </Grid>
                                 <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
-                                       Foreground="{TemplateBinding Foreground}" Visibility="{TemplateBinding LabelVisibility}" 
-                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                       Foreground="{TemplateBinding Foreground}" Visibility="{TemplateBinding LabelVisibility}"
+                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                             </StackPanel>
                         </ControlTemplate>
                     </Setter.Value>
@@ -173,7 +173,7 @@
                                 </Border.Triggers>
                                 <Label Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}"
                                        FontStyle="{TemplateBinding FontStyle}" Foreground="{TemplateBinding Foreground}"
-                                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>

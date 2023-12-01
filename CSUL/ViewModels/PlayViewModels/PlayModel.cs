@@ -33,7 +33,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             "确认: 关闭提示且不再弹出\n" +
                             "取消: 仅关闭提示";
                         MessageBoxResult ret = MessageBox.Show(steamInfo, "Steam游戏提示", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if(ret == MessageBoxResult.OK) GameManager.Instance.ShowSteamInfo = false;
+                        if (ret == MessageBoxResult.OK) GameManager.Instance.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
                     try
@@ -63,6 +63,7 @@ namespace CSUL.ViewModels.PlayViewModels
         }
 
         private bool buttonEnabled = true;
+
         public bool ButtonEnabled
         {
             get => buttonEnabled;

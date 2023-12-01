@@ -3,8 +3,8 @@
 
     <!--<SolidColorBrush x:Key="DefaultBrush" Color="{DynamicResource DefaultColor}" />-->
     <LinearGradientBrush x:Key="DefaultBrush" StartPoint="0,0" EndPoint="1.5,1.5">
-        <GradientStop Color="{DynamicResource DefaultColor}" Offset="0.0"/>
-        <GradientStop Color="{DynamicResource DefaultColor2}" Offset="1.2"/>
+        <GradientStop Color="{DynamicResource DefaultColor}" Offset="0.0" />
+        <GradientStop Color="{DynamicResource DefaultColor2}" Offset="1.2" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="WhiteBrush" Color="{DynamicResource WhiteColor}" />
     <SolidColorBrush x:Key="BlackBrush" Color="{DynamicResource BlackColor}" />

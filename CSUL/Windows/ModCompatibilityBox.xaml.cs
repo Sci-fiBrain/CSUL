@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CSUL.Windows
 {
@@ -52,10 +43,13 @@ namespace CSUL.Windows
         }
 
         #region ---私有字段---
+
         private readonly List<ItemData>[] modData;
-        #endregion
+
+        #endregion ---私有字段---
 
         #region ---私有方法---
+
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -73,18 +67,22 @@ namespace CSUL.Windows
         {
             listView.ItemsSource = modData[0];
         }
+
         private void ChangeToPass(object sender, MouseButtonEventArgs e)
         {
             listView.ItemsSource = modData[1];
         }
+
         private void ChangeToWrong(object sender, MouseButtonEventArgs e)
         {
             listView.ItemsSource = modData[2];
         }
+
         private void ChangeToUnknow(object sender, MouseButtonEventArgs e)
         {
             listView.ItemsSource = modData[3];
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

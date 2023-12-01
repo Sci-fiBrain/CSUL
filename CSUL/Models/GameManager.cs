@@ -17,6 +17,7 @@ namespace CSUL.Models
         public static GameManager Instance { get; } = new();
 
         #region ---构造函数---
+
         private GameManager()
         {
             if (File.Exists(ConfigPath))
@@ -28,14 +29,17 @@ namespace CSUL.Models
                 catch { }
             }
         }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
             this.SaveConfig(ConfigPath);
         }
-        #endregion
+
+        #endregion ---构造函数---
 
         #region ---公共属性---
+
         /// <summary>
         /// 启动参数
         /// </summary>
@@ -53,9 +57,11 @@ namespace CSUL.Models
         /// </summary>
         [Config]
         public bool ShowSteamInfo { get; set; } = true;
-        #endregion
+
+        #endregion ---公共属性---
 
         #region ---静态方法---
+
         /// <summary>
         /// 启动游戏
         /// </summary>
@@ -76,6 +82,7 @@ namespace CSUL.Models
                 Process.Start(gamePath, arguments);
             }
         }
-        #endregion
+
+        #endregion ---静态方法---
     }
 }

@@ -83,7 +83,7 @@ namespace CSUL.Models
                 MessageBox.Show(ExceptionManager.GetExMeg(ex), "FileManager加载错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);

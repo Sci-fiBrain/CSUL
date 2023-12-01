@@ -31,14 +31,14 @@
                 <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="auto" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
                             Command="{Binding CheckMods}"
-                            Content="检查" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible"/>
+                            Content="检查" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
                 <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="auto" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="卸载BepInEx"
-                            Command="{Binding RemoveCommand}" 
-                            Content="卸载" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible"/>
+                            Command="{Binding RemoveCommand}"
+                            Content="卸载" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
                 <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
                      ButtonType="IconUnRotate" ToolTip="打开插件文件夹"
-                    Command="{Binding OpenFolder}" LabelVisibility="Visible" Content="文件"/>
+                    Command="{Binding OpenFolder}" LabelVisibility="Visible" Content="文件" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,5,10"
                         HorizontalAlignment="Right" VerticalAlignment="Bottom">

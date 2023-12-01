@@ -28,7 +28,7 @@
         </Border>
         <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50" Margin="0,5,10,0"
                     HorizontalAlignment="Right" VerticalAlignment="Top" ButtonType="IconUnRotate"
-                    Command="{Binding OpenFolder}" ToolTip="打开地图文件夹" LabelVisibility="Visible" Content="文件"/>
+                    Command="{Binding OpenFolder}" ToolTip="打开地图文件夹" LabelVisibility="Visible" Content="文件" />
         <Border Grid.Row="1" Margin="0,10,0,0">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding MapData}" x:Name="listView">
                 <ListView.ItemContainerStyle>

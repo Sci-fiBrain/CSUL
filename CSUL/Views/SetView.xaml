@@ -40,10 +40,15 @@
                 <TextBox Text="{Binding StartArgument}" />
             </StackPanel>
         </Border>
-        <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="160" VerticalAlignment="Bottom">
-            <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel>
-                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png">
+        <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png"
+                           HorizontalAlignment="Center" VerticalAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonUp">
                                 <i:InvokeCommandAction Command="{Binding OpenWebUri}" 
@@ -51,11 +56,31 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Image>
-                    <Label Foreground="{DynamicResource WhiteBrush}"
-                                       Content="Version 1.0.0.0" FontSize="15" Padding="1"
-                                       HorizontalAlignment="Center" />
-                    <Label FontSize="20" HorizontalAlignment="Center" Foreground="{DynamicResource WhiteBrush}">By: 科幻大脑</Label>
-                </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding OpenWebUri}" 
+                                                       CommandParameter="https://afdian.net/a/scifibrain" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <StackPanel.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="FontSize" Value="20"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <Label HorizontalAlignment="Center">Version 1.0.0.0</Label>
+                        <Label HorizontalAlignment="Center">By 科幻大脑</Label>
+                        <Label FontSize="16" HorizontalAlignment="Center">
+                            <TextBlock TextDecorations="Underline">
+                                请大脑喝一杯奶茶~
+                            </TextBlock>
+                        </Label>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

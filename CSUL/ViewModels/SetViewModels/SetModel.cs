@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using System.Windows.Input;
 
 namespace CSUL.ViewModels.SetViewModels
 {
@@ -26,7 +27,7 @@ namespace CSUL.ViewModels.SetViewModels
             }
         }
 
-        public string StartArgument
+        public string? StartArgument
         {
             get => GameManager.Instance.StartArguemnt;
             set
@@ -35,5 +36,8 @@ namespace CSUL.ViewModels.SetViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ICommand OpenWebUri { get; } = new RelayCommand(sender =>
+            System.Diagnostics.Process.Start("explorer.exe", sender as string ?? ""));
     }
 }

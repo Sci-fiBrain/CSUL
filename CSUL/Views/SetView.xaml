@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:CSUL.ViewModels.SetViewModels"
-             xmlns:local="clr-namespace:CSUL.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -43,7 +43,14 @@
         <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="160" VerticalAlignment="Bottom">
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
-                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png" />
+                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding OpenWebUri}" 
+                                                       CommandParameter="https://www.cslbbs.net/" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Image>
                     <Label Foreground="{DynamicResource WhiteBrush}"
                                        Content="Version 1.0.0.0" FontSize="15" Padding="1"
                                        HorizontalAlignment="Center" />

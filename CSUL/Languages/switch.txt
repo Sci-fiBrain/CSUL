@@ -1,0 +1,5 @@
+﻿Language switching method:
+
+Change the corresponding language file to language.xaml
+
+For example, renaming "en-us.xaml" to "language.xaml"

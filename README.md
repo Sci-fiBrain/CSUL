@@ -26,5 +26,7 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 
 ## 鸣谢
 [@科幻大脑](https://github.com/Sci-fiBrain) 主操程序开发
+
 [@YYT](https://github.com/SuperYYT) 主操功能策划 
+
 [@喵小夕](https://space.bilibili.com/209728596/) 提供模组相关问题帮助

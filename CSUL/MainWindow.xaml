@@ -62,11 +62,11 @@
                                         <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                                     </Style>
                                 </StackPanel.Resources>
-                                <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0" ToolTip="主页" Content="主页" />
-                                <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="地图" Content="地图" />
-                                <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="存档" Content="存档" />
-                                <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="模组" Content="模组" />
-                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="设定" Content="设定" />
+                                <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0" ToolTip="{StaticResource MainPage}" Content="{StaticResource MainPage}" />
+                                <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="{StaticResource MapPage}" Content="{StaticResource MapPage}" />
+                                <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="{StaticResource SavePage}" Content="{StaticResource SavePage}" />
+                                <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="{StaticResource ModPage}" Content="{StaticResource ModPage}" />
+                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="{StaticResource SettingPage}" Content="{StaticResource SettingPage}" />
                             </StackPanel>
                             <StackPanel Grid.Row="1">
                                 <!--<Label Foreground="{DynamicResource WhiteBrush}"

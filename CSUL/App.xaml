@@ -8,6 +8,7 @@
                 <ResourceDictionary Source="Styles/BaseStyle.xaml" />
                 <ResourceDictionary Source="Styles/ExStyle.xaml" />
                 <ResourceDictionary Source="Styles/Paths.xaml" />
+                <ResourceDictionary Source="Languages/language.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

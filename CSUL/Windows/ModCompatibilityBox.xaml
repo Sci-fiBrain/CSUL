@@ -75,9 +75,9 @@
                 <Grid Grid.Row="0">
                     <Border Background="{DynamicResource BlackBrush}" Padding="3" CornerRadius="10,10,0,0" MouseMove="Border_MouseMove">
                         <Grid>
-                            <Label Content="兼容性检查结果（点击方块查看指定结果列表）" Foreground="{DynamicResource WhiteBrush}"
+                            <Label Content="{StaticResource CompatibilityWin}" Foreground="{DynamicResource WhiteBrush}"
                                HorizontalAlignment="Left" VerticalAlignment="Center"
-                               FontSize="20" Margin="10,0,0,0" />
+                               FontSize="18" Margin="10,0,0,0" />
                             <ec:CButton Icon="/Resources/Icons/close.png" HorizontalAlignment="Right"
                                     Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" />
                         </Grid>
@@ -101,7 +101,7 @@
                         <Border Grid.Row="0" Grid.Column="0" BorderThickness="3" Margin="5"
                             Background="CornflowerBlue" Style="{StaticResource ChoseBorder}">
                             <Grid MouseLeftButtonUp="ChangeToAll">
-                                <Label Content="模组总数" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
+                                <Label Content="{StaticResource AllMod}" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
                                 <Label Content="NaN" Margin="0,10,0,0" x:Name="allLabel"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                    Foreground="{DynamicResource WhiteBrush}" FontSize="50" />
@@ -110,7 +110,7 @@
                         <Border Grid.Row="0" Grid.Column="1" BorderThickness="3" Margin="5"
                             Background="DarkSeaGreen" Style="{StaticResource ChoseBorder}">
                             <Grid MouseLeftButtonUp="ChangeToPass">
-                                <Label Content="通过数" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
+                                <Label Content="{StaticResource PassMod}" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
                                 <Label Content="NaN" Margin="0,10,0,0" x:Name="passLabel"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                    Foreground="{DynamicResource WhiteBrush}" FontSize="50" />
@@ -119,7 +119,7 @@
                         <Border Grid.Row="1" Grid.Column="0" BorderThickness="3" Margin="5"
                             Background="IndianRed" Style="{StaticResource ChoseBorder}">
                             <Grid MouseLeftButtonUp="ChangeToWrong">
-                                <Label Content="错误数" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
+                                <Label Content="{StaticResource WrongMod}" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
                                 <Label Content="NaN" Margin="0,10,0,0" x:Name="wrongLabel"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                    Foreground="{DynamicResource WhiteBrush}" FontSize="50" />
@@ -128,7 +128,7 @@
                         <Border Grid.Row="1" Grid.Column="1" BorderThickness="3" Margin="5"
                             Background="HotPink" Style="{StaticResource ChoseBorder}">
                             <Grid MouseLeftButtonUp="ChangeToUnknow">
-                                <Label Content="未知数" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
+                                <Label Content="{StaticResource UnknowMod}" Foreground="{DynamicResource WhiteBrush}" FontSize="20" />
                                 <Label Content="NaN" Margin="0,10,0,0" x:Name="unknowLabel"
                                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                                    Foreground="{DynamicResource WhiteBrush}" FontSize="50" />

@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="StartGame">开始游戏</sys:String>
+    <sys:String x:Key="MainPage">主页</sys:String>
+    <sys:String x:Key="MapPage">地图</sys:String>
+    <sys:String x:Key="SavePage">存档</sys:String>
+    <sys:String x:Key="ModPage">模组</sys:String>
+    <sys:String x:Key="SettingPage">设置</sys:String>
+    <sys:String x:Key="File">文件</sys:String>
+    <sys:String x:Key="Check">检查</sys:String>
+    <sys:String x:Key="Remove">卸载</sys:String>
+    <sys:String x:Key="Delete">删除</sys:String>
+    <sys:String x:Key="CompatibilityWin">兼容性检查结果（点击方块查看指定结果列表）</sys:String>
+    <sys:String x:Key="AllMod">模组总数</sys:String>
+    <sys:String x:Key="PassMod">通过数</sys:String>
+    <sys:String x:Key="WrongMod">错误数</sys:String>
+    <sys:String x:Key="UnknowMod">未知数</sys:String>
+    <sys:String x:Key="vMe50">请大脑喝一杯奶茶~</sys:String>
+    <sys:String x:Key="GameInstRoot">游戏安装根目录（Cities2.exe所在的目录，目录不包含Cities2.exe）</sys:String>
+    <sys:String x:Key="GameDataRoot">游戏数据根目录（存储游戏数据: Map、Save等数据的目录）</sys:String>
+    <sys:String x:Key="StartPar">启动参数（请勿键入程序名 如: Cities2.exe 或 start.bat）</sys:String>
+    <sys:String x:Key="DevModelStart">以开发者模式启动</sys:String>
+    <sys:String x:Key="BepVer">BepInEx版本</sys:String>
+</ResourceDictionary>

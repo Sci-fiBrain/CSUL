@@ -28,7 +28,7 @@
         </Border>
         <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50" Margin="0,5,10,0"
                     HorizontalAlignment="Right" VerticalAlignment="Top" ButtonType="IconUnRotate"
-                    Command="{Binding OpenFolder}" ToolTip="打开存档文件夹" LabelVisibility="Visible" Content="文件" />
+                    Command="{Binding OpenFolder}" ToolTip="打开存档文件夹" LabelVisibility="Visible" Content="{StaticResource File}" />
         <Border Grid.Row="1" Margin="0,5,0,0">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SaveData}" x:Name="listView">
                 <ListView.ItemContainerStyle>
@@ -49,7 +49,7 @@
                             <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Center" />
                             <Label Grid.Column="1" Content="{Binding Id}" HorizontalAlignment="Center" />
                             <Label Grid.Column="2" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
-                            <Button Grid.Column="3" Content="删除"
+                            <Button Grid.Column="3" Content="{StaticResource Delete}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
                         </Grid>

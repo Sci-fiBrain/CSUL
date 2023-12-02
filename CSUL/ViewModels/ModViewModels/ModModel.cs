@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -141,7 +142,7 @@ namespace CSUL.ViewModels.ModViewModels
         /// <summary>
         /// 移除BepInEx
         /// </summary>
-        private void RemoveBepInEx(object? sender)
+        private async void RemoveBepInEx(object? sender)
         {
             MessageBoxResult ret = MessageBox.Show("确认移除BepInEx?\n插件将会临时备份至tempFile文件夹", "警告",
                 MessageBoxButton.OKCancel, MessageBoxImage.Warning);
@@ -163,9 +164,10 @@ namespace CSUL.ViewModels.ModViewModels
                 }
                 finally
                 {
+                    BepData = GetBepDownloadData();
+                    await Task.Delay(500);
                     ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
                     BepVersion = FileManager.Instance.BepVersion;
-                    BepData = GetBepDownloadData();
                 }
             }
         }

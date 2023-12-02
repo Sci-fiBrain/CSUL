@@ -47,7 +47,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo.png"
+                    <Image Height="100" Source="/Resources/Imgs/cslbbs_logo_low.png"
                            HorizontalAlignment="Center" VerticalAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonUp">

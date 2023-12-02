@@ -43,8 +43,8 @@
     <None Remove="Resources\Icons\remove_black.png" />
     <None Remove="Resources\Icons\save.png" />
     <None Remove="Resources\Imgs\back_image.png" />
-    <None Remove="Resources\Imgs\cslbbs_logo.png" />
-    <None Remove="Resources\Imgs\csl_logo.png" />
+    <None Remove="Resources\Imgs\cslbbs_logo_low.png" />
+    <None Remove="Resources\Imgs\csl_logo_low.png" />
     <None Remove="Resources\Imgs\csul_logo.png" />
     <None Remove="Resources\Imgs\logo1.png" />
     <None Remove="Resources\Imgs\logo2.png" />
@@ -53,6 +53,11 @@
 
   <ItemGroup>
     <Content Include="Resources\Imgs\win_logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Imgs\cslbbs_logo_low.png" />
+    <Resource Include="Resources\Imgs\csl_logo_low.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -81,14 +86,12 @@
     <Resource Include="Resources\Imgs\back_image.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Imgs\csl_logo.png" />
     <Resource Include="Resources\Imgs\csul_logo.png" />
     <Resource Include="Resources\Imgs\logo1.png" />
     <Resource Include="Resources\Icons\play.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Imgs\cslbbs_logo.png" />
     <Resource Include="Resources\Imgs\win_logo.png" />
   </ItemGroup>
 

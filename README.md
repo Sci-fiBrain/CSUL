@@ -1,5 +1,5 @@
 # Cities: Skylines II Universal Launcher
-Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称CSUL）是 [CSLBBS都市天际线2中文论坛](https://www.cslbbs.net/) 旗下一款功能丰富强大、外观简介美观天际线综合资源管理器。主要实现了模组存档地图等资源的导入管理，旨在为广大天际线玩家提供便利的一键资源管理和游戏启动功能。
+Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称CSUL）是 [CSLBBS都市天际线2中文论坛](https://www.cslbbs.net/) 旗下一款功能丰富强大、外观简洁大方的天际线综合资源管理器。主要实现了模组存档地图等资源的导入管理等功能，并且仍在不断发展和完善，旨在为广大天际线2玩家提供便利的一键资源管理和游戏启动功能。
 
 ## 目前已实现功能
 - [x] BepInEx前置一键安装/卸载

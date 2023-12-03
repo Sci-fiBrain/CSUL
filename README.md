@@ -16,6 +16,7 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 ## 待完成功能
 - [ ] 自动检测Xbox、微软商店游戏路径
 - [ ] 多语言支持（Multi-Language）
+- [ ] DLL格式模组检测及导入
 - [ ] 在线检测启动器更新
 - [ ] 跳过P社启动器启动游戏
 - [ ] 自定义启动器主题色、背景图

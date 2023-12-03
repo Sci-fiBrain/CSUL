@@ -7,10 +7,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 
 namespace CSUL.ViewModels.ModViewModels
 {   //ModModel 构造函数、方法、子类
@@ -21,9 +26,9 @@ namespace CSUL.ViewModels.ModViewModels
         public class ItemData
         {
             /// <summary>
-            /// 模组名称
+            /// 模组信息
             /// </summary>
-            public string Name { get; set; } = default!;
+            public PluginInfo PluginInfo { get; set; } = default!;
 
             /// <summary>
             /// 模组路径
@@ -89,7 +94,7 @@ namespace CSUL.ViewModels.ModViewModels
         {
             if (sender is not ItemData data) return;
             StringBuilder sb = new();
-            sb.Append("模组名称: ").Append(data.Name).AppendLine();
+            sb.Append("模组名称: ").Append(data.PluginInfo).AppendLine();
             sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
             sb.Append("模组路径: ").AppendLine().Append(data.Path).AppendLine();
             var ret = MessageBox.Show(sb.ToString(), "删除模组", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
@@ -207,12 +212,12 @@ namespace CSUL.ViewModels.ModViewModels
                     {
                         case BepInExCheckResult.WrongVersion:
                             wrong.Add(i);
-                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
+                            allData[i] = (ModData[i].PluginInfo.Name, modVersion?.ToString() ?? "Unknow");
                             break;
 
                         case BepInExCheckResult.Passed:
                             pass.Add(i);
-                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
+                            allData[i] = (ModData[i].PluginInfo.Name, modVersion?.ToString() ?? "Unknow");
                             break;
 
                         default: throw new Exception();
@@ -221,7 +226,7 @@ namespace CSUL.ViewModels.ModViewModels
                 catch
                 {
                     unknow.Add(i);
-                    allData[i] = (ModData[i].Name, "Unknow");
+                    allData[i] = (ModData[i].PluginInfo.Name, "Unknow");
                 }
             }
             ModCompatibilityBox.ShowBox(allData, pass, wrong, unknow);
@@ -237,11 +242,11 @@ namespace CSUL.ViewModels.ModViewModels
         private void RefreshData()
         {
             List<ItemData> items = new();
-            FileInfo[] files = FileManager.Instance.ModDir.GetFiles().Where(x => x.Name.EndsWith(".dll")).ToArray();
+            FileInfo[] files = FileManager.Instance.ModDir.GetFiles("*.dll*");
             items.AddRange(from file in files
                            select new ItemData()
                            {    //添加单文件的插件
-                               Name = file.Name,
+                               PluginInfo = GetPluginInfoFromFile(file),
                                Path = file.FullName,
                                LastWriteTime = file.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
                                Delete = file.Delete,
@@ -251,7 +256,7 @@ namespace CSUL.ViewModels.ModViewModels
             items.AddRange(from dir in dirs
                            select new ItemData()
                            {    //添加嵌套文件夹的插件
-                               Name = dir.Name,
+                               PluginInfo = GetPluginInfoFromDir(dir),
                                Path = dir.FullName,
                                LastWriteTime = dir.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
                                Delete = () => dir.Delete(true),
@@ -360,6 +365,107 @@ namespace CSUL.ViewModels.ModViewModels
                     }).ToList();
         }
 
+        private static PluginInfo GetPluginInfoFromDir(DirectoryInfo directory)
+        {
+            PluginInfo pluginInfo = new PluginInfo(directory.Name, "?");
+            FileInfo[] files = directory.GetFiles("*.dll*");
+            foreach (FileInfo file in files)
+            {
+                PluginInfo info = GetPluginInfoFromFile(file);
+                if (info.IsMainFileFound)
+                {
+                    pluginInfo = info;
+                    break;
+                }
+            }
+            return pluginInfo;
+        }
+
+        /// <summary>
+        /// 从dll文件获取Mod信息（名称及版本）
+        /// </summary>
+        /// <param name="file">dll文件路径</param>
+        public static PluginInfo GetPluginInfoFromFile(FileInfo file)
+        {
+            bool flag = false;
+            string fileName = Path.GetFileNameWithoutExtension(file.FullName);
+            PluginInfo pluginInfo = new PluginInfo(fileName, "?");
+            if (!file.Exists)
+            {
+                throw new FileNotFoundException($"\"{file.FullName}\" 文件不存在！");
+            }
+
+            string typeName = null;
+            using (var sr = new StreamReader(file.FullName))
+            {
+                using (var portableExecutableReader = new PEReader(sr.BaseStream))
+                {
+                    var metadataReader = portableExecutableReader.GetMetadataReader();
+
+                    foreach (var typeDefHandle in metadataReader.TypeDefinitions)
+                    {
+                        var typeDef = metadataReader.GetTypeDefinition(typeDefHandle);
+                        string name = metadataReader.GetString(typeDef.Name);
+                        if (name.Contains("MyPluginInfo"))
+                        {
+                            string _namespace = metadataReader.GetString(typeDef.Namespace);
+                            typeName = $"{_namespace}.{name}";
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                Assembly asm = Assembly.LoadFile(file.FullName);
+                var type = asm.GetType(typeName);
+                if (type != null)
+                {
+                    var nameField = type.GetField("PLUGIN_NAME");
+                    var versionField = type.GetField("PLUGIN_VERSION");
+                    if (nameField != null)
+                    {
+                        string name = nameField.GetRawConstantValue() as string;
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            pluginInfo.Name = name;
+                        }
+                    }
+                    if (versionField != null)
+                    {
+                        string version = versionField.GetRawConstantValue() as string;
+                        if (!string.IsNullOrEmpty(version))
+                        {
+                            pluginInfo.Version = version;
+                        }
+                    }
+                    pluginInfo.SetMainFile(file.FullName);
+                    flag = true;
+                }
+            }
+            return pluginInfo;
+        }
+
         #endregion ---私有方法---
+
+        #region Test
+        private void test(object? sender)
+        {
+            //PluginInfo pluginInfo;
+            //GetPluginInfoFromFile(new FileInfo(@"D:\SteamLibrary\steamapps\common\Cities Skylines II\BepInEx\plugins\TrafficUnlocker\TrafficUnlocker.dll"), out pluginInfo);
+        }
+        private ICommand _testCommand;
+        public ICommand TestCommand
+        {
+            get
+            {
+                if (_testCommand == null)
+                {
+                    _testCommand = new RelayCommand(test);
+                }
+                return _testCommand;
+            }
+        }
+        #endregion
     }
 }

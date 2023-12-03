@@ -11,6 +11,10 @@
     <sys:String x:Key="Check">检查</sys:String>
     <sys:String x:Key="Remove">卸载</sys:String>
     <sys:String x:Key="Delete">删除</sys:String>
+    <sys:String x:Key="Disable">禁用</sys:String>
+    <sys:String x:Key="Enable">启用</sys:String>
+    <sys:String x:Key="Disabled">已禁用</sys:String>
+    <sys:String x:Key="Enabled">已启用</sys:String>
     <sys:String x:Key="CompatibilityWin">兼容性检查结果（点击方块查看指定结果列表）</sys:String>
     <sys:String x:Key="AllMod">模组总数</sys:String>
     <sys:String x:Key="PassMod">通过数</sys:String>

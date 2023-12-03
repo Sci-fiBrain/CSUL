@@ -91,12 +91,10 @@ namespace CSUL.Models
 
         public void Disable(object? sender)
         {
-            Trace.WriteLine("Disable");
             if (!IsEnabled) { return; }
             FileInfo file = new FileInfo(MainFile);
             if (file.Exists && MainFile.ToLower().EndsWith(".dll"))
             {
-                Trace.WriteLine("True");
                 string newFileName = MainFile + "off";
                 file.MoveTo(newFileName);
                 IsEnabled = false;
@@ -106,12 +104,10 @@ namespace CSUL.Models
 
         public void Enable(object? sender)
         {
-            Trace.WriteLine("Enable");
             if (IsEnabled) { return; }
             FileInfo file = new FileInfo(MainFile);
             if (file.Exists/* && MainFile.ToLower().EndsWith(".dlloff")*/)
             {
-                Trace.WriteLine("True");
                 string newFileName = MainFile.Replace("dlloff", "dll");
                 file.MoveTo(newFileName);
                 IsEnabled = true;

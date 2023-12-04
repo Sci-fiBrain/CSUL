@@ -16,6 +16,7 @@ using System.Windows.Media;
 
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
+using CSUL.Extends;
 
 namespace CSUL.ViewModels.ModViewModels
 {   //ModModel 构造函数、方法、子类
@@ -23,33 +24,33 @@ namespace CSUL.ViewModels.ModViewModels
     {
         #region ---模组信息条目---
 
-        public class ItemData
-        {
-            /// <summary>
-            /// 模组信息
-            /// </summary>
-            public PluginInfo PluginInfo { get; set; } = default!;
+        //public class ItemData
+        //{
+        //    /// <summary>
+        //    /// 模组信息
+        //    /// </summary>
+        //    public PluginInfo PluginInfo { get; set; } = default!;
 
-            /// <summary>
-            /// 模组路径
-            /// </summary>
-            public string Path { get; set; } = default!;
+        //    /// <summary>
+        //    /// 模组路径
+        //    /// </summary>
+        //    public string Path { get; set; } = default!;
 
-            /// <summary>
-            /// 最后修改时间
-            /// </summary>
-            public string LastWriteTime { get; set; } = default!;
+        //    /// <summary>
+        //    /// 最后修改时间
+        //    /// </summary>
+        //    public string LastWriteTime { get; set; } = default!;
 
-            /// <summary>
-            /// 删除插件的方法
-            /// </summary>
-            public Action Delete { get; set; } = default!;
+        //    /// <summary>
+        //    /// 删除插件的方法
+        //    /// </summary>
+        //    public Action Delete { get; set; } = default!;
 
-            /// <summary>
-            /// 是否为单文件
-            /// </summary>
-            public bool IsFile { get; set; } = false;
-        }
+        //    /// <summary>
+        //    /// 是否为单文件
+        //    /// </summary>
+        //    public bool IsFile { get; set; } = false;
+        //}
 
         #endregion ---模组信息条目---
 
@@ -80,6 +81,7 @@ namespace CSUL.ViewModels.ModViewModels
             DownloadCommand = new RelayCommand(DownloadBepInEx);
             RemoveCommand = new RelayCommand(RemoveBepInEx);
             CheckMods = new RelayCommand(CheckModCompatibility);
+            RefreshCommand = new RelayCommand(Refresh);
             RefreshData();
         }
 
@@ -92,22 +94,22 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private void DeleteModFile(object? sender)
         {
-            if (sender is not ItemData data) return;
+            if (sender is not ModInfo data) return;
             StringBuilder sb = new();
-            sb.Append("模组名称: ").Append(data.PluginInfo).AppendLine();
+            sb.Append("模组名称: ").Append(data.Name).AppendLine();
             sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
-            sb.Append("模组路径: ").AppendLine().Append(data.Path).AppendLine();
+            sb.Append("模组路径: ").AppendLine().Append(data.ModPath).AppendLine();
             var ret = MessageBox.Show(sb.ToString(), "删除模组", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (ret == MessageBoxResult.OK)
             {
-                try
+                var result = data.Delete();
+                if (result.Success)
                 {
-                    data.Delete();
                     MessageBox.Show("删除成功");
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                    MessageBox.Show(ExceptionManager.GetExMeg(result.e), "文件删除失败",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 RefreshData();
@@ -202,22 +204,22 @@ namespace CSUL.ViewModels.ModViewModels
             List<int> pass = new(), wrong = new(), unknow = new();
             for (int i = 0; i < ModData.Count; i++)
             {
-                ItemData item = ModData[i];
+                ModInfo item = ModData[i];
                 try
                 {
                     //检查单个模组
-                    BepInExCheckResult ret = ExFileManager.ChickModBepInExVersioin(item.Path,
-                        out Version? modVersion, out Version? bepVersion, item.IsFile, knownBepVersion);
+                    BepInExCheckResult ret = ExFileManager.ChickModBepInExVersioin(item.ModPath,
+                        out Version? modVersion, out Version? bepVersion, item.IsSingleFile, knownBepVersion);
                     switch (ret)
                     {
                         case BepInExCheckResult.WrongVersion:
                             wrong.Add(i);
-                            allData[i] = (ModData[i].PluginInfo.Name, modVersion?.ToString() ?? "Unknow");
+                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
 
                         case BepInExCheckResult.Passed:
                             pass.Add(i);
-                            allData[i] = (ModData[i].PluginInfo.Name, modVersion?.ToString() ?? "Unknow");
+                            allData[i] = (ModData[i].Name, modVersion?.ToString() ?? "Unknow");
                             break;
 
                         default: throw new Exception();
@@ -226,10 +228,15 @@ namespace CSUL.ViewModels.ModViewModels
                 catch
                 {
                     unknow.Add(i);
-                    allData[i] = (ModData[i].PluginInfo.Name, "Unknow");
+                    allData[i] = (ModData[i].Name, "Unknow");
                 }
             }
             ModCompatibilityBox.ShowBox(allData, pass, wrong, unknow);
+        }
+
+        private void Refresh(object? sender)
+        {
+            RefreshData();
         }
 
         #endregion ---ICommand方法---
@@ -241,28 +248,13 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private void RefreshData()
         {
-            List<ItemData> items = new();
+            ModData.Clear();
             FileInfo[] files = FileManager.Instance.ModDir.GetFiles("*.dll*");
-            items.AddRange(from file in files
-                           select new ItemData()
-                           {    //添加单文件的插件
-                               PluginInfo = GetPluginInfoFromFile(file),
-                               Path = file.FullName,
-                               LastWriteTime = file.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
-                               Delete = file.Delete,
-                               IsFile = true,
-                           });
+
+
+            ModData.AddRange(from file in files select ModInfo.FromFile(file));
             DirectoryInfo[] dirs = FileManager.Instance.ModDir.GetDirectories();
-            items.AddRange(from dir in dirs
-                           select new ItemData()
-                           {    //添加嵌套文件夹的插件
-                               PluginInfo = GetPluginInfoFromDir(dir),
-                               Path = dir.FullName,
-                               LastWriteTime = dir.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
-                               Delete = () => dir.Delete(true),
-                               IsFile = false
-                           });
-            ModData = items;
+            ModData.AddRange(ModInfo.FromDirectories(dirs));
         }
 
         /// <summary>
@@ -364,108 +356,6 @@ namespace CSUL.ViewModels.ModViewModels
                         BackBrush = new SolidColorBrush(Color.FromRgb(242, 242, 242))
                     }).ToList();
         }
-
-        private static PluginInfo GetPluginInfoFromDir(DirectoryInfo directory)
-        {
-            PluginInfo pluginInfo = new PluginInfo(directory.Name, "?");
-            FileInfo[] files = directory.GetFiles("*.dll*");
-            foreach (FileInfo file in files)
-            {
-                PluginInfo info = GetPluginInfoFromFile(file);
-                if (info.IsMainFileFound)
-                {
-                    pluginInfo = info;
-                    break;
-                }
-            }
-            return pluginInfo;
-        }
-
-        /// <summary>
-        /// 从dll文件获取Mod信息（名称及版本）
-        /// </summary>
-        /// <param name="file">dll文件路径</param>
-        public static PluginInfo GetPluginInfoFromFile(FileInfo file)
-        {
-            bool flag = false;
-            string fileName = Path.GetFileNameWithoutExtension(file.FullName);
-            PluginInfo pluginInfo = new PluginInfo(fileName, "?");
-            if (!file.Exists)
-            {
-                throw new FileNotFoundException($"\"{file.FullName}\" 文件不存在！");
-            }
-
-            string typeName = null;
-            using (var sr = new StreamReader(file.FullName))
-            {
-                using (var portableExecutableReader = new PEReader(sr.BaseStream))
-                {
-                    var metadataReader = portableExecutableReader.GetMetadataReader();
-
-                    foreach (var typeDefHandle in metadataReader.TypeDefinitions)
-                    {
-                        var typeDef = metadataReader.GetTypeDefinition(typeDefHandle);
-                        string name = metadataReader.GetString(typeDef.Name);
-                        if (name.Contains("MyPluginInfo"))
-                        {
-                            string _namespace = metadataReader.GetString(typeDef.Namespace);
-                            typeName = $"{_namespace}.{name}";
-                        }
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(typeName))
-            {
-                Assembly asm = Assembly.LoadFile(file.FullName);
-                var type = asm.GetType(typeName);
-                if (type != null)
-                {
-                    var nameField = type.GetField("PLUGIN_NAME");
-                    var versionField = type.GetField("PLUGIN_VERSION");
-                    if (nameField != null)
-                    {
-                        string name = nameField.GetRawConstantValue() as string;
-                        if (!string.IsNullOrEmpty(name))
-                        {
-                            pluginInfo.Name = name;
-                        }
-                    }
-                    if (versionField != null)
-                    {
-                        string version = versionField.GetRawConstantValue() as string;
-                        if (!string.IsNullOrEmpty(version))
-                        {
-                            pluginInfo.Version = version;
-                        }
-                    }
-                    pluginInfo.SetMainFile(file.FullName);
-                    flag = true;
-                }
-            }
-            return pluginInfo;
-        }
-
         #endregion ---私有方法---
-
-        #region Test
-        private void test(object? sender)
-        {
-            //PluginInfo pluginInfo;
-            //GetPluginInfoFromFile(new FileInfo(@"D:\SteamLibrary\steamapps\common\Cities Skylines II\BepInEx\plugins\TrafficUnlocker\TrafficUnlocker.dll"), out pluginInfo);
-        }
-        private ICommand _testCommand;
-        public ICommand TestCommand
-        {
-            get
-            {
-                if (_testCommand == null)
-                {
-                    _testCommand = new RelayCommand(test);
-                }
-                return _testCommand;
-            }
-        }
-        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CSUL.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
@@ -51,9 +52,9 @@ namespace CSUL.ViewModels.ModViewModels
 
         #region ---模组信息列表---
 
-        private List<ItemData> modData = default!;
+        private ModInfoCollection modData = new ModInfoCollection();
 
-        public List<ItemData> ModData
+        public ModInfoCollection ModData
         {
             get => modData;
             set
@@ -68,23 +69,40 @@ namespace CSUL.ViewModels.ModViewModels
 
         #region ---Commands---
 
-        //添加新插件
+        /// <summary>
+        /// 添加新插件
+        /// </summary>
         public ICommand AddCommand { get; }
 
-        //删除插件
+        /// <summary>
+        /// 删除插件
+        /// </summary>
         public ICommand DeleteCommand { get; }
 
-        //下载BepInEx
+        /// <summary>
+        /// 下载BepInEx
+        /// </summary>
         public ICommand DownloadCommand { get; }
 
-        //检查mod的版本兼容性
+        /// <summary>
+        /// 检查mod的版本兼容性
+        /// </summary>
         public ICommand CheckMods { get; }
 
-        //打开文件夹
+        /// <summary>
+        /// 打开文件夹
+        /// </summary>
         public ICommand OpenFolder { get; } = new RelayCommand((sender)
             => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
 
-        //移除BepInEx
+        /// <summary>
+        /// 刷新mod列表
+        /// </summary>
+        public ICommand RefreshCommand { get; }
+
+        /// <summary>
+        /// 移除BepInEx
+        /// </summary>
         public ICommand RemoveCommand { get; }
 
         #endregion ---Commands---

@@ -28,6 +28,9 @@
                 </u:DragFile>
             </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0">
+                <ec:CButton Icon="/Resources/Icons/refresh_black.png" Height="auto" Width="50" Margin="0,0,10,0"
+                     ButtonType="IconUnRotate" ToolTip="刷新插件列表"
+                    Command="{Binding RefreshCommand}" LabelVisibility="Visible" Content="{DynamicResource Refresh}" />
                 <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="auto" Width="50" Margin="0,0,10,0"
                             ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
                             Command="{Binding CheckMods}"
@@ -38,10 +41,7 @@
                             Content="{StaticResource Remove}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
                 <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
                      ButtonType="IconUnRotate" ToolTip="打开插件文件夹"
-                    Command="{Binding OpenFolder}" LabelVisibility="Visible" Content="{StaticResource File}" />
-                <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
-                     ButtonType="IconUnRotate" ToolTip="test"
-                    Command="{Binding TestCommand}" LabelVisibility="Visible" Content="{StaticResource File}" />
+                    Command="{Binding OpenFolder}" LabelVisibility="Visible" Content="{DynamicResource File}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,5,10"
                         HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -66,34 +66,36 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="300" />
-                                    <ColumnDefinition Width="60" />
-                                    <ColumnDefinition Width="60" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="150" />
                                     <ColumnDefinition Width="70" />
                                     <ColumnDefinition Width="70" />
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Content="{Binding PluginInfo.Name}" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                                <Label Grid.Column="1" Content="{Binding PluginInfo.Version}" HorizontalAlignment="Center"/>
-                                <Label x:Name="lbl_enabled" Grid.Column="2" Content="{DynamicResource Enabled}" Foreground="Green" HorizontalAlignment="Center"/>
+                                <Label x:Name="lbl_name" Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Left" Margin="20,0,0,0"/>
+                                <Label x:Name="lbl_duplicated" Grid.Column="1" Content="{DynamicResource Duplicated}" Foreground="OrangeRed" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                                <Label Grid.Column="2" Content="{Binding Version}" HorizontalAlignment="Center"/>
                                 <Label Grid.Column="3" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
-                                <Button x:Name="btn_toggleEnable" Grid.Column="4" Content="{DynamicResource Disable}" Background="OrangeRed" Foreground="White" Margin="3,0"
-                                    Command="{Binding PluginInfo.DisableCommand}"/>
+                                <Button x:Name="btn_toggleEnable" Grid.Column="4" Content="{DynamicResource Enabled}" Background="Green" Foreground="White" Margin="3,0"
+                                    Command="{Binding DisableCommand}" CommandParameter="{Binding}"/>
                                 <Button Grid.Column="5" Content="{DynamicResource Delete}" Margin="3,0"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
+                                    CommandParameter="{Binding}" />
                                     
                             </Grid>
                             <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding PluginInfo.IsEnabled}" Value="False">
-                                    <Setter TargetName="btn_toggleEnable" Property="Background" Value="green"/>
-                                    <Setter TargetName="btn_toggleEnable" Property="Content" Value="{DynamicResource Enable}"/>
-                                    <Setter TargetName="btn_toggleEnable" Property="Command" Value="{Binding PluginInfo.EnableCommand}"/>
-                                    <Setter TargetName="lbl_enabled" Property="Foreground" Value="OrangeRed"/>
-                                    <Setter TargetName="lbl_enabled" Property="Content" Value="{DynamicResource Disabled}"/>
+                                <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                    <Setter TargetName="btn_toggleEnable" Property="Background" Value="OrangeRed"/>
+                                    <Setter TargetName="btn_toggleEnable" Property="Content" Value="{DynamicResource Disabled}"/>
+                                    <Setter TargetName="btn_toggleEnable" Property="Command" Value="{Binding EnableCommand}"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding PluginInfo.IsMainFileFound}" Value="False">
+                                <DataTrigger Binding="{Binding IsMainFileFound}" Value="False">
                                     <Setter TargetName="btn_toggleEnable" Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsDuplicated}" Value="True">
+                                    <Setter TargetName="lbl_name" Property="Foreground" Value="OrangeRed"/>
+                                    <Setter TargetName="lbl_duplicated" Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>

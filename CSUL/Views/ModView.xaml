@@ -19,7 +19,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Margin="0,0,0,5">
-                <u:DragFile Icon="/Resources/Icons/mod_black.png" x:Name="DragFile" FileName="模组">
+                <u:DragFile Icon="/Resources/Icons/mod_black.png" x:Name="DragFile" DragTitle="{DynamicResource DragTitle_Mod}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="DragEvent">
                             <i:InvokeCommandAction Command="{Binding AddCommand}" PassEventArgsToCommand="True" />
@@ -29,18 +29,18 @@
             </Border>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0">
                 <ec:CButton Icon="/Resources/Icons/refresh_black.png" Height="auto" Width="50" Margin="0,0,10,0"
-                     ButtonType="IconUnRotate" ToolTip="刷新插件列表"
+                     ButtonType="IconUnRotate" ToolTip="{DynamicResource Mod_Refresh}"
                     Command="{Binding RefreshCommand}" LabelVisibility="Visible" Content="{DynamicResource Refresh}" />
                 <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="auto" Width="50" Margin="0,0,10,0"
-                            ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
+                            ButtonType="IconUnRotate" ToolTip="{DynamicResource Mod_Check}"
                             Command="{Binding CheckMods}"
-                            Content="{StaticResource Check}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
+                            Content="{DynamicResource Check}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
                 <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="auto" Width="50" Margin="0,0,10,0"
-                            ButtonType="IconUnRotate" ToolTip="卸载BepInEx"
+                            ButtonType="IconUnRotate" ToolTip="{DynamicResource Mod_RemoveBepInEx}"
                             Command="{Binding RemoveCommand}"
-                            Content="{StaticResource Remove}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
+                            Content="{DynamicResource Remove}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
                 <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
-                     ButtonType="IconUnRotate" ToolTip="打开插件文件夹"
+                     ButtonType="IconUnRotate" ToolTip="{DynamicResource Mod_OpenDir}"
                     Command="{Binding OpenFolder}" LabelVisibility="Visible" Content="{DynamicResource File}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,0,5,10"
@@ -51,7 +51,7 @@
                         <Setter Property="FontSize" Value="12" />
                     </Style>
                 </StackPanel.Resources>
-                <Label Content="BepInEx版本" />
+                <Label Content="{DynamicResource BepVer}" />
                 <Label Content="{Binding BepVersion}" />
             </StackPanel>
             <Border Grid.Row="1" Margin="0,5,0,0">
@@ -78,7 +78,8 @@
                                 <Label Grid.Column="2" Content="{Binding Version}" HorizontalAlignment="Center"/>
                                 <Label Grid.Column="3" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
                                 <Button x:Name="btn_toggleEnable" Grid.Column="4" Content="{DynamicResource Enabled}" Background="Green" Foreground="White" Margin="3,0"
-                                    Command="{Binding DisableCommand}" CommandParameter="{Binding}"/>
+                                    Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DisableCommand}"
+                                    CommandParameter="{Binding}"/>
                                 <Button Grid.Column="5" Content="{DynamicResource Delete}" Margin="3,0"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
                                     CommandParameter="{Binding}" />
@@ -88,7 +89,7 @@
                                 <DataTrigger Binding="{Binding IsEnabled}" Value="False">
                                     <Setter TargetName="btn_toggleEnable" Property="Background" Value="OrangeRed"/>
                                     <Setter TargetName="btn_toggleEnable" Property="Content" Value="{DynamicResource Disabled}"/>
-                                    <Setter TargetName="btn_toggleEnable" Property="Command" Value="{Binding EnableCommand}"/>
+                                    <Setter TargetName="btn_toggleEnable" Property="Command" Value="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.EnableCommand}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsMainFileFound}" Value="False">
                                     <Setter TargetName="btn_toggleEnable" Property="IsEnabled" Value="False"/>
@@ -112,7 +113,7 @@
                     <Label Content="BepIn" FontSize="70px" Foreground="{DynamicResource WhiteBrush}" Margin="0" Padding="0" />
                     <Label Content="Ex" FontSize="70px" Foreground="#FFFF7500" Margin="0" Padding="0" />
                 </StackPanel>
-                <Label Content="未安装BepInEx" FontSize="25px" Foreground="{DynamicResource WhiteBrush}" HorizontalContentAlignment="Center" />
+                <Label Content="{DynamicResource BepNotInstalled}" FontSize="25px" Foreground="{DynamicResource WhiteBrush}" HorizontalContentAlignment="Center" />
                 <ListView ItemsSource="{Binding BepData}" Background="Transparent" BorderBrush="Transparent">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">

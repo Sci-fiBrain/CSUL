@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,45 +16,123 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using System.Reflection.Metadata;
-using System.Reflection.PortableExecutable;
-using CSUL.Extends;
-
 namespace CSUL.ViewModels.ModViewModels
 {   //ModModel 构造函数、方法、子类
     public partial class ModModel : BaseViewModel
     {
-        #region ---模组信息条目---
 
-        //public class ItemData
-        //{
-        //    /// <summary>
-        //    /// 模组信息
-        //    /// </summary>
-        //    public PluginInfo PluginInfo { get; set; } = default!;
+        #region ---Mod信息类---
+        public class ModInfo
+        {
+            #region ---构造函数---
+            public ModInfo(string name)
+            {
+                Name = name;
+            }
+            #endregion ---构造函数---
 
-        //    /// <summary>
-        //    /// 模组路径
-        //    /// </summary>
-        //    public string Path { get; set; } = default!;
+            #region ---公共属性---
+            /// <summary>
+            /// mod名称
+            /// </summary>
+            public string Name { get; set; }
 
-        //    /// <summary>
-        //    /// 最后修改时间
-        //    /// </summary>
-        //    public string LastWriteTime { get; set; } = default!;
+            /// <summary>
+            /// mod版本号
+            /// </summary>
+            public string Version { get; set; } = "?";
 
-        //    /// <summary>
-        //    /// 删除插件的方法
-        //    /// </summary>
-        //    public Action Delete { get; set; } = default!;
+            /// <summary>
+            /// mod的GUID
+            /// </summary>
+            public string GUID { get; set; }
 
-        //    /// <summary>
-        //    /// 是否为单文件
-        //    /// </summary>
-        //    public bool IsFile { get; set; } = false;
-        //}
+            /// <summary>
+            /// 主文件路径
+            /// </summary>
+            public string MainFile { get; private set; } = "";
 
-        #endregion ---模组信息条目---
+            /// <summary>
+            /// 是否找到主文件
+            /// </summary>
+            public bool IsMainFileFound { get; private set; } = false;
+
+            /// <summary>
+            /// 是否启用
+            /// </summary>
+            public bool IsEnabled { get; set; } = false;
+
+            /// <summary>
+            /// 是否重复
+            /// </summary>
+            public bool IsDuplicated { get; set; } = false;
+
+            /// <summary>
+            /// 模组路径
+            /// </summary>
+            public string ModPath { get; private set; } = default!;
+
+            /// <summary>
+            /// 最后修改时间
+            /// </summary>
+            public string LastWriteTime { get; set; } = default!;
+
+            /// <summary>
+            /// 是否为单文件
+            /// </summary>
+            public bool IsSingleFile { get; private set; } = false;
+
+            #endregion ---公共属性---
+
+            #region ---公共方法---
+            /// <summary>
+            /// 设置mod主文件，如果成功，则设置IsMainFileFound为true。
+            /// <para>同时会判断该mod是否被启用。</para>
+            /// </summary>
+            /// <exception cref="FileNotFoundException">所传入文件路径不存在时引发</exception>
+            /// <exception cref="ArgumentException">所传入文件后缀名不是dll或dlloff时引发</exception>
+            /// <param name="mainFile">主文件路径</param>
+            public void SetMainFile(string mainFile)
+            {
+                if (Path.Exists(mainFile) && (mainFile.ToLower().EndsWith(".dll") || mainFile.ToLower().EndsWith(".dlloff")))
+                {
+                    MainFile = mainFile;
+                    IsMainFileFound = true;
+                    IsEnabled = mainFile.ToLower().EndsWith(".dll");
+                }
+                else
+                {
+                    if (!Path.Exists(mainFile)) { throw new FileNotFoundException($"\"{mainFile}\" 该文件不存在!"); }
+                    else
+                    {
+                        throw new ArgumentException($"\"{mainFile}\" 该文件不是mod文件!");
+                    }
+                }
+            }
+
+            /// <summary>
+            /// 设置mod路径，并判断是否为单文件
+            /// </summary>
+            /// <param name="modPath">mod路径</param>
+            /// <exception cref="ArgumentException">当路径不存在时引发</exception>
+            public void SetModPath(string modPath)
+            {
+                if (File.Exists(modPath))
+                {
+                    ModPath = modPath;
+                    IsSingleFile = true;
+                }
+                else if (Directory.Exists(modPath))
+                {
+                    ModPath = modPath;
+                    IsSingleFile = false;
+                }
+                else { throw new ArgumentException($"\"{modPath}\" 该路径不存在!"); }
+            }
+            #endregion ---公共方法---
+        }
+        #endregion ---Mod信息类---
+
 
         #region ---BepInEx信息条目---
 
@@ -82,12 +162,47 @@ namespace CSUL.ViewModels.ModViewModels
             RemoveCommand = new RelayCommand(RemoveBepInEx);
             CheckMods = new RelayCommand(CheckModCompatibility);
             RefreshCommand = new RelayCommand(Refresh);
+            DisableCommand = new RelayCommand(Disable);
+            EnableCommand = new RelayCommand(Enable);
             RefreshData();
         }
 
         #endregion ---构造函数---
 
         #region ---ICommand方法---
+        /// <summary>
+        /// 禁用mod
+        /// </summary>
+        /// <param name="sender">Command传入的参数</param>
+        private void Disable(object? sender)
+        {
+            if (sender is not ModInfo data) return;
+            if (!data.IsEnabled) { return; }
+            FileInfo file = new FileInfo(data.MainFile);
+            if (file.Exists && data.MainFile.ToLower().EndsWith(".dll"))
+            {
+                string newFileName = data.MainFile + "off";
+                file.MoveTo(newFileName);
+            }
+            RefreshData();
+        }
+
+        /// <summary>
+        /// 启用mod
+        /// </summary>
+        /// <param name="sender">Command传入的参数</param>
+        private void Enable(object? sender)
+        {
+            if (sender is not ModInfo data) return;
+            if (data.IsEnabled) { return; }
+            FileInfo file = new FileInfo(data.MainFile);
+            if (file.Exists && data.MainFile.ToLower().EndsWith(".dlloff"))
+            {
+                string newFileName = data.MainFile.Replace("dlloff", "dll");
+                file.MoveTo(newFileName);
+            }
+            RefreshData();
+        }
 
         /// <summary>
         /// 删除模组文件
@@ -102,14 +217,16 @@ namespace CSUL.ViewModels.ModViewModels
             var ret = MessageBox.Show(sb.ToString(), "删除模组", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (ret == MessageBoxResult.OK)
             {
-                var result = data.Delete();
-                if (result.Success)
+                FileSystemInfo mod = data.IsSingleFile ? new FileInfo(data.ModPath) : new DirectoryInfo(data.ModPath);
+                try
                 {
+                    mod.Delete();
                     MessageBox.Show("删除成功");
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show(ExceptionManager.GetExMeg(result.e), "文件删除失败",
+
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 RefreshData();
@@ -200,6 +317,7 @@ namespace CSUL.ViewModels.ModViewModels
                 MessageBox.Show("BepInEx版本信息获取失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+
             Dictionary<int, (string name, string version)> allData = new();
             List<int> pass = new(), wrong = new(), unknow = new();
             for (int i = 0; i < ModData.Count; i++)
@@ -248,13 +366,13 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private void RefreshData()
         {
-            ModData.Clear();
+            List<ModInfo> modInfos = new List<ModInfo>();
             FileInfo[] files = FileManager.Instance.ModDir.GetFiles("*.dll*");
-
-
-            ModData.AddRange(from file in files select ModInfo.FromFile(file));
+            modInfos.AddRange(from file in files select FromFile(file));
             DirectoryInfo[] dirs = FileManager.Instance.ModDir.GetDirectories();
-            ModData.AddRange(ModInfo.FromDirectories(dirs));
+            modInfos.AddRange(FromDirectories(dirs));
+            CheckDuplication(modInfos);
+            ModData = modInfos;
         }
 
         /// <summary>
@@ -357,5 +475,157 @@ namespace CSUL.ViewModels.ModViewModels
                     }).ToList();
         }
         #endregion ---私有方法---
+
+        #region ---静态方法---
+        /// <summary>
+        /// 检查GUID对应的mod是否重复
+        /// </summary>
+        /// <param name="guid">要查重的GUID</param>
+        private static void CheckDuplication(IEnumerable<ModInfo> mods)
+        {
+            List<string> _checked = new List<string>();
+            foreach (ModInfo mod in mods)
+            {
+                string guid = mod.GUID;
+                if (_checked.Contains(guid)) continue;
+                var fileSearch = mods.Where(s => s.GUID == guid);
+                var enabledSearch = fileSearch.Where(s => s.IsEnabled);
+                int searchCount = enabledSearch.Count();
+                bool duplicated = searchCount > 1;
+                foreach (var item in fileSearch)
+                {
+                    item.IsDuplicated = duplicated;
+                }
+                _checked.Add(guid);
+            }
+        }
+
+        /// <summary>
+        /// 从dll文件获取Mod信息
+        /// </summary>
+        /// <param name="file">dll文件路径</param>
+        public static ModInfo? FromFile(FileInfo file)
+        {
+            return GetModFromFile(file);
+        }
+
+        /// <summary>
+        /// 从文件夹获取Mod信息
+        /// </summary>
+        /// <param name="dir">文件夹路径</param>
+        /// <returns></returns>
+        public static IEnumerable<ModInfo> FromDirectory(DirectoryInfo dir)
+        {
+            DirectoryInfo[] directories = dir.GetDirectories();
+            foreach (DirectoryInfo directory in directories)
+            {
+                IEnumerable<ModInfo> mods = FromDirectory(directory);
+                foreach (ModInfo mod in mods)
+                {
+                    yield return mod;
+                }
+            }
+            FileInfo[] files = dir.GetFiles("*.dll*");
+            foreach (FileInfo file in files)
+            {
+                ModInfo? mod = GetModFromFile(file, false);
+                if (mod != null)
+                {
+                    mod.SetModPath(dir.FullName);
+                    yield return mod;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从多个文件夹获取Mod信息
+        /// </summary>
+        /// <param name="directories">文件夹路径</param>
+        /// <returns></returns>
+        public static IEnumerable<ModInfo> FromDirectories(IEnumerable<DirectoryInfo> directories)
+        {
+            foreach (DirectoryInfo directory in directories)
+            {
+                IEnumerable<ModInfo> mods = FromDirectory(directory);
+                foreach (ModInfo mod in mods)
+                {
+                    yield return mod;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 读取dll文件信息
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="setModPath"></param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        private static ModInfo? GetModFromFile(FileInfo file, bool setModPath = true)
+        {
+            if (!file.Exists)
+            {
+                throw new FileNotFoundException($"\"{file.FullName}\" 文件不存在！");
+            }
+
+            string? typeName = null;
+            using (StreamReader sr = new(file.FullName))
+            {
+                using PEReader portableExecutableReader = new(sr.BaseStream);
+                MetadataReader metadataReader = portableExecutableReader.GetMetadataReader();
+
+                foreach (TypeDefinitionHandle typeDefHandle in metadataReader.TypeDefinitions)
+                {
+                    TypeDefinition typeDef = metadataReader.GetTypeDefinition(typeDefHandle);
+                    string name = metadataReader.GetString(typeDef.Name);
+                    if (name.Contains("MyPluginInfo"))
+                    {
+                        string _namespace = metadataReader.GetString(typeDef.Namespace);
+                        typeName = $"{_namespace}.{name}";
+                        break;
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                Assembly asm;
+                using (FileStream stream = new(file.FullName, FileMode.Open))
+                {
+                    using MemoryStream memStream = new();
+                    int res;
+                    byte[] b = new byte[file.Length];
+                    while ((res = stream.Read(b, 0, b.Length)) > 0)
+                    {
+                        memStream.Write(b, 0, b.Length);
+                    }
+                    asm = Assembly.Load(memStream.ToArray());
+                }
+                Type? type = asm.GetType(typeName);
+                FieldInfo? nameField = type?.GetField("PLUGIN_NAME");
+                FieldInfo? versionField = type?.GetField("PLUGIN_VERSION");
+                FieldInfo? idField = type?.GetField("PLUGIN_GUID");
+                string? name = nameField?.GetRawConstantValue() as string;
+                if (!string.IsNullOrEmpty(name))
+                {
+                    ModInfo info = new(name);
+                    string? version = versionField?.GetRawConstantValue() as string;
+                    info.Version = version ?? "?";
+
+                    string? id = idField?.GetRawConstantValue() as string;
+                    info.GUID = id ?? "";
+
+                    info.SetMainFile(file.FullName);
+                    info.LastWriteTime = file.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss");
+                    if (setModPath)
+                    {
+                        info.SetModPath(file.FullName);
+                    }
+                    return info;
+                }
+            }
+            return null;
+        }
+        #endregion ---静态方法---
+
     }
 }

@@ -5,6 +5,21 @@ namespace CSUL.ViewModels.SetViewModels
 {
     public class SetModel : BaseViewModel
     {
+        public string Language
+        {
+            get
+            {
+                return LanguageManager.Instance.CurrentLanguage!;
+            }
+
+            set
+            {
+                if (value == LanguageManager.Instance.CurrentLanguage) return;
+                LanguageManager.Instance.CurrentLanguage = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string GamePath
         {
             get => FileManager.Instance.GameRootDir.FullName!;

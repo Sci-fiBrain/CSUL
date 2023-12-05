@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:CSUL.ViewModels.SetViewModels"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:md="clr-namespace:CSUL.Models"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
@@ -32,12 +33,15 @@
                         <Setter Property="Margin" Value="5,10,5,0" />
                     </Style>
                 </StackPanel.Resources>
-                <Label Content="{StaticResource GameInstRoot}"/>
+                <Label Content="{DynamicResource GameInstRoot}"/>
                 <TextBox Text="{Binding GamePath}" />
-                <Label Content="{StaticResource GameDataRoot}"/>
+                <Label Content="{DynamicResource GameDataRoot}"/>
                 <TextBox Text="{Binding GameData}" />
-                <Label Content="{StaticResource StartPar}"/>
+                <Label Content="{DynamicResource StartPar}"/>
                 <TextBox Text="{Binding StartArgument}" />
+                <Label Content="{DynamicResource Language}"/>
+                <ComboBox HorizontalAlignment="Left" Width="150" Margin="6,0,0,0" ItemsSource="{x:Static md:LanguageManager.Languages}"
+                          DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Language}"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">
@@ -75,7 +79,7 @@
                         <Label HorizontalAlignment="Center">Version 1.0.0.0</Label>
                         <Label HorizontalAlignment="Center">By 科幻大脑</Label>
                         <Label FontSize="16" HorizontalAlignment="Center">
-                            <TextBlock TextDecorations="Underline" Text="{StaticResource vMe50}"/>
+                            <TextBlock TextDecorations="Underline" Text="{DynamicResource vMe50}"/>
                         </Label>
                     </StackPanel>
                 </Grid>

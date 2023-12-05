@@ -5,10 +5,28 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/BaseStyle.xaml" />
-                <ResourceDictionary Source="Styles/ExStyle.xaml" />
-                <ResourceDictionary Source="Styles/Paths.xaml" />
-                <ResourceDictionary Source="Languages/language.xaml"/>
+                <ResourceDictionary>
+                    <!--此处留空，添加资源请放下面-->
+                    <ResourceDictionary.MergedDictionaries>
+
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="Styles/BaseStyle.xaml" />
+                        <ResourceDictionary Source="Styles/ExStyle.xaml" />
+                        <ResourceDictionary Source="Styles/Paths.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <!--留空，添加资源请放下面-->
+                    <ResourceDictionary.MergedDictionaries>
+
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+
+                <!--<ResourceDictionary x:Name="lang" Source="Languages/en_us.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

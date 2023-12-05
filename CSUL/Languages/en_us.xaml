@@ -1,0 +1,54 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!--#region Simple words -->
+    <sys:String x:Key="StartGame">Play</sys:String>
+    <sys:String x:Key="MainPage">Home</sys:String>
+    <sys:String x:Key="MapPage">Map</sys:String>
+    <sys:String x:Key="SavePage">Save</sys:String>
+    <sys:String x:Key="ModPage">Mod</sys:String>
+    <sys:String x:Key="SettingPage">Settings</sys:String>
+    <sys:String x:Key="File">Open</sys:String>
+    <sys:String x:Key="Check">Check</sys:String>
+    <sys:String x:Key="Remove">Remove</sys:String>
+    <sys:String x:Key="Delete">Delete</sys:String>
+    <sys:String x:Key="AllMod">Mod Count</sys:String>
+    <sys:String x:Key="PassMod">Pass Count</sys:String>
+    <sys:String x:Key="WrongMod">Wrong Count</sys:String>
+    <sys:String x:Key="UnknowMod">Unknow Count</sys:String>
+    <sys:String x:Key="BepVer">BepInEx Ver</sys:String>
+    <sys:String x:Key="Disable">Disable</sys:String>
+    <sys:String x:Key="Enable">Enable</sys:String>
+    <sys:String x:Key="Disabled">Disabled</sys:String>
+    <sys:String x:Key="Duplicated">Duplicated</sys:String>
+    <sys:String x:Key="Enabled">Enabled</sys:String>
+    <sys:String x:Key="Refresh">Refresh</sys:String>
+    <sys:String x:Key="Language">Language</sys:String>
+    <!--#endregion-->
+
+    <!--#region Long term -->
+    <sys:String x:Key="CompatibilityWin">Compatibility Check Results (Click the box to see a list of specified results)</sys:String>
+    <sys:String x:Key="vMe50">Buy Me Coffe~</sys:String>
+    <sys:String x:Key="GameInstRoot">Game Installation Root (the directory where Cities2.exe is located, the directory does not contain Cities2.exe)</sys:String>
+    <sys:String x:Key="GameDataRoot">Game Data Root Directory (directory where game data is stored: Map, Save, etc.)</sys:String>
+    <sys:String x:Key="StartPar">Startup Parameters (do not enter program name such as Cities2.exe or start.bat)</sys:String>
+    <sys:String x:Key="DevModelStart">Start In Developer Mode</sys:String>
+    <sys:String x:Key="BepNotInstalled">BepInEx Not Installed</sys:String>
+    
+    <sys:String x:Key="DragTitle_Map">Drag Map File To Here To Import,Or Just Click To Import Map</sys:String>
+    <sys:String x:Key="DragTitle_Mod">Drag Mod File To Here To Import,Or Just Click To Import Mod</sys:String>
+    <sys:String x:Key="DragTitle_Save">Drag Save File To Here To Import,Or Just Click To Import Save</sys:String>
+    <!--#endregion-->
+
+    <!--#region Tooltips -->
+    <sys:String x:Key="Map_OpenDir">Open Map Directory</sys:String>
+
+    <sys:String x:Key="Mod_Refresh">Refresh Mod List</sys:String>
+    <sys:String x:Key="Mod_Check">Check Mods Compatibility</sys:String>
+    <sys:String x:Key="Mod_RemoveBepInEx">Remove BepInEx</sys:String>
+    <sys:String x:Key="Mod_OpenDir">Open Mod Directory</sys:String>
+
+    <sys:String x:Key="Save_OpenDir">Open Save Directory</sys:String>
+    <!--#endregion-->
+
+</ResourceDictionary>

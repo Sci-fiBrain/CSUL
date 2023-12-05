@@ -102,6 +102,7 @@ namespace CSUL
             {
                 FileManager.Instance.Dispose();
                 GameManager.Instance.Dispose();
+                LanguageManager.Instance.Dispose();
                 Environment.Exit(exitCode);
             }
         }

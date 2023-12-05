@@ -62,11 +62,11 @@
                                         <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                                     </Style>
                                 </StackPanel.Resources>
-                                <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0" ToolTip="{StaticResource MainPage}" Content="{StaticResource MainPage}" />
-                                <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="{StaticResource MapPage}" Content="{StaticResource MapPage}" />
-                                <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="{StaticResource SavePage}" Content="{StaticResource SavePage}" />
-                                <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="{StaticResource ModPage}" Content="{StaticResource ModPage}" />
-                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="{StaticResource SettingPage}" Content="{StaticResource SettingPage}" />
+                                <ec:CButton Icon="Resources/Icons/play.png" CommandParameter="0" ToolTip="{DynamicResource MainPage}" Content="{DynamicResource MainPage}" />
+                                <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="{DynamicResource MapPage}" Content="{DynamicResource MapPage}" />
+                                <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="{DynamicResource SavePage}" Content="{DynamicResource SavePage}" />
+                                <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="{DynamicResource ModPage}" Content="{DynamicResource ModPage}" />
+                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="{DynamicResource SettingPage}" Content="{DynamicResource SettingPage}" />
                             </StackPanel>
                             <StackPanel Grid.Row="1">
                                 <!--<Label Foreground="{DynamicResource WhiteBrush}"

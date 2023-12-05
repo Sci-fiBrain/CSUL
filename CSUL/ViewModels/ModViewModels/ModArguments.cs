@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels.ModViewModels
@@ -52,9 +53,9 @@ namespace CSUL.ViewModels.ModViewModels
 
         #region ---模组信息列表---
 
-        private ModInfoCollection modData = new ModInfoCollection();
+        private List<ModInfo> modData;
 
-        public ModInfoCollection ModData
+        public List<ModInfo> ModData
         {
             get => modData;
             set
@@ -104,6 +105,16 @@ namespace CSUL.ViewModels.ModViewModels
         /// 移除BepInEx
         /// </summary>
         public ICommand RemoveCommand { get; }
+
+        /// <summary>
+        /// 启用mod命令
+        /// </summary>
+        public ICommand EnableCommand { get; }
+
+        /// <summary>
+        /// 禁用mod命令
+        /// </summary>
+        public ICommand DisableCommand { get; }
 
         #endregion ---Commands---
     }

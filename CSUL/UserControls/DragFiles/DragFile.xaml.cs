@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,11 +42,14 @@ namespace CSUL.UserControls.DragFiles
         /// <summary>
         /// 要拖动的文件名称
         /// </summary>
-        public object FileName
+        public string DragTitle
         {
-            get => La.Content;
-            set => La.Content = $"将{value}拖入此处导入，或点击导入{value}";
+            get { return (string)GetValue(DragTitleProperty); }
+            set { SetValue(DragTitleProperty, value); }
         }
+        // Using a DependencyProperty as the backing store for DragTitle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DragTitleProperty =
+            DependencyProperty.Register("DragTitle", typeof(string), typeof(DragFile), new PropertyMetadata(""));
 
         private void MouseLeftButtonUp_Event(object sender, MouseButtonEventArgs e)
         {

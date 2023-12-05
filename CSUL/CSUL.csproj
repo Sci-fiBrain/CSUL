@@ -54,21 +54,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="Languages\en-us.xaml" />
-    <Page Remove="Languages\language.xaml" />
+    <Page Remove="Languages\en_us.xaml" />
+    <Page Remove="Languages\zh_cn.xaml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Languages\en-us.xaml">
+    <Content Include="Languages\en_us.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
+      <Generator></Generator>
     </Content>
     <Content Include="Resources\Imgs\win_logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Languages\language.xaml">
+    <Content Include="Languages\zh_cn.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\Icons\refresh.png" />

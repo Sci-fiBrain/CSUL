@@ -14,6 +14,9 @@ namespace CSUL.Models
         /// </summary>
         public static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL_Game.config");
 
+        /// <summary>
+        /// 得到<see cref="GameManager"/>的实例
+        /// </summary>
         public static GameManager Instance { get; } = new();
 
         #region ---构造函数---

@@ -12,6 +12,12 @@
     <UserControl.DataContext>
         <vm:SaveModel />
     </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Refresh}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
@@ -30,7 +36,7 @@
                     HorizontalAlignment="Right" VerticalAlignment="Top" ButtonType="IconUnRotate"
                     Command="{Binding OpenFolder}" ToolTip="打开存档文件夹" LabelVisibility="Visible" Content="{StaticResource File}" />
         <Border Grid.Row="1" Margin="0,5,0,0">
-            <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SaveData}" x:Name="listView">
+            <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding GameData}" x:Name="listView">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -45,11 +51,13 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Center" />
-                            <Label Grid.Column="1" Content="{Binding Id}" HorizontalAlignment="Center" />
+                            <Label Grid.Column="1" Content="{Binding Cid}" HorizontalAlignment="Center" />
                             <Label Grid.Column="2" Content="{Binding LastWriteTime}" HorizontalAlignment="Center" />
-                            <Button Grid.Column="3" Content="{StaticResource Delete}"
+                            <Label Grid.Column="3" Content="{Binding DataType}" HorizontalAlignment="Center" />
+                            <Button Grid.Column="4" Content="{StaticResource Delete}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
                         </Grid>

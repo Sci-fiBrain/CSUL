@@ -3,6 +3,9 @@ using System.Text;
 
 namespace CSUL.Models
 {
+    /// <summary>
+    /// 异常处理器
+    /// </summary>
     public class ExceptionManager
     {
         /// <summary>

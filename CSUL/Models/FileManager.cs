@@ -1,7 +1,15 @@
-﻿using System;
+﻿using CSUL.Models.Structs;
+using SharpCompress.Archives;
+using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
+using SharpCompress.Factories;
+using SharpCompress.Readers;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace CSUL.Models
@@ -11,20 +19,24 @@ namespace CSUL.Models
     /// </summary>
     public class FileManager : IDisposable
     {
+        #region ---公共静态属性---
+
         /// <summary>
         /// 配置文件路径
         /// </summary>
-        public static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.config");
+        public static string ConfigPath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.config");
 
         /// <summary>
         /// 临时文件夹路径
         /// </summary>
-        public static readonly string TempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
+        public static string TempDirPath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
 
         /// <summary>
         /// 获取<see cref="FileManager"/>实例
         /// </summary>
         public static FileManager Instance { get; } = new();
+
+        #endregion ---公共静态属性---
 
         #region ---构造函数---
 
@@ -217,6 +229,89 @@ namespace CSUL.Models
         public string? GamePath { get; set; }
 
         #endregion ---公共属性---
+
+        #region ---公共方法---
+
+        /// <summary>
+        /// 安装游戏数据文件（地图、存档）
+        /// </summary>
+        public async Task<InstalledGameDataFiles> InstallGameDataFile(string filePath)
+        {
+            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
+            string tempPath = Path.Combine(TempDirPath, $"ins{Random.Shared.NextInt64()}");
+            if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
+            Directory.CreateDirectory(tempPath);
+            await Task.Run(() =>
+            {
+                using Stream stream = File.OpenRead(filePath);
+                using IArchive archive = ArchiveFactory.Open(stream);
+                archive.WriteToDirectory(tempPath, new()
+                {
+                    ExtractFullPath = true,
+                    Overwrite = true
+                });
+            });
+            List<string> coks = new();
+            void RecursionSearch(string root)
+            {   //递归搜索方法
+                foreach (string file in Directory.GetFiles(root))
+                {
+                    if (Path.GetExtension(file) == ".cok" && File.Exists(file + ".cid"))
+                    {
+                        coks.Add(file);
+                    }
+                }
+                foreach (string dir in Directory.GetDirectories(root)) RecursionSearch(dir);
+            }
+            await Task.Run(() => RecursionSearch(tempPath));
+            InstalledGameDataFiles ret = new() { MapNames = new(), SaveNames = new() };
+            foreach (string cok in coks)
+            {
+                try
+                {
+                    List<string> names;
+                    string targetPath;
+                    switch (ExFileManager.GetGameDataFileType(cok))
+                    {
+                        case Enums.GameDataFileType.Save:
+                            targetPath = SaveDir.FullName;
+                            names = ret.SaveNames;
+                            break;
+
+                        case Enums.GameDataFileType.Map:
+                            targetPath = MapDir.FullName;
+                            names = ret.MapNames;
+                            break;
+
+                        default: continue;
+                    }
+                    string cokName = Path.GetFileName(cok);
+                    if (File.Exists(Path.Combine(targetPath, cokName))) await Task.Run(() =>
+                    {   //获得不重复的文件名
+                        string reEx = cokName[..cokName.LastIndexOf('.')];    //去除扩展名
+                        for (long i = 1; i < long.MaxValue; i++)
+                        {
+                            if (!File.Exists(Path.Combine(targetPath, $"{reEx}({i}).cok")))
+                            {
+                                cokName = $"{reEx}({i}).cok";
+                                break;
+                            }
+                        }
+                    });
+                    await Task.Run(() => File.Copy(cok, Path.Combine(targetPath, cokName), true));
+                    await Task.Run(() => File.Copy(cok + ".cid", Path.Combine(targetPath, cokName + ".cid"), true));
+                    names.Add(cokName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex, $"{filePath}中的{cok}安装时出现问题"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            Directory.Delete(tempPath, true);
+            return ret;
+        }
+
+        #endregion ---公共方法---
 
         #region ---私有方法---
 

@@ -1,36 +1,11 @@
-﻿using System.IO;
+﻿using CSUL.Models.Structs;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CSUL.Models
 {
-    /// <summary>
-    /// Bepinex文件信息
-    /// </summary>
-    public class BepinexInfo
-    {
-        /// <summary>
-        /// 版本号
-        /// </summary>
-        public string Version { get; set; } = default!;
-
-        /// <summary>
-        /// 是否为测试版
-        /// </summary>
-        public bool IsBeta { get; set; }
-
-        /// <summary>
-        /// 文件名
-        /// </summary>
-        public string FileName { get; set; } = default!;
-
-        /// <summary>
-        /// 下载链接
-        /// </summary>
-        public string Uri { get; set; } = default!;
-    }
-
     /// <summary>
     /// Web相关管理类
     /// </summary>

@@ -14,7 +14,7 @@
     <Grid>
         <Image  Height="280" Width="auto" Margin="0,-20,0,0"
                 Source="/Resources/Imgs/csl_logo_low.png"
-                HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                HorizontalAlignment="Left" VerticalAlignment="Top" />
         <StackPanel Margin="30" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <CheckBox Content="{StaticResource DevModelStart}" IsChecked="{Binding OpenDeveloper}"
                           Margin="10" FontSize="15" Foreground="{DynamicResource WhiteBrush}" />

@@ -1,12 +1,12 @@
 ﻿using CSUL.Models;
 using CSUL.UserControls.DragFiles;
-using SevenZip;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -17,29 +17,6 @@ namespace CSUL.ViewModels.SaveViewModels
     /// </summary>
     public class SaveModel : BaseViewModel
     {
-        public class ItemData
-        {
-            /// <summary>
-            /// 存档Id
-            /// </summary>
-            public string Id { get; set; } = default!;
-
-            /// <summary>
-            /// 存档名称
-            /// </summary>
-            public string? Name { get; set; }
-
-            /// <summary>
-            /// 存档路径
-            /// </summary>
-            public string Path { get; set; } = default!;
-
-            /// <summary>
-            /// 最后修改时间
-            /// </summary>
-            public string LastWriteTime { get; set; } = default!;
-        }
-
         public SaveModel()
         {
             //获取初始数据
@@ -48,18 +25,18 @@ namespace CSUL.ViewModels.SaveViewModels
             //设定命令处理方法
             DeleteCommand = new RelayCommand((sender) =>
             {
-                if (sender is not ItemData data) return;
+                if (sender is not GameDataFileInfo data) return;
                 StringBuilder sb = new();
                 sb.Append("存档名称: ").Append(data.Name).AppendLine();
-                sb.Append("存档ID: ").Append(data.Id).AppendLine();
+                sb.Append("存档ID: ").Append(data.Cid).AppendLine();
                 sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
-                sb.Append("存档路径: ").AppendLine().Append(data.Path).AppendLine();
+                sb.Append("存档路径: ").AppendLine().Append(data.FilePath).AppendLine();
                 var ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (ret == MessageBoxResult.OK)
                 {
                     try
                     {
-                        Directory.Delete(data.Path, true);
+                        data.Delete();
                         MessageBox.Show("删除成功");
                     }
                     catch (Exception ex)
@@ -70,25 +47,27 @@ namespace CSUL.ViewModels.SaveViewModels
                     RefreshData();
                 }
             });
-            AddCommand = new RelayCommand((sender) =>
+            AddCommand = new RelayCommand(async (sender) =>
             {
-                InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
+                await InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
             });
+            Refresh = new RelayCommand(sender => RefreshData());
         }
 
         public ICommand DeleteCommand { get; }
         public ICommand AddCommand { get; }
         public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", FileManager.Instance.SaveDir.FullName));
+        public ICommand Refresh { get; }
 
-        private List<ItemData> saveData = default!;
+        private IEnumerable<GameDataFileInfo> gameData = default!;
 
-        public List<ItemData> SaveData
+        public IEnumerable<GameDataFileInfo> GameData
         {
-            get => saveData;
+            get => gameData;
             set
             {
-                if (saveData == value) return;
-                saveData = value;
+                if (gameData == value) return;
+                gameData = value;
                 OnPropertyChanged();
             }
         }
@@ -96,59 +75,36 @@ namespace CSUL.ViewModels.SaveViewModels
         #region ---私有方法---
 
         /// <summary>
-        /// 将存档文件夹转为条目信息
-        /// </summary>
-        private static ItemData ConvertToItemData(string path)
-        {
-            if (!Directory.Exists(path)) throw new DirectoryNotFoundException();
-            DirectoryInfo info = new(path);
-            ItemData data = new()
-            {
-                Id = info.Name,
-                Name = info.GetFiles().FirstOrDefault(x => x.Name.EndsWith(".cok"))?.Name.Split('.')[0]
-                    ?? "*可能不是存档文件*",
-                Path = path,
-                LastWriteTime = info.LastWriteTime.ToString("yyyy-MM-dd-HH:mm:ss"),
-            };
-            return data;
-        }
-
-        /// <summary>
         /// 刷新存档数据
         /// </summary>
-        private void RefreshData() => SaveData = (from dir in FileManager.Instance.SaveDir.GetDirectories() select ConvertToItemData(dir.FullName)).ToList();
+        public void RefreshData() => GameData = from cid in FileManager.Instance.SaveDir.GetAllFiles()
+                                                where cid.Name.EndsWith(".cok")
+                                                let data = new GameDataFileInfo(cid.FullName)
+                                                select data;
 
         /// <summary>
         /// 安装文件
         /// </summary>
         /// <param name="paths"></param>
-        private void InstallFile(string[] paths)
+        private async Task InstallFile(string[] paths)
         {
             foreach (string path in paths)
             {
                 try
                 {
-                    if (!File.Exists(path)) continue;
-                    SevenZipExtractor zip = new(path);
-                    string firstFile = zip.ArchiveFileNames.FirstOrDefault()
-                        ?? throw new Exception("该压缩包不含任何文件");
-                    string? testFile = zip.ArchiveFileNames.FirstOrDefault(x => x.EndsWith(".cok"));
-                    if (testFile is null)
-                    {
-                        if (MessageBox.Show("该文件可能不是存档文件，是否继续安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                            == MessageBoxResult.No) continue;
-                    }
-                    if (FileManager.Instance.SaveDir.GetDirectories().Any(x => x.Name == firstFile.Split('\\')[0]))
-                    {
-                        if (MessageBox.Show("已存在该文件，是否覆盖安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                            == MessageBoxResult.No) continue;
-                    }
-                    zip.ExtractArchive(FileManager.Instance.SaveDir.FullName);
-                    MessageBox.Show("安装完成");
+                    Models.Structs.InstalledGameDataFiles ret = await FileManager.Instance.InstallGameDataFile(path);
+                    StringBuilder builder = new();
+                    builder.Append($"文件{Path.GetFileName(path)}解析完成").AppendLine();
+                    builder.Append($"已安装地图 {ret.MapNames.Count} 个: ").AppendLine();
+                    ret.MapNames.ForEach(x => builder.AppendLine(x));
+                    builder.AppendLine();
+                    builder.Append($"已安装存档 {ret.SaveNames.Count} 个: ").AppendLine();
+                    ret.SaveNames.ForEach(x => builder.AppendLine(x));
+                    MessageBox.Show(builder.ToString(), $"提示", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show($"存档{path}安装失败，原因: \n{ExceptionManager.GetExMeg(e)}", "安装出错");
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex, $"文件{Path.GetFileName(path)}安装失败"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             RefreshData();

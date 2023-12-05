@@ -32,26 +32,26 @@
                         <Setter Property="Margin" Value="5,10,5,0" />
                     </Style>
                 </StackPanel.Resources>
-                <Label Content="{StaticResource GameInstRoot}"/>
+                <Label Content="{StaticResource GameInstRoot}" />
                 <TextBox Text="{Binding GamePath}" />
-                <Label Content="{StaticResource GameDataRoot}"/>
+                <Label Content="{StaticResource GameDataRoot}" />
                 <TextBox Text="{Binding GameData}" />
-                <Label Content="{StaticResource StartPar}"/>
+                <Label Content="{StaticResource StartPar}" />
                 <TextBox Text="{Binding StartArgument}" />
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Image Height="100" Source="/Resources/Imgs/cslbbs_logo_low.png"
                            HorizontalAlignment="Center" VerticalAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding OpenWebUri}" 
+                                <i:InvokeCommandAction Command="{Binding OpenWebUri}"
                                                        CommandParameter="https://www.cslbbs.net/" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
@@ -61,21 +61,21 @@
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding OpenWebUri}" 
+                                <i:InvokeCommandAction Command="{Binding OpenWebUri}"
                                                        CommandParameter="https://afdian.net/a/scifibrain" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <StackPanel.Resources>
                             <Style TargetType="Label">
-                                <Setter Property="FontSize" Value="20"/>
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"/>
+                                <Setter Property="FontSize" Value="20" />
+                                <Setter Property="HorizontalAlignment" Value="Center" />
+                                <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                             </Style>
                         </StackPanel.Resources>
                         <Label HorizontalAlignment="Center">Version 1.0.0.0</Label>
                         <Label HorizontalAlignment="Center">By 科幻大脑</Label>
                         <Label FontSize="16" HorizontalAlignment="Center">
-                            <TextBlock TextDecorations="Underline" Text="{StaticResource vMe50}"/>
+                            <TextBlock TextDecorations="Underline" Text="{StaticResource vMe50}" />
                         </Label>
                     </StackPanel>
                 </Grid>

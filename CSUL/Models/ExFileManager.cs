@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CSUL.Models.Enums;
+using SharpCompress.Archives.Zip;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,6 +31,24 @@ namespace CSUL.Models
                     RecursionCopy(dir, relativePath += $"{dir.Name}\\");
             }
             RecursionCopy(dir, "");
+        }
+
+        /// <summary>
+        /// 递归获取文件夹下的所有文件
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static FileInfo[] GetAllFiles(this DirectoryInfo dir)
+        {
+            List<FileInfo> files = new();
+            void RecursionSearch(DirectoryInfo root)
+            {
+                files.AddRange(root.GetFiles());
+                foreach (DirectoryInfo dir in root.GetDirectories())
+                    RecursionSearch(dir);
+            }
+            RecursionSearch(dir);
+            return files.ToArray();
         }
 
         /// <summary>
@@ -116,6 +136,35 @@ namespace CSUL.Models
             if (bepInExVersion is null) return BepInExCheckResult.UnknowBepInEx;
             if (modVerison.Major != bepInExVersion.Major) return BepInExCheckResult.WrongVersion;
             return BepInExCheckResult.Passed;
+        }
+
+        /// <summary>
+        /// 获取游戏文件类型
+        /// </summary>
+        /// <param name="path">游戏文件路径</param>
+        public static GameDataFileType GetGameDataFileType(string path)
+        {
+            if (!File.Exists(path)) throw new FileNotFoundException(path);
+            using Stream stream = File.OpenRead(path);
+            return GetGameDataFileType(stream);
+        }
+
+        /// <summary>
+        /// 获取游戏文件路径
+        /// </summary>
+        /// <param name="stream">包含游戏文件的流</param>
+        public static GameDataFileType GetGameDataFileType(Stream stream)
+        {
+            try
+            {
+                IEnumerable<ZipArchiveEntry> entrys = ZipArchive.Open(stream).Entries;
+                if (entrys.Any(x => x.Key.EndsWith(".MapData")))
+                    return GameDataFileType.Map;
+                else if (entrys.Any(x => x.Key.EndsWith(".SaveGameData")))
+                    return GameDataFileType.Save;
+                else return GameDataFileType.Unknown;
+            }
+            catch { return GameDataFileType.Unknown; }
         }
     }
 }

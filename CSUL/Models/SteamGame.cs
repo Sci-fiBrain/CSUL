@@ -94,7 +94,7 @@ namespace CSUL.Models
     }
 
     /// <summary>
-    /// 注册表未找到
+    /// 注册表未找到异常
     /// </summary>
     public class RegistryNotFoundException : Exception
     {

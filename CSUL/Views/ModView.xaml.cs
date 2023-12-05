@@ -1,4 +1,5 @@
 ﻿using CSUL.UserControls.DragFiles;
+using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace CSUL.Views
@@ -11,6 +12,8 @@ namespace CSUL.Views
         public ModView()
         {
             InitializeComponent();
+            Dictionary<string, List<string>> targetType = DefaultDragFilesType.ZipFile;
+            targetType.Add("DLL文件", new() { ".dll" });
             DragFile.FileNameWithTypes = DefaultDragFilesType.ZipFile;
         }
     }

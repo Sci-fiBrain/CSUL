@@ -1,7 +1,6 @@
 ﻿using CSUL.Models;
 using CSUL.UserControls.DragFiles;
 using CSUL.Windows;
-using SevenZip;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -68,11 +67,11 @@ namespace CSUL.ViewModels.ModViewModels
         public ModModel()
         {
             DeleteCommand = new RelayCommand(DeleteModFile);
-            AddCommand = new RelayCommand((sender) =>
+            AddCommand = new RelayCommand(async (sender) =>
             {
-                InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
+                await InstallFile((sender as DragFilesEventArgs ?? throw new ArgumentNullException()).Paths);
             });
-            DownloadCommand = new RelayCommand(DownloadBepInEx);
+            DownloadCommand = new RelayCommand(async (sender) => await DownloadBepInEx(sender));
             RemoveCommand = new RelayCommand(RemoveBepInEx);
             CheckMods = new RelayCommand(CheckModCompatibility);
             RefreshData();
@@ -114,21 +113,22 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <returns></returns>
-        private async void DownloadBepInEx(object? sender)
+        private async Task DownloadBepInEx(object? sender)
         {
             try
             {
                 if (sender is not BepItemData data) return;
                 if (MessageBox.Show(data.Version, "确认", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
-                string path = Path.Combine(FileManager.TempDirPath, data.Name);
+                string path = Path.Combine(_tempDirPath, data.Name);
                 FileInfo file = new(path);
                 if (file.Directory?.Exists is true) file.Directory.Delete(true);
                 if (file.Exists) file.Delete();
                 if (file.Directory?.Exists is false) file.Directory?.Create();
                 await WebManager.DownloadFromUri(data.Uri, path);
-                SevenZipExtractor zip = new(path);
+                using PackageManager package = new();
+                await package.Decompress(path);
                 RemoveBepInEx();
-                await zip.ExtractArchiveAsync(FileManager.Instance.GameRootDir.FullName);
+                ExFileManager.CopyTo(package.FullName, FileManager.Instance.GameRootDir.FullName, true);
                 ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
                 BepVersion = FileManager.Instance.BepVersion;
                 MessageBox.Show("安装完成");
@@ -155,7 +155,7 @@ namespace CSUL.ViewModels.ModViewModels
                         MessageBoxButton.YesNo, MessageBoxImage.Information);
                     if (ret2 == MessageBoxResult.Yes)
                     {
-                        Process.Start("Explorer.exe", FileManager.TempDirPath);
+                        Process.Start("Explorer.exe", _tempDirPath);
                     }
                 }
                 catch (Exception e)
@@ -263,59 +263,89 @@ namespace CSUL.ViewModels.ModViewModels
         /// <summary>
         /// 安装文件
         /// </summary>
-        private void InstallFile(string[] paths)
+        private async Task InstallFile(string[] paths)
         {
             if (!FileManager.Instance.ModDir.Exists) FileManager.Instance.ModDir.Create();
             foreach (string path in paths)
             {
                 try
                 {
-                    if (!File.Exists(path)) continue;
-                    SevenZipExtractor zip = new(path);
-                    string firstFile = zip.ArchiveFileNames.FirstOrDefault()
-                        ?? throw new Exception("该压缩包不含任何文件");
-                    if (FileManager.Instance.ModDir.GetDirectories().Any(x => x.Name == firstFile.Split('\\')[0]))
+                    using PackageManager package = new();
+                    if (path.EndsWith(".dll")) await package.AddFile(path);
+                    else await package.Decompress(path);
+                    if (package.IsEempty) throw new Exception("该包不含任何文件");
+                    string name = Path.GetFileName(path);
+                    name = name[..name.LastIndexOf('.')];
+                    switch (ExFileManager.ChickModBepInExVersioin(package.FullName, out Version? modVersion, out Version? bepVersion))
                     {
-                        if (MessageBox.Show("已存在该文件，是否覆盖安装？", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question)
-                            == MessageBoxResult.No) continue;
-                    }
-                    //得到压缩包的文件名 mod文件夹的路径
-                    string targetName = path.Split('\\').Last();
-                    targetName = targetName[..targetName.LastIndexOf('.')];
-                    string modPath = Path.Combine(FileManager.Instance.ModDir.FullName, targetName);
-                    zip.ExtractArchive(modPath);
-                    switch (ExFileManager.ChickModBepInExVersioin(modPath, out Version? modVersion, out Version? bepVersion))
-                    {
-                        case BepInExCheckResult.Passed:
-                            MessageBox.Show($"模组 {targetName} 安装完成\n" +
-                                $"版本兼容性已检查", "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                            break;
-
                         case BepInExCheckResult.UnkownMod:
-                            MessageBox.Show($"文件 {targetName} 已安装\n" +
+                            if (MessageBox.Show($"文件 {name} 安装警告\n" +
                                 $"BepInEx版本: {bepVersion}\n" +
                                 "但未能成功获取模组BepInEx版本\n" +
-                                "请检查该文件是否为模组文件", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                "请检查该文件是否为模组文件\n" +
+                                "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
                             break;
 
                         case BepInExCheckResult.UnknowBepInEx:
-                            MessageBox.Show($"模组 {targetName} 已安装\n" +
+                            if (MessageBox.Show($"模组 {name} 安装警告\n" +
                                 $"插件版本: {modVersion}\n" +
                                 "但未能获取已安装BepInEx的版本信息\n" +
-                                "请自行检查模组兼容性", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
                             break;
 
                         case BepInExCheckResult.WrongVersion:
-                            MessageBox.Show($"模组 {targetName} 已安装" +
+                            if (MessageBox.Show($"模组 {name} 安装警告" +
                                 $"但模组版本与BepInEx不符\n" +
                                 $"BepInEx版本: {bepVersion}\n" +
                                 $"插件版本: {modVersion}\n" +
-                                $"该情况可能会引发兼容性问题", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                $"该情况可能会引发兼容性问题\n" +
+                                $"是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
                             break;
 
                         default:
-                            MessageBox.Show("未知兼容性检查结果");
+                            if (MessageBox.Show("未知兼容性检查结果\n" +
+                                "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
                             break;
+                    }
+                    string targetDir = FileManager.Instance.ModDir.FullName;
+                    if (package.OnlySingleFile)
+                    {
+                        if (File.Exists(Path.Combine(targetDir, $"{name}.dll")))
+                        {
+                            if (MessageBox.Show($"模组{name}.dll已存在\n" +
+                                $"是否覆盖安装？", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
+                        }
+                        File.Copy(path, Path.Combine(targetDir, $"{name}.dll"), true);
+                    }
+                    else
+                    {
+                        if (Directory.Exists(Path.Combine(targetDir, name)))
+                        {
+                            if (MessageBox.Show($"模组{name}已存在\n" +
+                                $"是否覆盖安装？", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.Cancel)
+                            {
+                                continue;
+                            }
+                        }
+                        Directory.CreateDirectory(Path.Combine(targetDir, name));
+                        Directory.Delete(Path.Combine(targetDir, name));
+                        ExFileManager.CopyTo(package.FullName, Path.Combine(targetDir, name));
+                        MessageBox.Show($"模组 {name} 安装完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception e)
@@ -335,7 +365,7 @@ namespace CSUL.ViewModels.ModViewModels
             if (!FileManager.Instance.GameRootDir.Exists) return;
             if (FileManager.Instance.ModDir.Exists)
             {   //备份插件 防止误删
-                FileManager.Instance.ModDir.CopyTo(Path.Combine(FileManager.TempDirPath, FileManager.Instance.ModDir.Name));
+                FileManager.Instance.ModDir.CopyTo(Path.Combine(_tempDirPath, FileManager.Instance.ModDir.Name), true);
             }
             if (FileManager.Instance.BepInExDir.Exists)
             {

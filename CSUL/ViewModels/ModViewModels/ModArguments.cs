@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,6 +10,11 @@ namespace CSUL.ViewModels.ModViewModels
 {   //ModModel用到的属性、字段
     public partial class ModModel
     {
+        /// <summary>
+        /// 临时文件夹路径
+        /// </summary>
+        private static readonly string _tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
+
         #region ---显示“未安装BepInEx”页面---
 
         private Visibility showNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;

@@ -1,6 +1,4 @@
-﻿using CSUL.Models.Enums;
-using SharpCompress.Archives.Zip;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,16 +15,25 @@ namespace CSUL.Models
         /// <summary>
         /// 递归复制文件夹
         /// </summary>
-        /// <param name="dir"></param>
         /// <param name="path"></param>
-        public static void CopyTo(this DirectoryInfo dir, string path)
+        /// <param name="destPath"></param>
+        public static void CopyTo(string path, string destPath, bool overwrite = false)
+        {
+            if (!Directory.Exists(path)) throw new DirectoryNotFoundException(path);
+            CopyTo(new DirectoryInfo(path), destPath, overwrite);
+        }
+
+        /// <summary>
+        /// 递归复制文件夹
+        /// </summary>
+        public static void CopyTo(this DirectoryInfo dir, string path, bool overwrite = false)
         {
             void RecursionCopy(DirectoryInfo root, string relativePath)
             {   //递归复制
                 DirectoryInfo total = new(Path.Combine(path, relativePath));
                 if (!total.Exists) total.Create();
                 foreach (FileInfo file in root.GetFiles())
-                    file.CopyTo(Path.Combine(path, relativePath, file.Name), true);
+                    file.CopyTo(Path.Combine(path, relativePath, file.Name), overwrite);
                 foreach (DirectoryInfo dir in root.GetDirectories())
                     RecursionCopy(dir, relativePath += $"{dir.Name}\\");
             }
@@ -136,35 +143,6 @@ namespace CSUL.Models
             if (bepInExVersion is null) return BepInExCheckResult.UnknowBepInEx;
             if (modVerison.Major != bepInExVersion.Major) return BepInExCheckResult.WrongVersion;
             return BepInExCheckResult.Passed;
-        }
-
-        /// <summary>
-        /// 获取游戏文件类型
-        /// </summary>
-        /// <param name="path">游戏文件路径</param>
-        public static GameDataFileType GetGameDataFileType(string path)
-        {
-            if (!File.Exists(path)) throw new FileNotFoundException(path);
-            using Stream stream = File.OpenRead(path);
-            return GetGameDataFileType(stream);
-        }
-
-        /// <summary>
-        /// 获取游戏文件路径
-        /// </summary>
-        /// <param name="stream">包含游戏文件的流</param>
-        public static GameDataFileType GetGameDataFileType(Stream stream)
-        {
-            try
-            {
-                IEnumerable<ZipArchiveEntry> entrys = ZipArchive.Open(stream).Entries;
-                if (entrys.Any(x => x.Key.EndsWith(".MapData")))
-                    return GameDataFileType.Map;
-                else if (entrys.Any(x => x.Key.EndsWith(".SaveGameData")))
-                    return GameDataFileType.Save;
-                else return GameDataFileType.Unknown;
-            }
-            catch { return GameDataFileType.Unknown; }
         }
     }
 }

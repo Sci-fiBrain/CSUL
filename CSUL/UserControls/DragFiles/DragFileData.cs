@@ -34,7 +34,7 @@ namespace CSUL.UserControls.DragFiles
         /// </summary>
         public static Dictionary<string, List<string>> ZipFile { get; } = new()
             {
-                {"压缩文件",new(){".zip", ".rar", ".7z", ".tar"} }
+                {"压缩文件", new(){".zip", ".rar", ".7z", ".tar"} }
             };
     }
 }

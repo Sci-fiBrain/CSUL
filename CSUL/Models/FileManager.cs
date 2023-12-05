@@ -1,9 +1,4 @@
 ﻿using CSUL.Models.Structs;
-using SharpCompress.Archives;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Common;
-using SharpCompress.Factories;
-using SharpCompress.Readers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,11 +20,6 @@ namespace CSUL.Models
         /// 配置文件路径
         /// </summary>
         public static string ConfigPath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.config");
-
-        /// <summary>
-        /// 临时文件夹路径
-        /// </summary>
-        public static string TempDirPath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
 
         /// <summary>
         /// 获取<see cref="FileManager"/>实例
@@ -71,7 +61,7 @@ namespace CSUL.Models
                 {   //获取失败，创建虚假目录，防止程序崩溃
                     MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏数据目录获取失败",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
-                    gameData = Path.Combine(TempDirPath, "fakeData");
+                    gameData = Path.Combine(_tempDirPath, "fakeData");
                     if (!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
                 }
 
@@ -83,7 +73,7 @@ namespace CSUL.Models
                 {   //获取失败，创建虚假目录，防止程序崩溃
                     MessageBox.Show($"原因:\n{e.Message}\n请手动设定目录", "游戏安装目录获取失败",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
-                    gameRoot = Path.Combine(TempDirPath, "fakeRoot");
+                    gameRoot = Path.Combine(_tempDirPath, "fakeRoot");
                     if (!Directory.Exists(gameData)) Directory.CreateDirectory(gameData);
                 }
                 //初始化各文件夹信息对象
@@ -112,6 +102,11 @@ namespace CSUL.Models
         private DirectoryInfo saveDir = default!;
         private DirectoryInfo bepInExDir = default!;
         private DirectoryInfo modDir = default!;
+
+        /// <summary>
+        /// 临时文件夹路径
+        /// </summary>
+        private static readonly string _tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
 
         #endregion ---私有字段---
 
@@ -238,19 +233,9 @@ namespace CSUL.Models
         public async Task<InstalledGameDataFiles> InstallGameDataFile(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
-            string tempPath = Path.Combine(TempDirPath, $"ins{Random.Shared.NextInt64()}");
-            if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
-            Directory.CreateDirectory(tempPath);
-            await Task.Run(() =>
-            {
-                using Stream stream = File.OpenRead(filePath);
-                using IArchive archive = ArchiveFactory.Open(stream);
-                archive.WriteToDirectory(tempPath, new()
-                {
-                    ExtractFullPath = true,
-                    Overwrite = true
-                });
-            });
+            InstalledGameDataFiles ret = new() { MapNames = new(), SaveNames = new() };
+            using PackageManager package = new();
+            await package.Decompress(filePath);
             List<string> coks = new();
             void RecursionSearch(string root)
             {   //递归搜索方法
@@ -263,15 +248,14 @@ namespace CSUL.Models
                 }
                 foreach (string dir in Directory.GetDirectories(root)) RecursionSearch(dir);
             }
-            await Task.Run(() => RecursionSearch(tempPath));
-            InstalledGameDataFiles ret = new() { MapNames = new(), SaveNames = new() };
+            await Task.Run(() => RecursionSearch(package.FullName));
             foreach (string cok in coks)
             {
                 try
                 {
                     List<string> names;
                     string targetPath;
-                    switch (ExFileManager.GetGameDataFileType(cok))
+                    switch (PackageManager.GetGameDataFileType(cok))
                     {
                         case Enums.GameDataFileType.Save:
                             targetPath = SaveDir.FullName;
@@ -307,7 +291,6 @@ namespace CSUL.Models
                     MessageBox.Show(ExceptionManager.GetExMeg(ex, $"{filePath}中的{cok}安装时出现问题"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            Directory.Delete(tempPath, true);
             return ret;
         }
 

@@ -50,7 +50,7 @@
                                 <ColumnDefinition Width="200" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="150" />
                                 <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Center" />

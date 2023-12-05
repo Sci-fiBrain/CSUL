@@ -63,16 +63,6 @@ namespace CSUL
             };
 
             #endregion ---异常处理---
-
-            try
-            {
-                SevenZip.SevenZipBase.SetLibraryPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DLL",
-                    IntPtr.Size == 4 ? "7z.dll" : "7z64.dll"));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ExceptionManager.GetExMeg(ex), "DLL加载错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)

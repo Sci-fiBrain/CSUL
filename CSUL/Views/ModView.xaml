@@ -12,6 +12,12 @@
     <UserControl.DataContext>
         <vm:ModModel />
     </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Refresh}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid>
         <Grid>
             <Grid.RowDefinitions>

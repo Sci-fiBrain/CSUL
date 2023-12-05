@@ -93,6 +93,8 @@ namespace CSUL.ViewModels.ModViewModels
         //移除BepInEx
         public ICommand RemoveCommand { get; }
 
+        //刷新
+        public ICommand Refresh { get; }
         #endregion ---Commands---
     }
 }

@@ -74,6 +74,7 @@ namespace CSUL.ViewModels.ModViewModels
             DownloadCommand = new RelayCommand(async (sender) => await DownloadBepInEx(sender));
             RemoveCommand = new RelayCommand(RemoveBepInEx);
             CheckMods = new RelayCommand(CheckModCompatibility);
+            Refresh = new RelayCommand(sender => RefreshData());
             RefreshData();
         }
 

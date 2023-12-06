@@ -1,6 +1,8 @@
 # Cities: Skylines II Universal Launcher
 Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称CSUL）是 [CSLBBS都市天际线2中文论坛](https://www.cslbbs.net/) 旗下一款功能丰富强大、外观简洁大方的天际线综合资源管理器。主要实现了模组存档地图等资源的导入管理等功能，并且仍在不断发展和完善，旨在为广大天际线2玩家提供便利的一键资源管理和游戏启动功能。
 
+为避免用户受病毒、漏洞等恶意代码的危害，在分享本启动器时应使用[CSLBBS官方发布页面](https://www.cslbbs.net/csul/)或[Github仓库链接](https://github.com/Sci-fiBrain/CSUL/)。
+
 ## 已实现功能
 - [x] BepInEx前置一键安装/卸载
 - [x] Mod模组一键导入安装/卸载
@@ -12,13 +14,12 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 - [x] 一键启动游戏
 - [x] 以开发者模式启动游戏等功能！
 
-
 ## 待完成功能
 - [ ] 多语言支持（Multi-Language）
-- [ ] 1.0.15f1版本地图格式变动适配
-- [ ] DLL格式模组检测及导入
+- [x] 1.0.15f1版本地图格式变动适配
+- [x] DLL格式模组检测及导入
 - [ ] 在线检测启动器更新
-- [ ] 增加.rar压缩文件解压支持
+- [x] 增加.rar压缩文件解压支持
 - [ ] 跳过P社启动器启动游戏
 - [ ] 自定义启动器主题色、背景图
 - [ ] 自动检测Xbox、微软商店游戏路径

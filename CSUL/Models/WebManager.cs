@@ -1,4 +1,5 @@
 ﻿using CSUL.Models.Structs;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -52,6 +53,31 @@ namespace CSUL.Models
                     file.Write(buffer, 0, size);
                 }
             });
+        }
+
+        /// <summary>
+        /// 得到CSUL当前的最新版本
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<Version?> GetCsulVersion()
+        {
+            Version? version = null;
+            const string key = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";
+            const string uri = "https://www.cslbbs.net/api/resources/91";
+            using HttpClient http = new();
+            http.DefaultRequestHeaders.Add("XF-API-Key", key);
+            using StreamReader stream = new(await http.GetStreamAsync(uri));
+            while (!stream.EndOfStream)
+            {
+                if (stream.ReadLine() is not string line) continue;
+                if (line.Trim().StartsWith("\"version\""))
+                {
+                    string ver = line.Split(':').Last().Trim('"', ' ', ',');
+                    version = new Version(ver);
+                    break;
+                }
+            }
+            return version;
         }
     }
 }

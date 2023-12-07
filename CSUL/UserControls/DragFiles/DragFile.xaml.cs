@@ -27,7 +27,7 @@ namespace CSUL.UserControls.DragFiles
         /// <summary>
         /// 要筛选的文件类型名称以及对应的文件类型
         /// </summary>
-        public Dictionary<string, List<string>> FileNameWithTypes { get; set; } = default!;
+        public DragFilesType FileNameWithTypes { get; set; } = default!;
 
         /// <summary>
         /// 要显示的图标路径

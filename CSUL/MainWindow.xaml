@@ -99,7 +99,7 @@
                             </Border>
                         </Grid>
                         <Grid Grid.Row="1" Margin="15,15,0,0">
-                            <ContentControl Content="{Binding ViewContent, Mode=OneWay}">
+                            <ContentControl Content="{Binding ViewContent, Mode=OneWay}" FocusVisualStyle="{x:Null}">
                                 <ec:ContentControlEx.ContentChangedAnimation>
                                     <Storyboard>
                                         <ThicknessAnimation From="30,0,-30,0" To="0" Duration="0:0:0.3" Storyboard.TargetProperty="Margin" />

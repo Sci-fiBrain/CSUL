@@ -7,10 +7,10 @@ namespace CSUL.ViewModels.SetViewModels
     {
         public string GamePath
         {
-            get => FileManager.Instance.GameRootDir.FullName!;
+            get => FileManager.Instance.GameRootDir.FullName;
             set
             {
-                if (value == FileManager.Instance.GamePath) return;
+                if (value == GamePath) return;
                 FileManager.Instance.GameRootDir = new(value);
                 OnPropertyChanged();
             }
@@ -21,7 +21,7 @@ namespace CSUL.ViewModels.SetViewModels
             get => FileManager.Instance.GameDataDir.FullName;
             set
             {
-                if (value == FileManager.Instance.GameDataDir.FullName) return;
+                if (value == GameData) return;
                 FileManager.Instance.GameDataDir = new(value);
                 OnPropertyChanged();
             }
@@ -32,7 +32,19 @@ namespace CSUL.ViewModels.SetViewModels
             get => GameManager.Instance.StartArguemnt;
             set
             {
+                if(value == StartArgument) return;
                 GameManager.Instance.StartArguemnt = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string? SteamPath
+        {
+            get => GameManager.Instance.SteamPath;
+            set
+            {
+                if(value == SteamPath) return;
+                GameManager.Instance.SteamPath = value;
                 OnPropertyChanged();
             }
         }

@@ -61,29 +61,31 @@ namespace CSUL.Models
         [Config]
         public bool ShowSteamInfo { get; set; } = true;
 
+        /// <summary>
+        /// 是否以Steam正版兼容模式启动
+        /// </summary>
+        [Config]
+        public bool SteamCompatibilityMode { get; set; } = false;
+
+        /// <summary>
+        /// 自定义Steam路径
+        /// </summary>
+        [Config]
+        public string? SteamPath { get; set; } = null;
         #endregion ---公共属性---
 
         #region ---静态方法---
 
         /// <summary>
-        /// 启动游戏
+        /// 直接启动应用
         /// </summary>
-        /// <param name="gamePath">游戏路径</param>
+        /// <param name="gamePath">应用路径</param>
         public static void StartGame(string gamePath, string? arguments = null)
         {
             if (string.IsNullOrEmpty(gamePath)) throw new ArgumentNullException(nameof(gamePath));
-            if (!File.Exists(gamePath))
-            {
-                throw new FileNotFoundException($"游戏路径{gamePath}不存在，请检查路径设置", gamePath);
-            }
-            if (arguments is null)
-            {
-                Process.Start(gamePath);
-            }
-            else
-            {
-                Process.Start(gamePath, arguments);
-            }
+            if (!File.Exists(gamePath)) throw new FileNotFoundException($"游戏路径{gamePath}不存在，请检查路径设置", gamePath);
+            if (arguments is null)  Process.Start(gamePath);
+            else Process.Start(gamePath, arguments);
         }
 
         #endregion ---静态方法---

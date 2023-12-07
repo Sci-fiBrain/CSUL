@@ -72,7 +72,7 @@ namespace CSUL.Models
 
                 try
                 {   //尝试自动获取游戏根目录
-                    gameRoot = SteamGame.GetGameInstallPath("Cities Skylines II");
+                    gameRoot = SteamManager.GetGameInstallPath("Cities Skylines II");
                 }
                 catch (Exception e)
                 {   //获取失败，创建虚假目录，防止程序崩溃

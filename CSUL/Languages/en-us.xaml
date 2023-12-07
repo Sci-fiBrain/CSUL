@@ -19,7 +19,9 @@
     <sys:String x:Key="vMe50">Buy Me Coffe~</sys:String>
     <sys:String x:Key="GameInstRoot">Game installation root (the directory where Cities2.exe is located, the directory does not contain Cities2.exe)</sys:String>
     <sys:String x:Key="GameDataRoot">Game data root directory (directory where game data is stored: Map, Save, etc.)</sys:String>
-    <sys:String x:Key="StartPar">Startup parameters (do not enter program name such as Cities2.exe or start.bat)</sys:String>
+    <sys:String x:Key="StartPar">Startup parameters (do not enter program name such as Cities2.exe or start.bat) [choosable]</sys:String>
     <sys:String x:Key="DevModelStart">Start in developer mode</sys:String>
     <sys:String x:Key="BepVer">BepInEx</sys:String>
+    <sys:String x:Key="SteamPath">Custom steam path (including steam.exe) [choosable]</sys:String>
+    <sys:String x:Key="SteamCompatible">Start in Steam compatibility mode (recommend)</sys:String>
 </ResourceDictionary>

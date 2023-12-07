@@ -48,7 +48,7 @@ namespace CSUL.UserControls.DragFiles
         }
 
         private void MouseLeftButtonUp_Event(object sender, MouseButtonEventArgs e)
-        {
+        {   //文件选择
             OpenFileDialog dialog = new()
             {
                 Title = "选择地图文件",
@@ -62,7 +62,7 @@ namespace CSUL.UserControls.DragFiles
         }
 
         private void Drop_Event(object sender, DragEventArgs e)
-        {
+        {   //文件拖入
             string[] files = DragHandel(e, FileNameWithTypes.SelectMany(x => x.Value).ToArray());
             DragEvent?.Invoke(this, new(files));
         }

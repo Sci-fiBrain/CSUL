@@ -17,7 +17,7 @@
             <i:InvokeCommandAction Command="{Binding Refresh}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid>
         <Grid>
             <Grid.RowDefinitions>

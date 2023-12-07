@@ -59,7 +59,7 @@ namespace CSUL.Models
         /// 得到CSUL当前的最新版本
         /// </summary>
         /// <returns></returns>
-        public static async Task<Version?> GetCsulVersion()
+        public static async Task<Version?> GetLatestCsulVersion()
         {
             Version? version = null;
             const string key = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";

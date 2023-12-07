@@ -40,13 +40,12 @@ namespace CSUL.Models
             RecursionCopy(dir, "");
         }
 
-
         /// <summary>
         /// 递归获取文件夹下的所有文件
         /// </summary>
         public static FileInfo[] GetAllFiles(string dirPath)
         {
-            if(!Directory.Exists(dirPath)) throw new DirectoryNotFoundException(dirPath);
+            if (!Directory.Exists(dirPath)) throw new DirectoryNotFoundException(dirPath);
             return GetAllFiles(new DirectoryInfo(dirPath));
         }
 
@@ -152,5 +151,10 @@ namespace CSUL.Models
             if (modVerison.Major != bepInExVersion.Major) return BepInExCheckResult.WrongVersion;
             return BepInExCheckResult.Passed;
         }
+
+        /// <summary>
+        /// 获取当前CSUL的版本
+        /// </summary>
+        public static Version? GetNowCsulVersion() => Assembly.GetExecutingAssembly().GetName().Version;
     }
 }

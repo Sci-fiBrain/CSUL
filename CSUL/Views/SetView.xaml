@@ -72,7 +72,11 @@
                                 <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                             </Style>
                         </StackPanel.Resources>
-                        <Label HorizontalAlignment="Center">Version 1.1.0.0</Label>
+                        <!--Version-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Padding="0" Content="Version " />
+                            <Label Content="{Binding CsulVersion}" Padding="0" />
+                        </StackPanel>
                         <Label HorizontalAlignment="Center">By 科幻大脑</Label>
                         <Label FontSize="16" HorizontalAlignment="Center">
                             <TextBlock TextDecorations="Underline" Text="{StaticResource vMe50}" />

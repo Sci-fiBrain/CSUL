@@ -12,7 +12,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         Title="CSUL"
-        Height="650" Width="1200" Initialized="Window_Initialized">
+        Height="650" Width="1200">
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}" />
     </Window.Resources>

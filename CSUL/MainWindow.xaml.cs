@@ -1,6 +1,5 @@
 ﻿using CSUL.Models;
 using System;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -80,27 +79,6 @@ namespace CSUL
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-
-        private async void Window_Initialized(object sender, EventArgs e)
-        {
-            Version? latest = await WebManager.GetCsulVersion();
-            if (latest is null) return;
-            Version? version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version is null) return;
-            if(version < latest)
-            {
-                StringBuilder builder = new();
-                builder.Append("CSUL有新版本更新").AppendLine();
-                builder.Append("当前版本: ").Append(version).AppendLine();
-                builder.Append("最新版本: ").Append(latest).AppendLine();
-                builder.Append("点击确认跳转到CSUL发布页面");
-                MessageBoxResult ret = MessageBox.Show(builder.ToString(), "更新提示", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                if(ret == MessageBoxResult.OK)
-                {
-                    System.Diagnostics.Process.Start("explorer.exe", "https://www.cslbbs.net/csul/");
-                }
-            }
         }
 
         /// <summary>

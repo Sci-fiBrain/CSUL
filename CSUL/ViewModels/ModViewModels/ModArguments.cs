@@ -95,6 +95,7 @@ namespace CSUL.ViewModels.ModViewModels
 
         //刷新
         public ICommand Refresh { get; }
+
         #endregion ---Commands---
     }
 }

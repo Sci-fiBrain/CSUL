@@ -201,12 +201,6 @@ namespace CSUL.Models
                     FileInfo? bepFile = coreDir.GetFiles().FirstOrDefault(x =>
                         x.Name.StartsWith("BepInEx") && x.Name.EndsWith(".dll"));
                     if (bepFile == null) return null;
-                    //Assembly assembly = Assembly.LoadFrom(bepFile.FullName);
-                    //AssemblyName? bep = assembly.GetReferencedAssemblies().FirstOrDefault(x =>
-                    //    x.Name?.Contains("BepInEx") is true);
-                    //Version? version = bep?.Version;
-
-                    //下面这种方法比较高效
                     FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(bepFile.FullName);
                     string? version = fileVersion.FileVersion;
                     return version is null ? null : new Version(version);
@@ -236,26 +230,14 @@ namespace CSUL.Models
             InstalledGameDataFiles ret = new() { MapNames = new(), SaveNames = new() };
             using TempPackage package = new();
             await package.Decompress(filePath);
-            List<string> coks = new();
-            void RecursionSearch(string root)
-            {   //递归搜索方法
-                foreach (string file in Directory.GetFiles(root))
-                {
-                    if (Path.GetExtension(file) == ".cok" && File.Exists(file + ".cid"))
-                    {
-                        coks.Add(file);
-                    }
-                }
-                foreach (string dir in Directory.GetDirectories(root)) RecursionSearch(dir);
-            }
-            await Task.Run(() => RecursionSearch(package.FullName));
-            foreach (string cok in coks)
+            IEnumerable<FileInfo> coks = ExFileManager.GetAllFiles(package.FullName).Where(x => x.Extension == ".cok");
+            foreach (FileInfo cok in coks)
             {
                 try
                 {
                     List<string> names;
                     string targetPath;
-                    switch (TempPackage.GetGameDataFileType(cok))
+                    switch (TempPackage.GetGameDataFileType(cok.FullName))
                     {
                         case Enums.GameDataFileType.Save:
                             targetPath = SaveDir.FullName;
@@ -269,7 +251,7 @@ namespace CSUL.Models
 
                         default: continue;
                     }
-                    string cokName = Path.GetFileName(cok);
+                    string cokName = cok.Name;
                     if (File.Exists(Path.Combine(targetPath, cokName))) await Task.Run(() =>
                     {   //获得不重复的文件名
                         string reEx = cokName[..cokName.LastIndexOf('.')];    //去除扩展名
@@ -282,13 +264,13 @@ namespace CSUL.Models
                             }
                         }
                     });
-                    await Task.Run(() => File.Copy(cok, Path.Combine(targetPath, cokName), true));
-                    await Task.Run(() => File.Copy(cok + ".cid", Path.Combine(targetPath, cokName + ".cid"), true));
+                    await Task.Run(() => File.Copy(cok.FullName, Path.Combine(targetPath, cokName), true));
+                    if (File.Exists(cok.FullName + ".cid")) await Task.Run(() => File.Copy(cok.FullName + ".cid", Path.Combine(targetPath, cokName + ".cid"), true));
                     names.Add(cokName);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ExceptionManager.GetExMeg(ex, $"{filePath}中的{cok}安装时出现问题"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ExceptionManager.GetExMeg(ex, $"{filePath}中的{cok.Name}安装时出现问题"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             return ret;

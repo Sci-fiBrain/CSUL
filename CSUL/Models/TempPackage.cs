@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CSUL.Models
 {
     /// <summary>
-    /// 文件包管理类
+    /// 临时文件包类 用于提供一个临时的文件夹储存文件
     /// </summary>
     public class TempPackage : IDisposable
     {
@@ -64,7 +64,7 @@ namespace CSUL.Models
         #region ---公共属性---
 
         /// <summary>
-        /// 解压文件所处的文件夹路径
+        /// 临时文件夹的路径
         /// </summary>
         public string FullName { get => fullName; }
 
@@ -130,7 +130,7 @@ namespace CSUL.Models
         }
 
         /// <summary>
-        /// 获取游戏文件路径
+        /// 获取游戏文件类型
         /// </summary>
         /// <param name="stream">包含游戏文件的流</param>
         public static GameDataFileType GetGameDataFileType(Stream stream)

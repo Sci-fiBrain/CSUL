@@ -40,11 +40,19 @@ namespace CSUL.Models
             RecursionCopy(dir, "");
         }
 
+
         /// <summary>
         /// 递归获取文件夹下的所有文件
         /// </summary>
-        /// <param name="dir"></param>
-        /// <returns></returns>
+        public static FileInfo[] GetAllFiles(string dirPath)
+        {
+            if(!Directory.Exists(dirPath)) throw new DirectoryNotFoundException(dirPath);
+            return GetAllFiles(new DirectoryInfo(dirPath));
+        }
+
+        /// <summary>
+        /// 递归获取文件夹下的所有文件
+        /// </summary>
         public static FileInfo[] GetAllFiles(this DirectoryInfo dir)
         {
             List<FileInfo> files = new();

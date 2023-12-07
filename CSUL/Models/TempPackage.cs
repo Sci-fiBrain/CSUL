@@ -12,22 +12,22 @@ namespace CSUL.Models
     /// <summary>
     /// 文件包管理类
     /// </summary>
-    public class PackageManager : IDisposable
+    public class TempPackage : IDisposable
     {
         #region ---构造函数---
 
         /// <summary>
-        /// 实例化<see cref="PackageManager"/>对象
+        /// 实例化<see cref="TempPackage"/>对象
         /// </summary>
         /// <param name="dirPath">文件要存储到的文件夹路径</param>
         /// <param name="file">要解压的文件</param>
-        public PackageManager(string dirPath) => Initialize(dirPath);
+        public TempPackage(string dirPath) => Initialize(dirPath);
 
         /// <summary>
-        /// 实例化<see cref="PackageManager"/>对象
+        /// 实例化<see cref="TempPackage"/>对象
         /// </summary>
         /// <param name="file">要解压的文件</param>
-        public PackageManager() => Initialize(Path.Combine(_tempDirPath, $"pm{Random.Shared.Next()}"));
+        public TempPackage() => Initialize(Path.Combine(_tempDirPath, $"pm{Random.Shared.Next()}"));
 
         /// <summary>
         /// 初始化

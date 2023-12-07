@@ -234,7 +234,7 @@ namespace CSUL.Models
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
             InstalledGameDataFiles ret = new() { MapNames = new(), SaveNames = new() };
-            using PackageManager package = new();
+            using TempPackage package = new();
             await package.Decompress(filePath);
             List<string> coks = new();
             void RecursionSearch(string root)
@@ -255,7 +255,7 @@ namespace CSUL.Models
                 {
                     List<string> names;
                     string targetPath;
-                    switch (PackageManager.GetGameDataFileType(cok))
+                    switch (TempPackage.GetGameDataFileType(cok))
                     {
                         case Enums.GameDataFileType.Save:
                             targetPath = SaveDir.FullName;

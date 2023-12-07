@@ -30,10 +30,10 @@ namespace CSUL.ViewModels.PlayViewModels
                             "2. 通过Steam进入过一次游戏后，再通过CSUL开始游戏\n" +
                             "3. 配置Steam中天际线2启动参数，跳过p社启动器\n" +
                             "4. 均通过Steam启动游戏，不通过CSUL\n\n" +
-                            "确认: 关闭提示且不再弹出\n" +
-                            "取消: 仅关闭提示";
+                            "确认: 关闭提示\n" +
+                            "取消: 关闭提示且不再弹出";
                         MessageBoxResult ret = MessageBox.Show(steamInfo, "Steam游戏提示", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (ret == MessageBoxResult.OK) GameManager.Instance.ShowSteamInfo = false;
+                        if (ret == MessageBoxResult.Cancel) GameManager.Instance.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
                     try

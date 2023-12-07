@@ -126,7 +126,7 @@ namespace CSUL.ViewModels.ModViewModels
                 if (file.Exists) file.Delete();
                 if (file.Directory?.Exists is false) file.Directory?.Create();
                 await WebManager.DownloadFromUri(data.Uri, path);
-                using PackageManager package = new();
+                using TempPackage package = new();
                 await package.Decompress(path);
                 RemoveBepInEx();
                 ExFileManager.CopyTo(package.FullName, FileManager.Instance.GameRootDir.FullName, true);
@@ -271,7 +271,7 @@ namespace CSUL.ViewModels.ModViewModels
             {
                 try
                 {
-                    using PackageManager package = new();
+                    using TempPackage package = new();
                     if (path.EndsWith(".dll")) await package.AddFile(path);
                     else await package.Decompress(path);
                     if (package.IsEempty) throw new Exception("该包不含任何文件");
@@ -279,6 +279,9 @@ namespace CSUL.ViewModels.ModViewModels
                     name = name[..name.LastIndexOf('.')];
                     switch (ExFileManager.ChickModBepInExVersioin(package.FullName, out Version? modVersion, out Version? bepVersion))
                     {
+                        case BepInExCheckResult.Passed:
+                            break;
+
                         case BepInExCheckResult.UnkownMod:
                             if (MessageBox.Show($"文件 {name} 安装警告\n" +
                                 $"BepInEx版本: {bepVersion}\n" +
@@ -346,7 +349,7 @@ namespace CSUL.ViewModels.ModViewModels
                         Directory.CreateDirectory(Path.Combine(targetDir, name));
                         Directory.Delete(Path.Combine(targetDir, name));
                         ExFileManager.CopyTo(package.FullName, Path.Combine(targetDir, name));
-                        MessageBox.Show($"模组 {name} 安装完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"模组 {name} 安装完成\n兼容性检查已结束", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception e)

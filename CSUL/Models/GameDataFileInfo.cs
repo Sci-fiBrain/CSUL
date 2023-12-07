@@ -17,7 +17,7 @@ namespace CSUL.Models
         public GameDataFileInfo(string path)
         {
             if (!File.Exists(path)) throw new FileNotFoundException(path);
-            DataType = PackageManager.GetGameDataFileType(path);
+            DataType = TempPackage.GetGameDataFileType(path);
             cokPath = path;
             cidPath = path + ".cid";
             if (File.Exists(cidPath))

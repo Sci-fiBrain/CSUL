@@ -14,6 +14,11 @@ namespace CSUL.Models
     /// </summary>
     public class FileManager : IDisposable
     {
+        /// <summary>
+        /// 临时文件夹路径
+        /// </summary>
+        private static readonly string _tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
+
         #region ---公共静态属性---
 
         /// <summary>
@@ -102,11 +107,6 @@ namespace CSUL.Models
         private DirectoryInfo saveDir = default!;
         private DirectoryInfo bepInExDir = default!;
         private DirectoryInfo modDir = default!;
-
-        /// <summary>
-        /// 临时文件夹路径
-        /// </summary>
-        private static readonly string _tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
 
         #endregion ---私有字段---
 

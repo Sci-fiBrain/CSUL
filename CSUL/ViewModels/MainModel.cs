@@ -82,7 +82,7 @@ namespace CSUL.ViewModels
             if (latest is null) return;
             Version? version = CsulVersion;
             if (version is null) return;
-            if (version > latest)
+            if (version < latest)
             {
                 StringBuilder builder = new();
                 builder.Append("CSUL有新版本更新").AppendLine();

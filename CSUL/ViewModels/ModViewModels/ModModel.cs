@@ -349,8 +349,8 @@ namespace CSUL.ViewModels.ModViewModels
                         Directory.CreateDirectory(Path.Combine(targetDir, name));
                         Directory.Delete(Path.Combine(targetDir, name));
                         ExFileManager.CopyTo(package.FullName, Path.Combine(targetDir, name));
-                        MessageBox.Show($"模组 {name} 安装完成\n兼容性检查已结束", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                    MessageBox.Show($"模组 {name} 安装完成\n兼容性检查已完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception e)
                 {

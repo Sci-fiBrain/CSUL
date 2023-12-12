@@ -24,4 +24,6 @@
     <sys:String x:Key="BepVer">BepInEx</sys:String>
     <sys:String x:Key="SteamPath">Custom steam path (including steam.exe) [choosable]</sys:String>
     <sys:String x:Key="SteamCompatible">Start in Steam compatibility mode (recommend)</sys:String>
+    <sys:String x:Key="On">On</sys:String>
+    <sys:String x:Key="Off">Off</sys:String>
 </ResourceDictionary>

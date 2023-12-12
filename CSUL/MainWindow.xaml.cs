@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using Gma.System.MouseKeyHook;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace CSUL
                 ExitProgram(0);
             };
 
-            #region ---异常处理---
+            #region --异常处理--
 
             //全局异常捕获
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
@@ -62,9 +63,28 @@ namespace CSUL
                 e.RequestCatch = false;
             };
 
-            #endregion ---异常处理---
+            #endregion --异常处理--
+
+            // 实验性功能：游戏UI操作
+            UiDeveloper uiDeveloper = new();
+            IKeyboardMouseEvents globalHook = Hook.GlobalEvents();
+            globalHook.KeyDown += (sender, e) =>
+            {
+                if (e.Control && e.Alt)
+                {
+                    if (e.KeyCode == System.Windows.Forms.Keys.C)
+                    {
+
+                    }
+                    else if (e.KeyCode == System.Windows.Forms.Keys.T)
+                    {
+
+                    }
+                }
+            };
         }
 
+        #region ---UI方法---
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -95,5 +115,6 @@ namespace CSUL
                 Environment.Exit(exitCode);
             }
         }
+        #endregion
     }
 }

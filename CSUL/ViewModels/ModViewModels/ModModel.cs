@@ -130,6 +130,7 @@ namespace CSUL.ViewModels.ModViewModels
                 await package.Decompress(path);
                 RemoveBepInEx();
                 ExFileManager.CopyTo(package.FullName, FileManager.Instance.GameRootDir.FullName, true);
+                BepData = FileManager.Instance.NoBepInEx ? GetBepDownloadData() : null;
                 ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
                 BepVersion = FileManager.Instance.BepVersion;
                 MessageBox.Show("安装完成");
@@ -167,6 +168,7 @@ namespace CSUL.ViewModels.ModViewModels
                 {
                     BepData = GetBepDownloadData();
                     await Task.Delay(500);
+                    BepData = FileManager.Instance.NoBepInEx ? GetBepDownloadData() : null;
                     ShowNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
                     BepVersion = FileManager.Instance.BepVersion;
                 }
@@ -237,6 +239,7 @@ namespace CSUL.ViewModels.ModViewModels
         /// </summary>
         private void RefreshData()
         {
+            if(!FileManager.Instance.ModDir.Exists) FileManager.Instance.ModDir.Create();
             List<ItemData> items = new();
             FileInfo[] files = FileManager.Instance.ModDir.GetFiles().Where(x => x.Name.EndsWith(".dll")).ToArray();
             items.AddRange(from file in files

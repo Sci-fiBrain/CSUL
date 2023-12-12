@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>1.1.4.2</AssemblyVersion>
-    <FileVersion>1.1.4.2</FileVersion>
+    <AssemblyVersion>1.1.4.3</AssemblyVersion>
+    <FileVersion>1.1.4.3</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Imgs\win_logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -79,7 +79,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="MouseKeyHook" Version="5.7.1" />
     <PackageReference Include="SharpCompress" Version="0.34.2" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>

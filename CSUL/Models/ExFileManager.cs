@@ -35,7 +35,7 @@ namespace CSUL.Models
                 foreach (FileInfo file in root.GetFiles())
                     file.CopyTo(Path.Combine(path, relativePath, file.Name), overwrite);
                 foreach (DirectoryInfo dir in root.GetDirectories())
-                    RecursionCopy(dir, relativePath += $"{dir.Name}\\");
+                    RecursionCopy(dir, relativePath + $"{dir.Name}\\");
             }
             RecursionCopy(dir, "");
         }

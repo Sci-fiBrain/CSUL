@@ -13,6 +13,7 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 - [x] Steam平台自动检测路径
 - [x] 一键启动游戏
 - [x] 以开发者模式启动游戏
+- [x] 以Steam正版兼容模式启动游戏
 - [x] 在线检测启动器更新
 
 ## 待完成功能
@@ -24,7 +25,7 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 - [ ] 蓝图导入（待定）
 
 ## 目前已知问题
-- [ ] 启动游戏有时出现闪退
+暂无
 
 ## 鸣谢
 [@科幻大脑](https://github.com/Sci-fiBrain) 主操程序开发

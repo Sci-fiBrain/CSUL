@@ -14,7 +14,7 @@ namespace CSUL.Models.ModPlayers
         /// <summary>
         /// 模组路径
         /// </summary>
-        public string Path { get; }
+        public string ModPath { get; }
 
         /// <summary>
         /// 最后修改时间
@@ -24,11 +24,6 @@ namespace CSUL.Models.ModPlayers
         /// <summary>
         /// 是否禁用
         /// </summary>
-        public bool Disabled { get; }
-
-        /// <summary>
-        /// 删除模组
-        /// </summary>
-        public void Delete();
+        public bool Disabled { get; set; }
     }
 }

@@ -118,7 +118,7 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameRootDir
         {
-            get => gameRootDir = new(gameRootDir.FullName);
+            get => GetDirectoryInfo(ref gameRootDir);
             set
             {
                 SetDirInfo(ref gameRootDir, value);
@@ -132,7 +132,7 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameDataDir
         {
-            get => gameDataDir = new(gameDataDir.FullName);
+            get => GetDirectoryInfo(ref gameDataDir);
             set
             {
                 SetDirInfo(ref gameDataDir, value);
@@ -145,7 +145,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo MapDir
         {
-            get => mapDir = new(mapDir.FullName);
+            get => GetDirectoryInfo(ref mapDir);
             set => SetDirInfo(ref mapDir, value);
         }
 
@@ -154,7 +154,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo SaveDir
         {
-            get => saveDir = new(saveDir.FullName);
+            get => GetDirectoryInfo(ref saveDir);
             set => SetDirInfo(ref saveDir, value);
         }
 
@@ -163,7 +163,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo BepInExDir
         {
-            get => bepInExDir = new(bepInExDir.FullName);
+            get => GetDirectoryInfo(ref bepInExDir);
             set => SetDirInfo(ref bepInExDir, value);
         }
 
@@ -172,7 +172,7 @@ namespace CSUL.Models
         /// </summary>
         public DirectoryInfo ModDir
         {
-            get => modDir = new(modDir.FullName);
+            get => GetDirectoryInfo(ref modDir);
             set => SetDirInfo(ref modDir, value);
         }
 
@@ -311,6 +311,15 @@ namespace CSUL.Models
             ModDir = new(Path.Combine(BepInExDir.FullName, "plugins"));
         }
 
+        /// <summary>
+        /// 得到文件夹信息
+        /// </summary>
+        private DirectoryInfo GetDirectoryInfo(ref DirectoryInfo dir)
+        {
+            dir = new(dir.FullName);
+            if(!dir.Exists) dir.Create();
+            return dir;
+        }
         #endregion ---私有方法---
     }
 }

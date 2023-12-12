@@ -64,24 +64,6 @@ namespace CSUL
             };
 
             #endregion --异常处理--
-
-            // 实验性功能：游戏UI操作
-            UiDeveloper uiDeveloper = new();
-            IKeyboardMouseEvents globalHook = Hook.GlobalEvents();
-            globalHook.KeyDown += (sender, e) =>
-            {
-                if (e.Control && e.Alt)
-                {
-                    if (e.KeyCode == System.Windows.Forms.Keys.C)
-                    {
-
-                    }
-                    else if (e.KeyCode == System.Windows.Forms.Keys.T)
-                    {
-
-                    }
-                }
-            };
         }
 
         #region ---UI方法---

@@ -21,7 +21,6 @@ namespace CSUL
                 e.Cancel = true;
                 ExitProgram(0);
             };
-
             #region --异常处理--
 
             //全局异常捕获

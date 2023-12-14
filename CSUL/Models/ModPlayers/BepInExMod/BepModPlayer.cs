@@ -33,6 +33,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         public string BepInExPath { get; set; } = default!;
 
         public string PluginPath { get => Path.Combine(BepInExPath, "plugins"); }
+
         public List<BepModData> ModDatas
         { get { RefreshData(); return modDatas; } }
 

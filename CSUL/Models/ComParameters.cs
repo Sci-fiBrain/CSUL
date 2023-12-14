@@ -39,19 +39,19 @@ namespace CSUL.Models
         /// <param name="getBasePath">用于获取游戏根目录和游戏数据目录的方法</param>
         internal ComParameters(Func<(string?, string?)> getBasePath)
         {
-            if(File.Exists(ConfigPath)) try { this.LoadConfig(ConfigPath); } catch { }
+            if (File.Exists(ConfigPath)) try { this.LoadConfig(ConfigPath); } catch { }
             else (gameRootPath, gameDataPath) = getBasePath();
             if (!GameRoot.Exists)
             {
                 MessageBox.Show("游戏安装文件夹未找到，请手动设定", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 gameRootPath = Path.Combine(TempPath, "fakeGameRoot");
-                if(!GameRoot.Exists) GameRoot.Create();
+                if (!GameRoot.Exists) GameRoot.Create();
             }
             if (!GameData.Exists)
             {
                 MessageBox.Show("游戏数据文件夹未找到，请手动设定", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 gameDataPath = Path.Combine(TempPath, "fakeGameData");
-                if(!GameData.Exists) GameData.Create();
+                if (!GameData.Exists) GameData.Create();
             }
             Instance = this;
         }
@@ -91,12 +91,14 @@ namespace CSUL.Models
         public bool SteamCompatibilityMode { get; set; } = false;
 
         #region --游戏平台相关--
+
         /// <summary>
         /// Steam路径
         /// </summary>
         [Config]
         public string? SteamPath { get; set; }
-        #endregion
+
+        #endregion --游戏平台相关--
 
         #region --文件夹相关--
 

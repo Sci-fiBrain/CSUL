@@ -36,6 +36,7 @@ namespace CSUL.ViewModels.ModViewModels
         #endregion ---显示“未安装BepInEx”页面---
 
         #region ---BepInEx的版本---
+
         public Version? BepVersion
         {
             get => BepManager.TryGetBepVersion(CP.GameRoot.FullName, out Version? ver) ? ver : null;
@@ -47,6 +48,7 @@ namespace CSUL.ViewModels.ModViewModels
         #region ---BepInEx的下载数据---
 
         private List<BepItemData>? bepData = BepManager.IsInstalled(CP.GameRoot.FullName) ? GetBepDownloadData() : null;
+
         public List<BepItemData>? BepData
         {
             get => bepData;

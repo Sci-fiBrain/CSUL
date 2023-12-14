@@ -1,5 +1,4 @@
-﻿using CSUL.Models;
-using CSUL.Models.Network;
+﻿using CSUL.Models.Network;
 using CSUL.Views;
 using System;
 using System.Collections.Generic;

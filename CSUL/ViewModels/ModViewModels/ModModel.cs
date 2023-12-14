@@ -18,7 +18,6 @@ namespace CSUL.ViewModels.ModViewModels
 {   //ModModel 构造函数、方法、子类
     public partial class ModModel : BaseViewModel
     {
-
         #region ---模组信息条目---
 
         public class ItemData
@@ -113,6 +112,7 @@ namespace CSUL.ViewModels.ModViewModels
         }
 
         private bool bepIsDownloading = false;
+
         /// <summary>
         /// 下载并安装BepInEx
         /// </summary>
@@ -215,11 +215,11 @@ namespace CSUL.ViewModels.ModViewModels
                 ItemData item = ModData[i];
                 try
                 {
-                    if(!BepManager.TryGetModBepVersion(item.Path, out Version? modVersion))
+                    if (!BepManager.TryGetModBepVersion(item.Path, out Version? modVersion))
                     {
                         unknow.Add(i);
                     }
-                    else if(bepVersion.Major == modVersion.Major)
+                    else if (bepVersion.Major == modVersion.Major)
                     {
                         pass.Add(i);
                     }
@@ -288,14 +288,14 @@ namespace CSUL.ViewModels.ModViewModels
                     name = name[..name.LastIndexOf('.')];
                     BepManager.TryGetBepVersion(CP.GameRoot.FullName, out Version? bepVersion);
                     BepManager.TryGetModBepVersion(package.FullName, out Version? modVersion);
-                    if(bepVersion is null || modVersion is null)
+                    if (bepVersion is null || modVersion is null)
                     {
                         if (MessageBox.Show($"文件 {name} 安装警告\n" +
                                 $"BepInEx版本: {(bepVersion is null ? "未能获取已安装BepInEx的版本信息" : bepVersion)}\n" +
                                 $"模组版本: {(modVersion is null ? "未能成功获取模组BepInEx版本" : modVersion)}\n" +
                                 "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel) continue;
                     }
-                    else if(bepVersion.Major != modVersion.Major)
+                    else if (bepVersion.Major != modVersion.Major)
                     {
                         if (MessageBox.Show($"模组 {name} 安装警告" +
                                 $"但模组版本与BepInEx不符\n" +

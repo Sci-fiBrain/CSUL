@@ -34,7 +34,7 @@ namespace CSUL.ViewModels.SetViewModels
             get => CP.StartArguemnt;
             set
             {
-                if(value == StartArgument) return;
+                if (value == StartArgument) return;
                 CP.StartArguemnt = value;
                 OnPropertyChanged();
             }
@@ -45,7 +45,7 @@ namespace CSUL.ViewModels.SetViewModels
             get => CP.SteamPath;
             set
             {
-                if(value == SteamPath) return;
+                if (value == SteamPath) return;
                 CP.SteamPath = value;
                 OnPropertyChanged();
             }

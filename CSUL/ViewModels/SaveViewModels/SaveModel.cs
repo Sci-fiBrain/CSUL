@@ -59,7 +59,7 @@ namespace CSUL.ViewModels.SaveViewModels
 
         public ICommand DeleteCommand { get; }
         public ICommand AddCommand { get; }
-        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe",CP.Saves.FullName));
+        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", CP.Saves.FullName));
         public ICommand Refresh { get; }
 
         private IEnumerable<GameDataFileInfo> gameData = default!;

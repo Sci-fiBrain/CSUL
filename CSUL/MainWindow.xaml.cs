@@ -1,6 +1,5 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
-using Gma.System.MouseKeyHook;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +14,6 @@ namespace CSUL
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             //基础代码初始化
@@ -32,6 +30,7 @@ namespace CSUL
         }
 
         #region ---UI方法---
+
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -61,14 +60,20 @@ namespace CSUL
                 Environment.Exit(exitCode);
             }
         }
-        #endregion
+
+        #endregion ---UI方法---
 
         #region ---私有方法---
+
         private static (string? root, string? data) GetBasePath()
         {
-            Cities2Path.TryFromSteam(out string? fromSteam);
+            string? root = null;
+            if (Cities2Path.TryFromSteam(out string? fromSteam)) root = fromSteam;
+            else if(Cities2Path.TryFromMicrosoft(out string? fromMicrosoft)) root = fromMicrosoft;
+            else if(Cities2Path.TryFromXbox(out string? fromXbox)) root = fromXbox;
+
             Cities2Path.TryGetGameDataPath(out string? gameDataPath);
-            return (fromSteam, gameDataPath);
+            return (root, gameDataPath);
         }
 
         /// <summary>
@@ -115,6 +120,7 @@ namespace CSUL
                 e.RequestCatch = false;
             };
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

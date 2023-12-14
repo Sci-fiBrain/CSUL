@@ -26,9 +26,9 @@ namespace CSUL.Models.Local
         #region --游戏路径获取--
 
         /// <summary>
-        /// 尝试从Steam获取天际线2路径
+        /// 尝试从Steam获取天际线2根目录
         /// </summary>
-        /// <param name="path">天际线2路径</param>
+        /// <param name="path">天际线2根目录</param>
         /// <returns>是否获取成功</returns>
         public static bool TryFromSteam([NotNullWhen(true)] out string? path)
         {
@@ -45,9 +45,9 @@ namespace CSUL.Models.Local
         }
 
         /// <summary>
-        /// 尝试从微软商店获取天际线2路径
+        /// 尝试从微软商店获取天际线2根目录
         /// </summary>
-        /// <param name="path">天际线2路径</param>
+        /// <param name="path">天际线2根目录</param>
         /// <returns>是否获取成功</returns>
         public static bool TryFromMicrosoft([NotNullWhen(true)] out string? path)
         {
@@ -56,9 +56,9 @@ namespace CSUL.Models.Local
         }
 
         /// <summary>
-        /// 尝试从Xbox获取天际线2路径
+        /// 尝试从Xbox获取天际线2根目录
         /// </summary>
-        /// <param name="path">天际线2路径</param>
+        /// <param name="path">天际线2根目录</param>
         /// <returns>是否获取成功</returns>
         public static bool TryFromXbox([NotNullWhen(true)] out string? path)
         {

@@ -1,13 +1,9 @@
-﻿using CSUL.Models.ModPlayers;
-using CSUL.Models.ModPlayers.BepInExMod;
+﻿using CSUL.Models.ModPlayers.BepInExMod;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CSUL.Models
+namespace CSUL.Models.ModPlayers
 {
     /// <summary>
     /// 模组管理器
@@ -15,29 +11,39 @@ namespace CSUL.Models
     public class ModManager
     {
         #region ---静态变量---
-        private readonly static string modPlayersPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "modPlayers");
+
+        private static readonly string modPlayersPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "modPlayers");
+
         /// <summary>
         /// 获取<see cref="ModManager"/>实例
         /// </summary>
         public static ModManager Instance { get; } = new();
-        #endregion
+
+        #endregion ---静态变量---
 
         #region ---私有字段---
+
         private List<IModPlayer> modPlayers = default!;
-        #endregion
+
+        #endregion ---私有字段---
 
         #region ---构造函数---
+
         private ModManager()
         {
             LoadPlayers();
         }
-        #endregion
+
+        #endregion ---构造函数---
 
         #region ---公共方法---
+
         public IModPlayer[] GetBaseModPlayers() => modPlayers.ToArray();
-        #endregion
+
+        #endregion ---公共方法---
 
         #region ---私有方法---
+
         private void LoadPlayers()
         {
             modPlayers = new();
@@ -51,9 +57,10 @@ namespace CSUL.Models
                     player = new BepModPlayer(dir);
                 }
                 catch { }
-                if(player is not null) modPlayers.Add(player);
+                if (player is not null) modPlayers.Add(player);
             }
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

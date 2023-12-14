@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using CSUL.Models.Network;
 using CSUL.Views;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,7 @@ namespace CSUL.ViewModels
         /// <returns></returns>
         private async Task CheckVersion()
         {
-            Version? latest = await WebManager.GetLatestCsulVersion();
+            Version? latest = await NetworkData.GetCsulLastestVersion();
             if (latest is null) return;
             Version? version = CsulVersion;
             if (version is null) return;

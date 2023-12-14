@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using CSUL.Models.Local.Game;
 using CSUL.UserControls.DragFiles;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace CSUL.ViewModels.MapViewModels
     /// </summary>
     public class MapModel : BaseViewModel
     {
+        private static ComParameters CP { get; } = ComParameters.Instance;
+
         public MapModel()
         {
             //获取初始数据
@@ -41,7 +44,7 @@ namespace CSUL.ViewModels.MapViewModels
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "文件删除失败",
+                        MessageBox.Show(ex.ToFormative(), "文件删除失败",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     RefreshData();
@@ -56,7 +59,7 @@ namespace CSUL.ViewModels.MapViewModels
 
         public ICommand AddCommand { get; }
         public ICommand DeleteCommand { get; }
-        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", FileManager.Instance.MapDir.FullName));
+        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", CP.Maps.FullName));
         public ICommand Refresh { get; }
 
         private IEnumerable<GameDataFileInfo> gameData = default!;
@@ -77,7 +80,7 @@ namespace CSUL.ViewModels.MapViewModels
         /// <summary>
         /// 刷新地图数据
         /// </summary>
-        private void RefreshData() => GameData = from cid in FileManager.Instance.MapDir.GetAllFiles()
+        private void RefreshData() => GameData = from cid in CP.Maps.GetAllFiles()
                                                  where cid.Name.EndsWith(".cok")
                                                  let data = new GameDataFileInfo(cid.FullName)
                                                  select data;
@@ -92,7 +95,7 @@ namespace CSUL.ViewModels.MapViewModels
             {
                 try
                 {
-                    Models.Structs.InstalledGameDataFiles ret = await FileManager.Instance.InstallGameDataFile(path);
+                    InstalledGameDataFiles ret = await GameDataFile.Install(path, CP.Saves.FullName, CP.Maps.FullName);
                     StringBuilder builder = new();
                     builder.Append($"文件{Path.GetFileName(path)}解析完成").AppendLine();
                     builder.Append($"已安装地图 {ret.MapNames.Count} 个: ").AppendLine();
@@ -104,7 +107,7 @@ namespace CSUL.ViewModels.MapViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ExceptionManager.GetExMeg(ex, $"文件{Path.GetFileName(path)}安装失败"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.ToFormative($"文件{Path.GetFileName(path)}安装失败"), "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             RefreshData();

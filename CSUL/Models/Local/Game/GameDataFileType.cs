@@ -1,4 +1,4 @@
-﻿namespace CSUL.Models.Enums
+﻿namespace CSUL.Models.Local.Game
 {
     /// <summary>
     /// 游戏文件类型

@@ -38,6 +38,7 @@ namespace CSUL.Models.ModPlayers
         public abstract void RefreshData();
 
         #region ---接口方法---
+
         /// <summary>
         /// 启用播放集
         /// </summary>
@@ -67,6 +68,7 @@ namespace CSUL.Models.ModPlayers
         /// 移除mod
         /// </summary>
         void IModPlayer.RemoveMod(IModData mod) => RemoveMod((T)mod);
-        #endregion
+
+        #endregion ---接口方法---
     }
 }

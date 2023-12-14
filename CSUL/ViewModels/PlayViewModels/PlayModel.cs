@@ -1,5 +1,7 @@
 ﻿using CSUL.Models;
+using CSUL.Models.Local;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,7 @@ namespace CSUL.ViewModels.PlayViewModels
     /// </summary>
     public class PlayModel : BaseViewModel
     {
+        private static ComParameters CP { get; } = ComParameters.Instance;
         private Window? window = null;
 
         public PlayModel()
@@ -21,7 +24,7 @@ namespace CSUL.ViewModels.PlayViewModels
                 {
                     ButtonEnabled = false;
                     await Task.Delay(500);
-                    if (GameManager.Instance.ShowSteamInfo)
+                    if (CP.ShowSteamInfo)
                     {
                         const string steamInfo =
                             "由于天际线2正版验证的问题，启动游戏时可能出现闪退\n" +
@@ -35,23 +38,24 @@ namespace CSUL.ViewModels.PlayViewModels
                             "确认: 关闭提示\n" +
                             "取消: 关闭提示且不再弹出";
                         MessageBoxResult ret = MessageBox.Show(steamInfo, "Steam游戏提示", MessageBoxButton.OKCancel, MessageBoxImage.Information);
-                        if (ret == MessageBoxResult.Cancel) GameManager.Instance.ShowSteamInfo = false;
+                        if (ret == MessageBoxResult.Cancel) CP.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
                     try
                     {
-                        string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{GameManager.Instance.StartArguemnt}";
-                        if (GameManager.Instance.SteamCompatibilityMode)
+                        string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";
+                        if (CP.SteamCompatibilityMode)
                         {   //Steam正版兼容模式
                             string? steamPath = null;
-                            if(GameManager.Instance.SteamPath is string path && File.Exists(path)) steamPath = path;
-                            SteamManager.StartApp(949230, arg, steamPath);
+                            if (CP.SteamPath is string path && File.Exists(path)) steamPath = path;
+                            else if (!Cities2Path.TryGetSteamPath(out steamPath)) throw new FileNotFoundException("Steam.exe未找到，请检查Steam路径设置");
+                            Process.Start(steamPath, $"-applaunch 949230 {arg}");
                         }
-                        else GameManager.StartGame(FileManager.Instance.GamePath!, arg);
+                        else Process.Start(Path.Combine(CP.GameRoot.FullName, "Cities2.exe"), arg);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ExceptionManager.GetExMeg(ex), "游戏启动出现错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(ex.ToFormative(), "游戏启动出现错误", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                     await Task.Delay(500);
                     ButtonEnabled = true;
@@ -62,20 +66,20 @@ namespace CSUL.ViewModels.PlayViewModels
 
         public bool OpenDeveloper
         {
-            get => GameManager.Instance.OpenDeveloper;
+            get => CP.OpenDeveloper;
             set
             {
-                GameManager.Instance.OpenDeveloper = value;
+                CP.OpenDeveloper = value;
                 OnPropertyChanged();
             }
         }
 
         public bool SteamCompatibilityMode
         {
-            get => GameManager.Instance.SteamCompatibilityMode;
+            get => CP.SteamCompatibilityMode;
             set
             {
-                GameManager.Instance.SteamCompatibilityMode = value;
+                CP.SteamCompatibilityMode = value;
                 OnPropertyChanged();
             }
         }

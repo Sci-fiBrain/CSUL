@@ -1,17 +1,26 @@
-﻿using System;
+﻿/*  CSUL 标准文件头注释
+ *  --------------------------------------
+ *  文件名称: ExceptionEx.cs
+ *  创建时间: 2023年11月26日 12:47
+ *  创建开发: ScifiBrain
+ *  文件介绍: Exception扩展类 提供Exception的扩展方法
+ *  --------------------------------------
+ */
+
+using System;
 using System.Text;
 
 namespace CSUL.Models
 {
     /// <summary>
-    /// 异常处理器
+    /// Exception扩展类 提供Exception的扩展方法
     /// </summary>
-    public class ExceptionManager
+    public static class ExceptionEx
     {
         /// <summary>
-        /// 得到异常信息
+        /// 格式化异常信息
         /// </summary>
-        public static string GetExMeg(Exception? ex, string? meg = null)
+        public static string ToFormative(this Exception? ex, string? meg = null)
         {
             StringBuilder builder = new();
             builder.AppendLine($"发生时间: {DateTime.Now:yyyy_MM_dd HH:mm:ss:ffff}");

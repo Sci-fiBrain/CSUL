@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*  CSUL 标准文件头注释
+ *  --------------------------------------
+ *  文件名称: ConfigActivator.cs
+ *  创建时间: 2023年11月25日 0:00
+ *  创建开发: ScifiBrain
+ *  文件介绍: 配置文件特性
+ *  --------------------------------------
+ */
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;

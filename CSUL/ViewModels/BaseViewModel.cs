@@ -1,6 +1,7 @@
 ﻿using CSUL.Models;
 using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace CSUL.ViewModels
@@ -15,7 +16,7 @@ namespace CSUL.ViewModels
         /// <summary>
         /// 获取当前CSUL版本
         /// </summary>
-        public Version? CsulVersion { get => ExFileManager.GetNowCsulVersion(); }
+        public Version? CsulVersion { get => Assembly.GetExecutingAssembly().GetName().Version; }
 
 #pragma warning restore CA1822
 

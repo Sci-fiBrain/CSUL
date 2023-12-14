@@ -26,7 +26,9 @@ namespace CSUL.ViewModels
             this.canExecute = canExecute;
         }
 
+#pragma warning disable CS0067
         public event EventHandler? CanExecuteChanged;
+#pragma warning restore CS0067
 
         public bool CanExecute(object? parameter) => action is not null || canExecute?.Invoke(parameter) is true;
 

@@ -5,46 +5,48 @@ namespace CSUL.ViewModels.SetViewModels
 {
     public class SetModel : BaseViewModel
     {
+        private static ComParameters CP { get; } = ComParameters.Instance;
+
         public string GamePath
         {
-            get => FileManager.Instance.GameRootDir.FullName;
+            get => CP.GameRoot.FullName;
             set
             {
                 if (value == GamePath) return;
-                FileManager.Instance.GameRootDir = new(value);
+                CP.GameRoot = new(value);
                 OnPropertyChanged();
             }
         }
 
         public string GameData
         {
-            get => FileManager.Instance.GameDataDir.FullName;
+            get => CP.GameData.FullName;
             set
             {
                 if (value == GameData) return;
-                FileManager.Instance.GameDataDir = new(value);
+                CP.GameData = new(value);
                 OnPropertyChanged();
             }
         }
 
         public string? StartArgument
         {
-            get => GameManager.Instance.StartArguemnt;
+            get => CP.StartArguemnt;
             set
             {
                 if(value == StartArgument) return;
-                GameManager.Instance.StartArguemnt = value;
+                CP.StartArguemnt = value;
                 OnPropertyChanged();
             }
         }
 
         public string? SteamPath
         {
-            get => GameManager.Instance.SteamPath;
+            get => CP.SteamPath;
             set
             {
                 if(value == SteamPath) return;
-                GameManager.Instance.SteamPath = value;
+                CP.SteamPath = value;
                 OnPropertyChanged();
             }
         }

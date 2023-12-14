@@ -1,7 +1,15 @@
-﻿using CSUL.Models.Enums;
+﻿/*  CSUL 标准文件头注释
+ *  --------------------------------------
+ *  文件名称: GameDataFileInfo.cs
+ *  创建时间: 2023年12月14日 13:11
+ *  创建开发: ScifiBrain
+ *  文件介绍: 游戏数据文件信息类
+ *  --------------------------------------
+ */
+
 using System.IO;
 
-namespace CSUL.Models
+namespace CSUL.Models.Local.Game
 {
     /// <summary>
     /// 游戏数据文件信息类
@@ -13,11 +21,11 @@ namespace CSUL.Models
         /// <summary>
         /// 实例化<see cref="GameDataFileInfo"/>类
         /// </summary>
-        /// <param name="path">游戏数据文件路径</param>
+        /// <param name="path">游戏数据文件(.cok)路径</param>
         public GameDataFileInfo(string path)
         {
             if (!File.Exists(path)) throw new FileNotFoundException(path);
-            DataType = TempPackage.GetGameDataFileType(path);
+            DataType = GameDataFile.GetGameDataFileType(path);
             cokPath = path;
             cidPath = path + ".cid";
             if (File.Exists(cidPath))

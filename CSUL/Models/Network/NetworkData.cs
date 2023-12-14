@@ -1,36 +1,46 @@
-﻿using CSUL.Models.Structs;
+﻿/*  CSUL 标准文件头注释
+ *  --------------------------------------
+ *  文件名称: NetworkData.cs
+ *  创建时间: 2023年12月13日 23:59
+ *  创建开发: ScifiBrain
+ *  文件介绍: 涉及网络相关数据处理的静态类
+ *  --------------------------------------
+ */
+
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CSUL.Models
+namespace CSUL.Models.Network
 {
     /// <summary>
-    /// Web相关管理类
+    /// 涉及网络相关数据处理的静态类
     /// </summary>
-    public class WebManager
+    internal static class NetworkData
     {
-        private const string versionUri = "https://minebbs-1251544790.file.myqcloud.com/bepinex.html";
+        private const string netBepVersionUrl = "https://minebbs-1251544790.file.myqcloud.com/bepinex.html";    //BepInEx版本信息获取地址
 
         /// <summary>
-        /// 获取Bepinex版本列表
+        /// 获取BepInEx文件的版本信息
         /// </summary>
-        public static BepinexInfo[] GetBepinexInfos()
+        /// <returns>包含BepInEx文件信息的集合</returns>
+        public static IEnumerable<NetBepInfo> GetNetBepInfos()
         {
             using HttpClient http = new();
-            string data = http.GetStringAsync(versionUri).Result;
+            string data = http.GetStringAsync(netBepVersionUrl).Result;
             string info = data[(data.IndexOf("[Start]") + 7)..data.IndexOf("[End]")].Replace("<br>", "").Trim();
-            BepinexInfo[] infos = (from line in info.Split('\n')
-                                   let item = line.Split(' ')
-                                   select new BepinexInfo()
-                                   {
-                                       Version = item[0],
-                                       IsBeta = item[1].Contains("beta"),
-                                       FileName = item[2],
-                                       Uri = item[3]
-                                   }).ToArray();
+            IEnumerable<NetBepInfo> infos = from line in info.Split('\n')
+                                            let item = line.Split(' ')
+                                            select new NetBepInfo()
+                                            {
+                                                Version = item[0],
+                                                IsBeta = item[1].Contains("beta"),
+                                                FileName = item[2],
+                                                Uri = item[3]
+                                            };
             return infos;
         }
 
@@ -38,7 +48,7 @@ namespace CSUL.Models
         /// 下载文件
         /// </summary>
         /// <param name="uri">文件链接</param>
-        /// <param name="path">文件路径</param>
+        /// <param name="path">文件要下载到的路径</param>
         public static async Task DownloadFromUri(string uri, string path)
         {
             using HttpClient http = new();
@@ -56,10 +66,10 @@ namespace CSUL.Models
         }
 
         /// <summary>
-        /// 得到CSUL当前的最新版本
+        /// 获取CSUL的最新版本
         /// </summary>
-        /// <returns></returns>
-        public static async Task<Version?> GetLatestCsulVersion()
+        /// <returns>CSUL的最新版本</returns>
+        public static async Task<Version?> GetCsulLastestVersion()
         {
             Version? version = null;
             const string key = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";

@@ -1,5 +1,4 @@
-﻿
-namespace CSUL.Models.ModPlayers
+﻿namespace CSUL.Models.ModPlayers
 {
     /// <summary>
     /// 模组基本信息接口

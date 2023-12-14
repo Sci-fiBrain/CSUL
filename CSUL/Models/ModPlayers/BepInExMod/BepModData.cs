@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace CSUL.Models.ModPlayers.BepInExMod
 {
@@ -20,15 +15,19 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         public BepModData(string path, bool isFile) => (modPath, this.isFile) = (path, isFile);
 
         #region ---私有字段---
+
         /// <summary>
         /// 禁用标签
         /// </summary>
         private const string DisTag = "[Disabled]";
+
         private readonly bool isFile;
         private string modPath;
-        #endregion
+
+        #endregion ---私有字段---
 
         #region ---公共属性---
+
         public string Name
         {
             get => Path.GetFileName(ModPath);
@@ -92,7 +91,8 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         /// 是否为单文件mod
         /// </summary>
         public bool IsFile { get => isFile; }
-        #endregion
+
+        #endregion ---公共属性---
 
         /// <summary>
         /// 删除模组
@@ -110,9 +110,10 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         }
 
         #region ---比较方法---
+
         public override bool Equals(object? obj)
         {
-            if(obj is BepModData mod)
+            if (obj is BepModData mod)
             {
                 return mod.ModPath == ModPath;
             }
@@ -123,6 +124,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         {
             return ModPath.GetHashCode();
         }
-        #endregion
+
+        #endregion ---比较方法---
     }
 }

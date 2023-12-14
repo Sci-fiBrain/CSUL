@@ -1,12 +1,18 @@
-﻿//与Web相关的结构体类
-namespace CSUL.Models.Structs
-{
-    #region ---BepInEx文件信息---
+﻿/*  CSUL 标准文件头注释
+ *  --------------------------------------
+ *  文件名称: NetBepInfo.cs
+ *  创建时间: 2023年12月14日 0:01
+ *  创建开发: ScifiBrain
+ *  文件介绍: 单个BepInEx文件信息的结构体
+ *  --------------------------------------
+ */
 
+namespace CSUL.Models.Network
+{
     /// <summary>
-    /// Bepinex文件信息
+    /// 单个BepInEx文件信息
     /// </summary>
-    public struct BepinexInfo
+    internal struct NetBepInfo
     {
         /// <summary>
         /// 版本号
@@ -28,6 +34,4 @@ namespace CSUL.Models.Structs
         /// </summary>
         public string Uri { get; set; }
     }
-
-    #endregion ---BepInEx文件信息---
 }

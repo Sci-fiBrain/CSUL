@@ -11,6 +11,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
     public class BepModPlayer : BaseModPlayer<BepModData>
     {
         #region ---构造函数---
+
         /// <summary>
         /// 初始化<see cref="BepModPlayer"/>实例
         /// </summary>
@@ -20,7 +21,8 @@ namespace CSUL.Models.ModPlayers.BepInExMod
             this.sourcePath = sourcePath;
             RefreshData();
         }
-        #endregion
+
+        #endregion ---构造函数---
 
         private readonly string sourcePath;
         private List<BepModData> modDatas = new();
@@ -29,8 +31,10 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         /// BepInEx文件夹路径
         /// </summary>
         public string BepInExPath { get; set; } = default!;
+
         public string PluginPath { get => Path.Combine(BepInExPath, "plugins"); }
-        public List<BepModData> ModDatas { get { RefreshData(); return modDatas; } }
+        public List<BepModData> ModDatas
+        { get { RefreshData(); return modDatas; } }
 
         public override void AddMod(BepModData mod)
         {
@@ -45,7 +49,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
             else
             {
                 DirectoryInfo dir = new(mod.ModPath);
-                if(dir.Exists) dir.CopyTo(targetPath, true);
+                if (dir.Exists) dir.CopyTo(targetPath, true);
             }
             RefreshData();
         }
@@ -94,7 +98,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
                 else
                 {
                     DirectoryInfo dir = new(targetPath);
-                    if(dir.Exists) dir.CopyTo(targetPath, true);
+                    if (dir.Exists) dir.CopyTo(targetPath, true);
                 }
             }
         }
@@ -118,6 +122,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         }
 
         #region ---比较方法---
+
         public override bool Equals(object? obj)
         {
             if (obj is BepModPlayer player)
@@ -131,6 +136,7 @@ namespace CSUL.Models.ModPlayers.BepInExMod
         {
             return sourcePath.GetHashCode();
         }
-        #endregion
+
+        #endregion ---比较方法---
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using CSUL.Models.Local.BepInEx;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +11,8 @@ namespace CSUL.ViewModels.ModViewModels
 {   //ModModel用到的属性、字段
     public partial class ModModel
     {
+        private static ComParameters CP { get; } = ComParameters.Instance;
+
         /// <summary>
         /// 临时文件夹路径
         /// </summary>
@@ -17,7 +20,7 @@ namespace CSUL.ViewModels.ModViewModels
 
         #region ---显示“未安装BepInEx”页面---
 
-        private Visibility showNoEx = FileManager.Instance.NoBepInEx ? Visibility.Visible : Visibility.Collapsed;
+        private Visibility showNoEx = BepManager.IsInstalled(CP.GameRoot.FullName) ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility ShowNoEx
         {
@@ -33,25 +36,27 @@ namespace CSUL.ViewModels.ModViewModels
         #endregion ---显示“未安装BepInEx”页面---
 
         #region ---BepInEx的版本---
-
-        private Version? bepVersion = FileManager.Instance.BepVersion;
-
         public Version? BepVersion
         {
-            get => bepVersion;
-            set
-            {
-                if (bepVersion == value) return;
-                bepVersion = value;
-                OnPropertyChanged();
-            }
+            get => BepManager.TryGetBepVersion(CP.GameRoot.FullName, out Version? ver) ? ver : null;
+            set => OnPropertyChanged();
         }
 
         #endregion ---BepInEx的版本---
 
         #region ---BepInEx的下载数据---
 
-        public List<BepItemData>? BepData { get; private set; } = FileManager.Instance.NoBepInEx ? GetBepDownloadData() : null;
+        private List<BepItemData>? bepData = BepManager.IsInstalled(CP.GameRoot.FullName) ? GetBepDownloadData() : null;
+        public List<BepItemData>? BepData
+        {
+            get => bepData;
+            private set
+            {
+                if (bepData == value) return;
+                bepData = value;
+                OnPropertyChanged();
+            }
+        }
 
         #endregion ---BepInEx的下载数据---
 
@@ -88,7 +93,7 @@ namespace CSUL.ViewModels.ModViewModels
 
         //打开文件夹
         public ICommand OpenFolder { get; } = new RelayCommand((sender)
-            => Process.Start("Explorer.exe", FileManager.Instance.ModDir.FullName));
+            => Process.Start("Explorer.exe", CP.BepMod.FullName));
 
         //移除BepInEx
         public ICommand RemoveCommand { get; }

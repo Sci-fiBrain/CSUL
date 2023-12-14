@@ -40,7 +40,14 @@ namespace CSUL.Models
         internal ComParameters(Func<(string?, string?)> getBasePath)
         {
             if (File.Exists(ConfigPath)) try { this.LoadConfig(ConfigPath); } catch { }
-            else (gameRootPath, gameDataPath) = getBasePath();
+            else
+            {
+                (string? root, string? data) = getBasePath();
+                gameRootPath = root ?? "fake";
+                gameDataPath = data ?? "fake";
+            }
+            gameRootPath ??= "fake";
+            gameDataPath ??= "fake";
             if (!GameRoot.Exists)
             {
                 MessageBox.Show("游戏安装文件夹未找到，请手动设定", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -104,7 +111,7 @@ namespace CSUL.Models
 
         #region -基础文件夹-
 
-        private string? gameDataPath;
+        private string gameDataPath;
 
         /// <summary>
         /// 游戏数据文件夹
@@ -112,11 +119,11 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameData
         {
-            get => new(gameDataPath ?? "unknow");
+            get => new(gameDataPath);
             set => gameDataPath = value.FullName;
         }
 
-        private string? gameRootPath;
+        private string gameRootPath;
 
         /// <summary>
         /// 游戏安装文件夹
@@ -124,7 +131,7 @@ namespace CSUL.Models
         [Config]
         public DirectoryInfo GameRoot
         {
-            get => new(gameRootPath ?? "unknow");
+            get => new(gameRootPath);
             set => gameRootPath = value.FullName;
         }
 

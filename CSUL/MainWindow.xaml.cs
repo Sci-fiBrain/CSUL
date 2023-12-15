@@ -1,7 +1,11 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -14,20 +18,86 @@ namespace CSUL
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly CancellationTokenSource cancellation = new();
+
+        #region ---构造函数---
+
         public MainWindow()
         {
-            //基础代码初始化
+            #region --基础代码初始化--
+
             CatchException(Dispatcher);
+            Mutex mutex = new(true, "CSUL", out bool mainProcess);
+
+            #region -主进程-
+
+            if (mainProcess)
+            {   //主进程
+                if (TryCreatRegisterFile(out string reg))
+                {   //创建注册表
+                    MessageBoxResult ret = MessageBox.Show("为加强CSUL与论坛的连接，需要创建一个注册表添加自定义协议\n" +
+                        "在此保证该注册表内容安全，如有疑虑可查看源码\n" +
+                        "是否同意创建?", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (ret == MessageBoxResult.Yes)
+                    {
+                        ProcessStartInfo startInfo = new() { UseShellExecute = false, CreateNoWindow = true, FileName = "cmd", Arguments = $"/c {reg}" };
+                        Process.Start(startInfo)?.WaitForExit();
+                    }
+                }
+                Task.Run(() => PipeReader(cancellation.Token), cancellation.Token);
+            }
+
+            #endregion -主进程-
+
+            #region -副进程-
+
+            else
+            {   //副进程
+                try
+                {
+                    string[] args = Environment.GetCommandLineArgs();
+                    if (args.Length > 1)
+                    {
+                        using NamedPipeClientStream pipe = new(".", "CSUL_Pipe", PipeDirection.Out);
+                        try
+                        {   //向主进程传参
+                            pipe.Connect(TimeSpan.FromSeconds(5));
+                            string info = string.Join(" ", args[1..]);
+                            byte[] buffer = info.StartsWith("csul:")
+                                ? System.Web.HttpUtility.UrlDecodeToBytes(info[5..])
+                                : Encoding.UTF8.GetBytes(info);
+                            pipe.Write(buffer, 0, buffer.Length);
+                            pipe.Close();
+                        }
+                        catch (TimeoutException) { }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToFormative(), "传参时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                Environment.Exit(0);
+            }
+
+            #endregion -副进程-
+
             ComParameters cp = new(GetBasePath);
 
-            //UI代码初始化
+            #endregion --基础代码初始化--
+
+            #region --UI代码初始化--
+
             InitializeComponent();
             Closing += (sender, e) =>
             {
                 e.Cancel = true;
                 ExitProgram(0);
             };
+
+            #endregion --UI代码初始化--
         }
+
+        #endregion ---构造函数---
 
         #region ---UI方法---
 
@@ -50,12 +120,14 @@ namespace CSUL
         /// <summary>
         /// 退出程序
         /// </summary>
-        private static void ExitProgram(int exitCode)
+        private void ExitProgram(int exitCode)
         {
             MessageBoxResult ret = MessageBox.Show("确定退出吗？", "提示",
                 MessageBoxButton.OKCancel, MessageBoxImage.Question, MessageBoxResult.Cancel);
             if (ret == MessageBoxResult.OK)
             {
+                cancellation.Cancel();
+                cancellation.Dispose();
                 ComParameters.Instance.Dispose();
                 Environment.Exit(exitCode);
             }
@@ -65,12 +137,67 @@ namespace CSUL
 
         #region ---私有方法---
 
+        /// <summary>
+        /// 尝试创建注册表文件
+        /// </summary>
+        /// <param name="regPath">注册表文件的路径</param>
+        /// <returns>是否创建成功</returns>
+        private static bool TryCreatRegisterFile(out string regPath)
+        {
+            regPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csul.reg");
+            if (File.Exists(regPath)) return false;
+            using StreamWriter stream = new(File.Create(regPath));
+            stream.WriteLine("Windows Registry Editor Version 5.00");
+            stream.WriteLine();
+            stream.WriteLine("[HKEY_CLASSES_ROOT\\csul]");
+            stream.WriteLine("@=\"URL:csul\"");
+            stream.WriteLine("\"URL Protocol\"=\"\"");
+            stream.WriteLine();
+            stream.WriteLine("[HKEY_CLASSES_ROOT\\csul\\shell]");
+            stream.WriteLine();
+            stream.WriteLine("[HKEY_CLASSES_ROOT\\csul\\shell\\open]");
+            stream.WriteLine();
+            stream.WriteLine("[HKEY_CLASSES_ROOT\\csul\\shell\\open\\command]");
+            stream.WriteLine($"@=\"\\\"{System.Windows.Forms.Application.ExecutablePath.Replace("\\", "\\\\")}\\\" \\\"%1\\\"\"");
+            return true;
+        }
+
+        /// <summary>
+        /// 管道读取方法
+        /// </summary>
+        private static async Task PipeReader(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                using NamedPipeServerStream pipe = new("CSUL_Pipe", PipeDirection.In);
+                try
+                {
+                    await pipe.WaitForConnectionAsync(token);
+                    using MemoryStream stream = new();
+                    while (pipe.IsConnected)
+                    {
+                        try
+                        {
+                            byte[] buffer = new byte[512];
+                            int size = await pipe.ReadAsync(buffer, token);
+                            stream.Write(buffer, 0, size);
+                        }
+                        catch (IOException) { break; }
+                    }
+                    string info = Encoding.UTF8.GetString(stream.ToArray());
+                    MessageBox.Show(info);
+                }
+                catch (OperationCanceledException) { break; }
+                catch (Exception) { }
+            }
+        }
+
         private static (string? root, string? data) GetBasePath()
         {
             string? root = null;
             if (Cities2Path.TryFromSteam(out string? fromSteam)) root = fromSteam;
-            else if(Cities2Path.TryFromMicrosoft(out string? fromMicrosoft)) root = fromMicrosoft;
-            else if(Cities2Path.TryFromXbox(out string? fromXbox)) root = fromXbox;
+            else if (Cities2Path.TryFromMicrosoft(out string? fromMicrosoft)) root = fromMicrosoft;
+            else if (Cities2Path.TryFromXbox(out string? fromXbox)) root = fromXbox;
 
             Cities2Path.TryGetGameDataPath(out string? gameDataPath);
             return (root, gameDataPath);

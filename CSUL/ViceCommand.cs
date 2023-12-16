@@ -6,8 +6,8 @@
  *  文件介绍: 副进程传参处理
  *  --------------------------------------
  */
+
 using CSUL.Models.Network.CB;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,7 +27,8 @@ namespace CSUL
             PropertyNameCaseInsensitive = true,
         };
 
-        private ViceCommand() { }
+        private ViceCommand()
+        { }
 
         /// <summary>
         /// 解析命令
@@ -55,6 +56,7 @@ namespace CSUL
         }
 
         #region ---私有方法---
+
         /// <summary>
         /// 安装BepInEx模组
         /// </summary>
@@ -82,6 +84,7 @@ namespace CSUL
                 return new Dictionary<string, string>(pairs);
             });
         }
-        #endregion
+
+        #endregion ---私有方法---
     }
 }

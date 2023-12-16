@@ -1,9 +1,11 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +37,7 @@ namespace CSUL
             {   //主进程
                 if (TryCreatRegisterFile(out string reg))
                 {   //创建注册表
-                    MessageBoxResult ret = MessageBox.Show("为加强CSUL与论坛的连接，需要创建一个注册表添加自定义协议\n" +
+                    MessageBoxResult ret = MessageBox.Show("为实现论坛内容自动下载安装，需要创建一个注册表添加自定义协议\n" +
                         "在此保证该注册表内容安全，如有疑虑可查看源码\n" +
                         "是否同意创建?", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (ret == MessageBoxResult.Yes)
@@ -63,8 +65,8 @@ namespace CSUL
                         {   //向主进程传参
                             pipe.Connect(TimeSpan.FromSeconds(5));
                             string info = string.Join(" ", args[1..]);
-                            byte[] buffer = info.StartsWith("csul:")
-                                ? System.Web.HttpUtility.UrlDecodeToBytes(info[5..])
+                            byte[] buffer = info.StartsWith("csul://")
+                                ? System.Web.HttpUtility.UrlDecodeToBytes(info[7..])
                                 : Encoding.UTF8.GetBytes(info);
                             pipe.Write(buffer, 0, buffer.Length);
                             pipe.Close();
@@ -184,11 +186,14 @@ namespace CSUL
                         }
                         catch (IOException) { break; }
                     }
-                    string info = Encoding.UTF8.GetString(stream.ToArray());
-                    MessageBox.Show(info);
+                    string command = Encoding.UTF8.GetString(stream.ToArray());
+                    await ViceCommand.Parse(command);
                 }
                 catch (OperationCanceledException) { break; }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToFormative(), "参数处理出现错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

@@ -39,15 +39,15 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         /// <summary>
         /// 尝试获取BepInEx的版本
         /// </summary>
-        /// <param name="gameRootPath">游戏安装路径</param>
+        /// <param name="bepRootPath">BepInEx根目录</param>
         /// <param name="version">BepInEx版本</param>
         /// <returns>是否获取成功</returns>
-        public static bool TryGetBepVersion(string gameRootPath, [NotNullWhen(true)] out Version? version)
+        public static bool TryGetBepVersion(string bepRootPath, [NotNullWhen(true)] out Version? version)
         {
             version = null;
             try
             {
-                string corePath = Path.Combine(gameRootPath, "BepInEx", "core");
+                string corePath = Path.Combine(bepRootPath, "BepInEx", "core");
                 if (!Directory.Exists(corePath)) return false;
                 string? bepCore = Directory.GetFiles(corePath).Select(Path.GetFileName)
                     .FirstOrDefault(x => x!.StartsWith("BepInEx") && x!.EndsWith(".dll"));

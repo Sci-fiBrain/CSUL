@@ -41,8 +41,7 @@ namespace CSUL.Models.Local.ModPlayer
             {
                 try
                 {
-                    BaseModPlayer modPlayer = LoadModPlayer(playerPath);
-                    players.Add(modPlayer.GetHashCode(), modPlayer);
+                    LoadModPlayer(playerPath);
                 }
                 catch (Exception ex)
                 {
@@ -59,7 +58,6 @@ namespace CSUL.Models.Local.ModPlayer
         private readonly Dictionary<int, BaseModPlayer> players = new();
         #endregion
 
-        #region ---公共方法---
         /// <summary>
         /// 获取指定HashCode的播放集
         /// </summary>
@@ -71,7 +69,9 @@ namespace CSUL.Models.Local.ModPlayer
                 return modPlayer;
             }
         }
-        
+
+        #region ---公共方法---
+
         /// <summary>
         /// 获取所有的加载器
         /// </summary>
@@ -86,37 +86,34 @@ namespace CSUL.Models.Local.ModPlayer
         /// <returns>该播放集的HashCode</returns>
         public int CreatNewModPlayer(string name, ModPlayerType playerType)
         {
-            string path = Path.Combine(playerRootPath, name);
-            if (Directory.Exists(path)) throw new Exception("该名称的播放集已存在");
-            else Directory.CreateDirectory(path);
-            string config = Path.Combine(path, "modPlayer.config");
-            using Stream stream = File.Create(config);
-            using Utf8JsonWriter json = new(stream);
-            json.WriteStartObject();
-            json.WriteString(typeof(ModPlayerType).Name, playerType.ToString());
-            json.WriteEndObject();
-            BaseModPlayer player = playerType switch
-            {
-                ModPlayerType.BepInEx => new BepInEx.BepModPlayer(),
-                _ => throw new Exception("未知的播放集类型")
-            };
-            player.Initialize(rootPath, dataPath, path);
-            int hashCode = player.GetHashCode();
-            players.Add(hashCode, player);
-            Task.Run(() => OnDataChanged?.Invoke(this, EventArgs.Empty));
-            return hashCode;
+            throw new NotImplementedException();
+            //string path = Path.Combine(playerRootPath, name);
+            //if (Directory.Exists(path)) throw new Exception("该名称的播放集已存在");
+            //else Directory.CreateDirectory(path);
+            //string config = Path.Combine(path, "modPlayer.config");
+            //using Stream stream = File.Create(config);
+            //using Utf8JsonWriter json = new(stream);
+            //json.WriteStartObject();
+            //json.WriteString(typeof(ModPlayerType).Name, playerType.ToString());
+            //json.WriteEndObject();
+            //BaseModPlayer player = playerType switch
+            //{
+            //    ModPlayerType.BepInEx => new BepInEx.BepModPlayer(),
+            //    _ => throw new Exception("未知的播放集类型")
+            //};
+            //player.Initialize(rootPath, dataPath, path);
+            //int hashCode = player.GetHashCode();
+            //players.Add(hashCode, player);
+            //Task.Run(() => OnDataChanged?.Invoke(this, EventArgs.Empty));
+            //return hashCode;
         }
-        #endregion
 
-        #region ---私有方法---
         /// <summary>
         /// 加载播放集
         /// </summary>
-        /// <param name="rootPath">游戏根目录</param>
-        /// <param name="dataPath">游戏数据目录</param>
         /// <param name="playerPath">播放集目录</param>
         /// <returns></returns>
-        private BaseModPlayer LoadModPlayer(string playerPath)
+        public void LoadModPlayer(string playerPath)
         {
             string config = Path.Combine(playerPath, "modPlayer.config");
             if (!File.Exists(config)) throw new FileNotFoundException(config);
@@ -130,7 +127,9 @@ namespace CSUL.Models.Local.ModPlayer
                 _ => throw new Exception("未知的播放集类型")
             };
             player.Initialize(rootPath, dataPath, playerPath);
-            return player;
+            int hashCode = player.GetHashCode();
+            if (players.ContainsKey(hashCode)) throw new Exception("该播放集已加载");
+            players.Add(hashCode, player);
         }
         #endregion
     }

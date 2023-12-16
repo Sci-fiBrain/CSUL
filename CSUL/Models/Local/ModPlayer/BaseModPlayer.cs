@@ -96,11 +96,6 @@ namespace CSUL.Models.Local.ModPlayer
         public abstract bool IsEnabled { get; }
 
         /// <summary>
-        /// 当前播放集的名字
-        /// </summary>
-        public abstract string Name { get; }
-
-        /// <summary>
         /// 播放集类型
         /// </summary>
         public abstract ModPlayerType PlayerType { get; }

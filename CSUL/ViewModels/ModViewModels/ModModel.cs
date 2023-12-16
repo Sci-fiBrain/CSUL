@@ -135,7 +135,8 @@ namespace CSUL.ViewModels.ModViewModels
                 if (file.Directory?.Exists is true) file.Directory.Delete(true);
                 if (file.Exists) file.Delete();
                 if (file.Directory?.Exists is false) file.Directory?.Create();
-                await NetworkData.DownloadFromUri(data.Uri, path);
+                using FileStream stream = File.Create(path);
+                await NetworkData.DownloadFromUri(data.Uri, stream);
                 using TempDirectory package = new();
                 await package.Decompress(path);
                 RemoveBepInEx();

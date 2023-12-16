@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -29,7 +30,16 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 if (args.AddedItems[0] is not BaseModPlayer player) return;
                 SelectedPlayer = player;
             });
-            AddModCommand = new RelayCommand(sender => { });
+            AddModCommand = new RelayCommand(sender =>
+            {
+                if (sender is not DragFilesEventArgs args) return;
+                if(selectedPlayer is null)
+                {
+                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                foreach (string path in args.Paths) selectedPlayer?.AddMod(path);
+            });
             RefreshData();
         }
 

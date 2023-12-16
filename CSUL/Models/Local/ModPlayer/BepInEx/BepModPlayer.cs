@@ -25,31 +25,30 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         protected override void Initialized()
         {
-            name = Path.GetFileName(PlayerPath);
+            bepPath = Path.Combine(PlayerPath, "BepInEx");
+            modPath = Path.Combine(PlayerPath, "Mods");
+            if (!Directory.Exists(bepPath)) throw new DirectoryNotFoundException("BepInEx文件未找到");
+            if (!Directory.Exists(modPath)) throw new DirectoryNotFoundException("Mods文件未找到");
+
         }
         #endregion
 
         #region ---私有字段---
-        private string name = default!;
         private bool isEnabled = default!;
+        private readonly List<BepModData> mods = new();
+        private string bepPath = default!;
+        private string modPath = default!;
         #endregion
 
         #region ---公共属性---
         public override bool IsEnabled => isEnabled;
 
-        public override string Name => name;
-
         public override ModPlayerType PlayerType => ModPlayerType.BepInEx;
 
-        public override IModData[] ModDatas => new BepModData[]
-        {
-            new BepModData(){Name = "模组A"},
-            new BepModData(){Name = "模组B"},
-            new BepModData(){Name = "模组C"},
-        };
+        public override IModData[] ModDatas => mods.ToArray();
         #endregion
 
-        #region ---公共方法
+        #region ---公共方法---
         public override void AddMod(string path)
         {
             throw new NotImplementedException();
@@ -57,32 +56,34 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override void Disable()
         {
-            throw new NotImplementedException();
+            if (!isEnabled) return;
+            isEnabled = false;
         }
 
         public override void Enable()
         {
-            throw new NotImplementedException();
+            if (isEnabled) return;
+            isEnabled = true;
         }
 
         public override void EnableMod(IModData modData)
         {
-            throw new NotImplementedException();
+            if (modData is not BepModData mod) return;
         }
 
         public override void DisableMod(IModData modData)
         {
-            throw new NotImplementedException();
+            if (modData is not BepModData mod) return;
         }
 
         public override void RemoveMod(IModData modData)
         {
-            throw new NotImplementedException();
+            if (modData is not BepModData mod) return;
         }
 
         public override void UpgradeMod(IModData modData, string path)
         {
-            throw new NotImplementedException();
+            if (modData is not BepModData mod) return;
         }
         #endregion
     }

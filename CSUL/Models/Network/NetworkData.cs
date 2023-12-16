@@ -45,24 +45,23 @@ namespace CSUL.Models.Network
         }
 
         /// <summary>
-        /// 下载文件
+        /// 下载文件到指定流
         /// </summary>
         /// <param name="uri">文件链接</param>
-        /// <param name="path">文件要下载到的路径</param>
+        /// <param name="stream">文件要下载到的流</param>
         /// <param name="DownloadProgress">一个委托 返回已下载的字节数</param>
-        public static async Task DownloadFromUri(string uri, string path, Action<long>? DownloadProgress = null)
+        public static async Task DownloadFromUri(string uri, Stream stream, Action<long>? DownloadProgress = null)
         {
             using HttpClient http = new();
-            using FileStream file = File.Create(path);
-            using Stream stream = await http.GetStreamAsync(uri);
+            using Stream webStream = await http.GetStreamAsync(uri);
             long total = 0;
             while (true)
             {
                 byte[] buffer = new byte[1024];
-                int size = await stream.ReadAsync(buffer);
+                int size = await webStream.ReadAsync(buffer);
                 if (size <= 0) break;
                 DownloadProgress?.Invoke(total += size);
-                await file.WriteAsync(buffer);
+                await stream.WriteAsync(buffer);
             }
         }
 

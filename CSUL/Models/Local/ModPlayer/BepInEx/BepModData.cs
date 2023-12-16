@@ -19,6 +19,11 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
     /// </summary>
     internal class BepModData : IModData
     {
+        public BepModData(string path)
+        {
+
+        }
+
         public string Name { get; set; }
 
         public string? ModVersion { get; set; }

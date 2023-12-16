@@ -9,7 +9,7 @@ namespace CSUL.ExControls
     /// <summary>
     /// <see cref="ContentControl"/>的附加属性
     /// </summary>
-    public class ContentControlEx
+    public static class ContentControlEx
     {
         public static readonly DependencyProperty ContentChangedAnimationProperty = DependencyProperty.RegisterAttached(
     "ContentChangedAnimation", typeof(Storyboard), typeof(ContentControlEx),

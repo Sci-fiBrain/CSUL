@@ -13,7 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using ParPairs = System.Collections.Generic.Dictionary<string, string>;
 
 namespace CSUL
 {
@@ -37,7 +39,7 @@ namespace CSUL
         {
             int index = command.IndexOf('?');
             Queue<string> keys;
-            Dictionary<string, string> pars;
+            ParPairs pars;
             if (index == -1 || index + 1 == command.Length)
             {   //无参数
                 keys = new(command.Split("/").Where(x => x.Length > 0));
@@ -52,6 +54,7 @@ namespace CSUL
             switch (keys.Dequeue())
             {
                 case "installbepmod": await InstallBepMod(pars); break;
+                case "installbepmods": await InstallBepMods(pars); break;
             }
         }
 
@@ -60,17 +63,25 @@ namespace CSUL
         /// <summary>
         /// 安装BepInEx模组
         /// </summary>
-        private static async Task InstallBepMod(Dictionary<string, string> pars)
+        private static async Task InstallBepMod(ParPairs pairs)
         {
-            if (!pars.TryGetValue("json", out string? json)) return;
-            MemoryStream stream = new(Encoding.UTF8.GetBytes(json));
-            CbResourceData? data = await JsonSerializer.DeserializeAsync<CbResourceData>(stream, options);
+            if (!pairs.TryGetValue("json", out string? json)) return;
+            CbResourceData? data = await ConvertJson<CbResourceData>(json);
+        }
+
+        /// <summary>
+        /// 安装多个模组
+        /// </summary>
+        private static async Task InstallBepMods(ParPairs pairs)
+        {
+            if (!pairs.TryGetValue("json", out string? json)) return;
+            CbResourceData[]? data = await ConvertJson<CbResourceData[]>(json);
         }
 
         /// <summary>
         /// 从参数数据得到字典
         /// </summary>
-        private static async Task<Dictionary<string, string>> GetDicFromData(IEnumerable<string> data)
+        private static async Task<ParPairs> GetDicFromData(IEnumerable<string> data)
         {
             return await Task.Run(() =>
             {
@@ -81,8 +92,17 @@ namespace CSUL
                     if (index == x.Length - 1) return default;
                     return KeyValuePair.Create(x[..index], x[(index + 1)..]);
                 });
-                return new Dictionary<string, string>(pairs);
+                return new ParPairs(pairs);
             });
+        }
+
+        /// <summary>
+        /// 转换json字符串
+        /// </summary>
+        private static async Task<T?> ConvertJson<T>(string json)
+        {
+            using MemoryStream stream = new(Encoding.UTF8.GetBytes(json));
+            return await JsonSerializer.DeserializeAsync<T>(stream, options);
         }
 
         #endregion ---私有方法---

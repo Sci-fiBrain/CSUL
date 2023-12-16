@@ -178,7 +178,7 @@ namespace CSUL
                     {
                         try
                         {
-                            byte[] buffer = new byte[512];
+                            byte[] buffer = new byte[1024];
                             int size = await pipe.ReadAsync(buffer, token);
                             stream.Write(buffer, 0, size);
                         }

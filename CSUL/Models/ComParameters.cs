@@ -7,6 +7,7 @@
  *  --------------------------------------
  */
 
+using CSUL.Models.Local.ModPlayer;
 using System;
 using System.IO;
 using System.Windows;
@@ -21,8 +22,6 @@ namespace CSUL.Models
         /// 配置文件路径
         /// </summary>
         private static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL_CP.config");
-
-        private static readonly string TempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
 
         /// <summary>
         /// 得到<see cref="ComParameters"/>实例
@@ -51,13 +50,13 @@ namespace CSUL.Models
             if (!GameRoot.Exists)
             {
                 MessageBox.Show("游戏安装文件夹未找到，请手动设定", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-                gameRootPath = Path.Combine(TempPath, "fakeGameRoot");
+                gameRootPath = Path.Combine(Template.FullName, "fakeGameRoot");
                 if (!GameRoot.Exists) GameRoot.Create();
             }
             if (!GameData.Exists)
             {
                 MessageBox.Show("游戏数据文件夹未找到，请手动设定", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
-                gameDataPath = Path.Combine(TempPath, "fakeGameData");
+                gameDataPath = Path.Combine(Template.FullName, "fakeGameData");
                 if (!GameData.Exists) GameData.Create();
             }
             Instance = this;
@@ -72,6 +71,8 @@ namespace CSUL.Models
         #endregion ---构造函数---
 
         #region ---公共属性---
+
+        #region --游戏启动相关--
 
         /// <summary>
         /// 游戏启动参数
@@ -96,6 +97,8 @@ namespace CSUL.Models
         /// </summary>
         [Config]
         public bool SteamCompatibilityMode { get; set; } = false;
+
+        #endregion --游戏启动相关--
 
         #region --游戏平台相关--
 
@@ -135,6 +138,13 @@ namespace CSUL.Models
             set => gameRootPath = value.FullName;
         }
 
+        /// <summary>
+        /// 运行文件夹
+        /// </summary>
+        private readonly string basePath = AppDomain.CurrentDomain.BaseDirectory;
+
+        public DirectoryInfo Base => GetDirectoryInfo(basePath);
+
         #endregion -基础文件夹-
 
         #region -派生文件夹-
@@ -142,46 +152,50 @@ namespace CSUL.Models
         /// <summary>
         /// 地图文件夹
         /// </summary>
-        public DirectoryInfo Maps
-        {
-            get => GetDirectoryInfo(Path.Combine(gameDataPath, "Maps"));
-        }
+        public DirectoryInfo Maps => GetDirectoryInfo(Path.Combine(gameDataPath, "Maps"));
 
         /// <summary>
         /// 存档文件夹
         /// </summary>
-        public DirectoryInfo Saves
-        {
-            get => GetDirectoryInfo(Path.Combine(gameDataPath, "Saves"));
-        }
+        public DirectoryInfo Saves => GetDirectoryInfo(Path.Combine(gameDataPath, "Saves"));
 
         /// <summary>
         /// BepInEx根文件夹
         /// </summary>
-        public DirectoryInfo BepInEx
-        {
-            get => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx"));
-        }
+        public DirectoryInfo BepInEx => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx"));
 
         /// <summary>
         /// BepInEx模组文件夹
         /// </summary>
-        public DirectoryInfo BepMod
-        {
-            get => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx", "plugins"));
-        }
+        public DirectoryInfo BepMod => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx", "plugins"));
 
         /// <summary>
         /// BepInEx配置文件夹
         /// </summary>
-        public DirectoryInfo BepConfig
-        {
-            get => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx", "config"));
-        }
+        public DirectoryInfo BepConfig => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx", "config"));
+
+        /// <summary>
+        /// 临时文件夹
+        /// </summary>
+        public DirectoryInfo Template => GetDirectoryInfo(Path.Combine(basePath, "Template"));
+
+        /// <summary>
+        /// 模组播放集文件夹
+        /// </summary>
+        public DirectoryInfo ModPlayers => GetDirectoryInfo(Path.Combine(basePath, "ModPlayers"));
 
         #endregion -派生文件夹-
 
         #endregion --文件夹相关--
+
+        #region --模组播放集管理器--
+
+        /// <summary>
+        /// 模组播放集管理器
+        /// </summary>
+        public ModPlayerManager ModPlayerManager { get; set; } = default!;
+
+        #endregion --模组播放集管理器--
 
         #endregion ---公共属性---
 

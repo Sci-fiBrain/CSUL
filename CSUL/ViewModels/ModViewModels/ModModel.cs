@@ -1,6 +1,6 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
-using CSUL.Models.Local.BepInEx;
+using CSUL.Models.Local.ModPlayer.BepInEx;
 using CSUL.Models.Network;
 using CSUL.UserControls.DragFiles;
 using CSUL.Windows;

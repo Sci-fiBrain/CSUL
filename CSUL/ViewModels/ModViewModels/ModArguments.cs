@@ -1,5 +1,5 @@
 ﻿using CSUL.Models;
-using CSUL.Models.Local.BepInEx;
+using CSUL.Models.Local.ModPlayer.BepInEx;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

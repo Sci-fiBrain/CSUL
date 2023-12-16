@@ -26,4 +26,6 @@
     <sys:String x:Key="SteamCompatible">Start in Steam compatibility mode (recommend)</sys:String>
     <sys:String x:Key="On">On</sys:String>
     <sys:String x:Key="Off">Off</sys:String>
+    <sys:String x:Key="ModPlayer">Mod Player</sys:String>
+    <sys:String x:Key="Creat">Creat</sys:String>
 </ResourceDictionary>

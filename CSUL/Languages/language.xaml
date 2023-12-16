@@ -26,4 +26,6 @@
     <sys:String x:Key="SteamCompatible">以Steam正版兼容模式启动（推荐）</sys:String>
     <sys:String x:Key="On">启用</sys:String>
     <sys:String x:Key="Off">禁用</sys:String>
+    <sys:String x:Key="ModPlayer">播放集</sys:String>
+    <sys:String x:Key="Creat">创建</sys:String>
 </ResourceDictionary>

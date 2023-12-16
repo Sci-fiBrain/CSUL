@@ -16,7 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace CSUL.Models.Local.BepInEx
+namespace CSUL.Models.Local.ModPlayer.BepInEx
 {
     /// <summary>
     /// BepInEx相关的处理方法

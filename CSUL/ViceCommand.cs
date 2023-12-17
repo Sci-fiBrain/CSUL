@@ -66,7 +66,8 @@ namespace CSUL
         private static async Task InstallBepMod(ParPairs pairs)
         {
             if (!pairs.TryGetValue("json", out string? json)) return;
-            CbResourceData? data = await ConvertJson<CbResourceData>(json);
+
+
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace CSUL
         private static async Task InstallBepMods(ParPairs pairs)
         {
             if (!pairs.TryGetValue("json", out string? json)) return;
-            CbResourceData[]? data = await ConvertJson<CbResourceData[]>(json);
+
         }
 
         /// <summary>

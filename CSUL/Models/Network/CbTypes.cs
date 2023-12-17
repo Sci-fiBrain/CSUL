@@ -6,12 +6,10 @@
  *  文件介绍: CSLBBS传参类型
  *  --------------------------------------
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace CSUL.Models.Network.CB
 {
@@ -21,71 +19,159 @@ namespace CSUL.Models.Network.CB
     internal class CbResourceData
     {
         /// <summary>
-        /// 资源类型
+        /// 资源Id
         /// </summary>
-        [JsonPropertyName("type")]
-        public string ResourceType { get; set; } = default!;
+        [JsonPropertyName("resource_id")]
+        public int Id { get; set; }
 
         /// <summary>
-        /// 前缀类型
+        /// 资源标题
         /// </summary>
-        public string Prefix { get; set; } = default!;
-
-        /// <summary>
-        /// 资源名称
-        /// </summary>
+        [JsonPropertyName("title")]
         public string Title { get; set; } = default!;
-
-        /// <summary>
-        /// 资源描述
-        /// </summary>
-        public string TagLine { get; set; } = default!;
-
-        /// <summary>
-        /// 图标地址
-        /// </summary>
-        public string IconUrl { get; set; } = default!;
 
         /// <summary>
         /// 资源版本
         /// </summary>
-        public string Version { get; set; } = default!;
+        [JsonPropertyName("version")]
+        public string ResourceVersion { get; set; } = default!;
 
         /// <summary>
-        /// 文件信息
+        /// 资源前缀
         /// </summary>
-        public CbFileData[]? CurrentFiles { get; set; }
+        [JsonPropertyName("prefix")]
+        public string Prefix { get; set; } = default!;
 
         /// <summary>
-        /// 支持的加载器版本（5或6）
+        /// 资源地址
         /// </summary>
-        public int[]? ModLoader { get; set; }
+        [JsonPropertyName("view_url")]
+        public string ResourceUrl { get; set; } = default!;
+
+        /// <summary>
+        /// 资源更新时间
+        /// </summary>
+        [JsonPropertyName("last_update")]
+        [JsonConverter(typeof(TimeConverter))]
+        public DateTime LastUpdateTime { get; set; }
+
+        /// <summary>
+        /// 资源更新次数
+        /// </summary>
+        [JsonPropertyName("update_count")]
+        public int UpdateCount { get; set; }
+
+        /// <summary>
+        /// 资源发布时间
+        /// </summary>
+        [JsonPropertyName("resource_date")]
+        [JsonConverter(typeof(TimeConverter))]
+        public DateTime PublishTime { get; set; }
+
+        /// <summary>
+        /// 资源描述
+        /// </summary>
+        [JsonPropertyName("tag_line")]
+        public string Desciption { get; set; } = default!;
+
+        /// <summary>
+        /// 资源文件
+        /// </summary>
+        [JsonPropertyName("current_files")]
+        public CbFileData[]? Files { get; set; }
+
+        /// <summary>
+        /// 资源扩展信息
+        /// </summary>
+        [JsonIgnore]
+        public CbCustomInfo CustomInfo { get; set; } = default!;
+
+        #region ---转换类型---
+
+        private class TimeConverter : JsonConverter<DateTime>
+        {
+            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                if (reader.TryGetInt64(out long value)) return DateTimeOffset.FromUnixTimeSeconds(value).LocalDateTime;
+                return default!;
+            }
+
+            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+            {
+                writer.WriteNumberValue(new DateTimeOffset(value).ToUnixTimeSeconds());
+            }
+        }
+
+        #endregion ---转换类型---
     }
 
     /// <summary>
-    /// CSLBBS资源文件数据
+    /// CSLBBS自定义字段信息
     /// </summary>
-    internal class CbFileData
+    internal class CbCustomInfo
     {
         /// <summary>
-        /// 文件Id
+        /// 资源类型
         /// </summary>
-        public int Id { get; set; }
+        public CbResourceType ResourceType { get; set; }
+    }
+
+    /// <summary>
+    /// BepInEx模组数据
+    /// </summary>
+    internal class CbCustomBepModInfo : CbCustomInfo
+    {
+        /// <summary>
+        /// BepInEx版本
+        /// </summary>
+        public int[]? BepInExVersion { get; set; }
 
         /// <summary>
-        /// 文件名称
+        /// 前置BepInEx模组
         /// </summary>
+        public CbResourceData[]? DependBepMods { get; set; }
+
+        /// <summary>
+        /// 支持的游戏版本
+        /// </summary>
+        public string GameVersion { get; set; } = default!;
+    }
+
+    /// <summary>
+    /// CSLBBS文件数据
+    /// </summary>
+    public class CbFileData
+    {
+        [JsonPropertyName("id")]
+        public int FileId { get; set; }
+
+        [JsonPropertyName("filename")]
         public string FileName { get; set; } = default!;
 
+        [JsonPropertyName("size")]
+        public int Size { get; set; }
+
+        [JsonPropertyName("download_url")]
+        public string Url { get; set; } = default!;
+    }
+
+    /// <summary>
+    /// CSLBBS资源类型
+    /// </summary>
+    internal enum CbResourceType
+    {
         /// <summary>
-        /// 文件大小（字节）
+        /// 默认
         /// </summary>
-        public long Size { get; set; }
+        Default,
+
+        BepMod,
+        Map,
+        Save,
 
         /// <summary>
-        /// 下载地址
+        /// 自定义电台
         /// </summary>
-        [JsonPropertyName("download_url")]
-        public string DownloadUrl { get; set; } = default!;
+        CustomRadios
     }
 }

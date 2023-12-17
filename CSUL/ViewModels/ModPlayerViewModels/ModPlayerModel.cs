@@ -24,19 +24,20 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             manager.OnDataChanged += (sender, e) => RefreshData();
             CP.ModPlayerManager = manager;
             CreatNewModPlayerCommand = new RelayCommand(sender =>
-            {
+            {   //创建播放集
                 ModPlayerCteator playerCteator = new();
                 playerCteator.ShowDialog();
+                RefreshData();
             });
             ComboSelectedCommand = new RelayCommand(sender =>
-            {
+            {   //选择播放集
                 if (sender is not SelectionChangedEventArgs args) return;
                 if (args.AddedItems.Count < 1) return;
                 if (args.AddedItems[0] is not BaseModPlayer player) return;
                 SelectedPlayer = player;
             });
             AddModCommand = new RelayCommand(sender =>
-            {
+            {   //添加模组
                 if (sender is not DragFilesEventArgs args) return;
                 if(selectedPlayer is null)
                 {

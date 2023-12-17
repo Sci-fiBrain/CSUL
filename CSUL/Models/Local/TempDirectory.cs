@@ -26,7 +26,7 @@ namespace CSUL.Models.Local
         /// </summary>
         public TempDirectory()
         {
-            string tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempFile");
+            string tempDirPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempFile");
             FullName = Path.Combine(tempDirPath, $"tempDir{GetHashCode()}");
             Directory.CreateDirectory(FullName);
         }

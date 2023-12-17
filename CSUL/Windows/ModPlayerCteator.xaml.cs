@@ -1,4 +1,5 @@
 ﻿using CSUL.Models.Local.ModPlayer;
+using CSUL.ViewModels.ModPlayerCreatorViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace CSUL.Windows
         internal ModPlayerCteator()
         {
             InitializeComponent();
+            ModPlayerCreatorModel? vm = DataContext as ModPlayerCreatorModel;
+            if (vm is not null) vm.Window = this;
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)

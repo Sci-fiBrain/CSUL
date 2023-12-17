@@ -34,6 +34,11 @@
                     <Label Content="{StaticResource ModPlayer}"/>
                 </Grid>
                 <ComboBox ItemsSource="{Binding Players}" FocusVisualStyle="{x:Null}" Width="300">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding ComboSelectedCommand}" PassEventArgsToCommand="True" />
@@ -41,7 +46,7 @@
                     </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Name}"/>
+                            <Label Content="{Binding PlayerName}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

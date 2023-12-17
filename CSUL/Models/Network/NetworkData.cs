@@ -52,7 +52,7 @@ namespace CSUL.Models.Network
         /// 下载文件到指定流
         /// </summary>
         /// <param name="uri">文件链接</param>
-        /// <param name="stream">文件要下载到的流</param>
+        /// <param name="path">文件要下载到的流</param>
         /// <param name="DownloadProgress">一个委托 返回已下载的字节数</param>
         public static async Task DownloadFromUri(string uri, Stream stream, Action<long>? DownloadProgress = null)
         {
@@ -65,8 +65,9 @@ namespace CSUL.Models.Network
                 int size = await webStream.ReadAsync(buffer);
                 if (size <= 0) break;
                 DownloadProgress?.Invoke(total += size);
-                await stream.WriteAsync(buffer);
+                await stream.WriteAsync(buffer.AsMemory()[..size]);
             }
+            await stream.FlushAsync();
         }
 
         /// <summary>

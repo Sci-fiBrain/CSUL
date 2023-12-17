@@ -75,36 +75,6 @@ namespace CSUL.Models.Local.ModPlayer
         public List<BaseModPlayer> GetModPlayers() => players.Select(x => x.Value).ToList();
 
         /// <summary>
-        /// 创建新的模组播放集
-        /// </summary>
-        /// <param name="name">播放集名称</param>
-        /// <param name="playerType">播放集类型</param>
-        /// <returns>该播放集的HashCode</returns>
-        public int CreatNewModPlayer(string name, ModPlayerType playerType)
-        {
-            throw new NotImplementedException();
-            //string path = Path.Combine(playerRootPath, name);
-            //if (Directory.Exists(path)) throw new Exception("该名称的播放集已存在");
-            //else Directory.CreateDirectory(path);
-            //string config = Path.Combine(path, "modPlayer.config");
-            //using Stream stream = File.Create(config);
-            //using Utf8JsonWriter json = new(stream);
-            //json.WriteStartObject();
-            //json.WriteString(typeof(ModPlayerType).Name, playerType.ToString());
-            //json.WriteEndObject();
-            //BaseModPlayer player = playerType switch
-            //{
-            //    ModPlayerType.BepInEx => new BepInEx.BepModPlayer(),
-            //    _ => throw new Exception("未知的播放集类型")
-            //};
-            //player.Initialize(rootPath, dataPath, path);
-            //int hashCode = player.GetHashCode();
-            //players.Add(hashCode, player);
-            //Task.Run(() => OnDataChanged?.Invoke(this, EventArgs.Empty));
-            //return hashCode;
-        }
-
-        /// <summary>
         /// 加载播放集
         /// </summary>
         /// <param name="playerPath">播放集目录</param>

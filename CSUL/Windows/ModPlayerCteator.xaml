@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ec="clr-namespace:CSUL.ExControls"
         xmlns:vm="clr-namespace:CSUL.ViewModels.ModPlayerCreatorViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CSUL.Windows"
         mc:Ignorable="d" Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        Title="ModPlayerCteater" Height="450" Width="800">
+        Title="ModPlayerCteater" Height="350" Width="500">
     <Window.DataContext>
         <vm:ModPlayerCreatorModel/>
     </Window.DataContext>
@@ -25,16 +26,73 @@
         <Grid Grid.Row="0">
             <Border Background="{DynamicResource BlackBrush}" Padding="3" CornerRadius="10,10,0,0" MouseMove="Border_MouseMove">
                 <Grid>
-                    <Label Content="播放集创建器" Foreground="{DynamicResource WhiteBrush}"
+                    <Label Content="创建新的播放集" Foreground="{DynamicResource WhiteBrush}"
                    HorizontalAlignment="Left" VerticalAlignment="Center"
                    FontSize="18" Margin="10,0,0,0" />
                     <ec:CButton Icon="/Resources/Icons/close.png" HorizontalAlignment="Right"
-                        Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" />
+                        Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" IsEnabled="{Binding ButtonEnable}"/>
                 </Grid>
             </Border>
         </Grid>
-        <Border Grid.Row="1" BorderBrush="{DynamicResource BlackBrush}" BorderThickness="1" CornerRadius="0,0,10,10">
-            
+        <Border Grid.Row="1" BorderBrush="{DynamicResource BlackBrush}" BorderThickness="1" CornerRadius="0,0,10,10" IsEnabled="{Binding ButtonEnable}">
+            <Grid>
+                <StackPanel Margin="10">
+                    <StackPanel Orientation="Vertical" Margin="0, 5">
+                        <Grid VerticalAlignment="Center">
+                            <Label Content="播放集名称" FontSize="16"/>
+                        </Grid>
+                        <TextBox Height="30" FontSize="15" Text="{Binding PlayerName}"
+                                 VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0, 5">
+                        <Grid VerticalAlignment="Center">
+                            <Label Content="播放集类型" FontSize="16"/>
+                        </Grid>
+                        <ComboBox Height="30" ItemsSource="{Binding PlayerTypes}"
+                                  VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0, 5">
+                        <Grid VerticalAlignment="Center">
+                            <Label Content="BepInEx版本" FontSize="16"/>
+                        </Grid>
+                        <ComboBox Height="30" ItemsSource="{Binding BepDatas}"
+                                  VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding ChooseBepCommand}" PassEventArgsToCommand="True" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+                <ec:CButton Height="40" Width="130" FontSize="16" IsEnabled="{Binding ButtonEnable}"
+                            ButtonType="Text" Content="创建" Margin="10"
+                            Foreground="{DynamicResource WhiteBrush}"
+                            Background="{DynamicResource BlackBrush}"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Command="{Binding CreatCommand}"/>
+            </Grid>
         </Border>
     </Grid>
 </Window>

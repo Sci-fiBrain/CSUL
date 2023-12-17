@@ -34,14 +34,12 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         #endregion
 
         #region ---私有字段---
-        private bool isEnabled = default!;
         private readonly List<BepModData> mods = new();
         private string bepPath = default!;
         private string modPath = default!;
         #endregion
 
         #region ---公共属性---
-        public override bool IsEnabled => isEnabled;
 
         public override ModPlayerType PlayerType => ModPlayerType.BepInEx;
 
@@ -54,16 +52,19 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             throw new NotImplementedException();
         }
 
-        public override void Disable()
+        public override void Disable(string gameRoot, string dataRoot)
         {
-            if (!isEnabled) return;
-            isEnabled = false;
+            throw new NotImplementedException();
         }
 
-        public override void Enable()
+        public override void Enable(string gameRoot, string dataRoot)
         {
-            if (isEnabled) return;
-            isEnabled = true;
+            throw new NotImplementedException();
+        }
+
+        public override bool GetPlayerState(string gameRoot, string dataRoot)
+        {
+            throw new NotImplementedException();
         }
 
         public override void EnableMod(IModData modData)

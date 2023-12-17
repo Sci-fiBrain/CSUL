@@ -1,6 +1,7 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local.ModPlayer;
 using CSUL.UserControls.DragFiles;
+using CSUL.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,14 @@ namespace CSUL.ViewModels.ModPlayerViewModels
 
         public ModPlayerModel()
         {
-            manager = new(CP.GameRoot.FullName, CP.GameData.FullName, CP.ModPlayers.FullName);
+            manager = new(CP.ModPlayers.FullName);
             manager.OnDataChanged += (sender, e) => RefreshData();
             CP.ModPlayerManager = manager;
-            CreatNewModPlayerCommand = new RelayCommand(sender => manager.CreatNewModPlayer(Random.Shared.Next().ToString(), ModPlayerType.BepInEx));
+            CreatNewModPlayerCommand = new RelayCommand(sender =>
+            {
+                ModPlayerCteator playerCteator = new();
+                playerCteator.ShowDialog();
+            });
             ComboSelectedCommand = new RelayCommand(sender =>
             {
                 if (sender is not SelectionChangedEventArgs args) return;

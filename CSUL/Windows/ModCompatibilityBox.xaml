@@ -67,21 +67,21 @@
                 </Grid.Effect>
             </Grid>
         </Border>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Border Background="{DynamicResource BlackBrush}" Padding="3" CornerRadius="10,10,0,0" MouseMove="Border_MouseMove">
-                        <Grid>
-                            <Label Content="{StaticResource CompatibilityWin}" Foreground="{DynamicResource WhiteBrush}"
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Border Background="{DynamicResource BlackBrush}" Padding="3" CornerRadius="10,10,0,0" MouseMove="Border_MouseMove">
+                    <Grid>
+                        <Label Content="{StaticResource CompatibilityWin}" Foreground="{DynamicResource WhiteBrush}"
                                HorizontalAlignment="Left" VerticalAlignment="Center"
                                FontSize="18" Margin="10,0,0,0" />
-                            <ec:CButton Icon="/Resources/Icons/close.png" HorizontalAlignment="Right"
+                        <ec:CButton Icon="/Resources/Icons/close.png" HorizontalAlignment="Right"
                                     Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" />
-                        </Grid>
-                    </Border>
+                    </Grid>
+                </Border>
             </Grid>
             <Border Grid.Row="1" Background="Transparent" BorderBrush="{DynamicResource BlackBrush}" BorderThickness="1" CornerRadius="0,0,10,10">
                 <Grid>

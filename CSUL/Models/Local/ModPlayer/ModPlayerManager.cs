@@ -30,12 +30,10 @@ namespace CSUL.Models.Local.ModPlayer
         /// <summary>
         /// 实例化<see cref="ModPlayerManager"/>对象
         /// </summary>
-        /// <param name="rootPath">游戏根目录</param>
-        /// <param name="dataPath">游戏数据目录</param>
         /// <param name="playerRootPath">播放集根目录</param>
-        public ModPlayerManager(string rootPath, string dataPath, string playerRootPath)
+        public ModPlayerManager(string playerRootPath)
         {
-            (this.rootPath, this.dataPath, this.playerRootPath) = (rootPath, dataPath, playerRootPath);
+            this.playerRootPath = playerRootPath;
             string[] pathes = Directory.GetDirectories(playerRootPath);
             foreach (string playerPath in pathes)
             {
@@ -52,8 +50,6 @@ namespace CSUL.Models.Local.ModPlayer
         #endregion
 
         #region ---私有字段---
-        private readonly string rootPath;
-        private readonly string dataPath;
         private readonly string playerRootPath;
         private readonly Dictionary<int, BaseModPlayer> players = new();
         #endregion
@@ -126,7 +122,7 @@ namespace CSUL.Models.Local.ModPlayer
                 ModPlayerType.BepInEx => new BepInEx.BepModPlayer(),
                 _ => throw new Exception("未知的播放集类型")
             };
-            player.Initialize(rootPath, dataPath, playerPath);
+            player.Initialize(playerPath);
             int hashCode = player.GetHashCode();
             if (players.ContainsKey(hashCode)) throw new Exception("该播放集已加载");
             players.Add(hashCode, player);

@@ -19,13 +19,9 @@ namespace CSUL.Models.Local.ModPlayer
         /// <summary>
         /// 加载播放集
         /// </summary>
-        /// <param name="rootPath">游戏根目录</param>
-        /// <param name="dataPath">游戏数据目录</param>
         /// <param name="playerPath">播放集目录</param>
-        public void Initialize(string rootPath, string dataPath, string playerPath)
+        public void Initialize(string playerPath)
         {
-            RootPath = rootPath;
-            DataPath = dataPath;
             PlayerPath = playerPath;
             Initialized();
         }
@@ -47,12 +43,24 @@ namespace CSUL.Models.Local.ModPlayer
         /// <summary>
         /// 启用播放集
         /// </summary>
-        public abstract void Enable();
+        /// <param name="gameRoot">游戏安装目录</param>
+        /// <param name="dataRoot">游戏数据目录</param>
+        public abstract void Enable(string gameRoot, string dataRoot);
 
         /// <summary>
         /// 禁用播放集
         /// </summary>
-        public abstract void Disable();
+        /// <param name="gameRoot">游戏安装目录</param>
+        /// <param name="dataRoot">游戏数据目录</param>
+        public abstract void Disable(string gameRoot, string dataRoot);
+
+        /// <summary>
+        /// 获取播放集状态
+        /// </summary>
+        /// <param name="gameRoot">游戏安装目录</param>
+        /// <param name="dataRoot">游戏数据目录</param>
+        /// <returns>一个<see cref="bool"/>值 表示该播放集是否已启用</returns>
+        public abstract bool GetPlayerState(string gameRoot, string dataRoot);
 
         /// <summary>
         /// 添加模组
@@ -91,11 +99,6 @@ namespace CSUL.Models.Local.ModPlayer
         #region ---抽象属性---
 
         /// <summary>
-        /// 当前播放集是否已启用
-        /// </summary>
-        public abstract bool IsEnabled { get; }
-
-        /// <summary>
         /// 播放集类型
         /// </summary>
         public abstract ModPlayerType PlayerType { get; }
@@ -109,16 +112,6 @@ namespace CSUL.Models.Local.ModPlayer
         #endregion ---抽象属性---
 
         #region ---公共属性---
-
-        /// <summary>
-        /// 游戏数据根目录
-        /// </summary>
-        protected string DataPath { get; private set; } = default!;
-
-        /// <summary>
-        /// 游戏安装根目录
-        /// </summary>
-        protected string RootPath { get; private set; } = default!;
 
         /// <summary>
         /// 播放集根目录

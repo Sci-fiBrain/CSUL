@@ -8,13 +8,11 @@
  */
 
 using CSUL.Models.Network.CB;
-using SharpCompress;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -76,23 +74,10 @@ namespace CSUL.Models.Network
         /// <returns>CSUL的最新版本</returns>
         public static async Task<Version?> GetCsulLastestVersion()
         {
-            Version? version = null;
-            const string key = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";
-            const string uri = "https://www.cslbbs.net/api/resources/91";
-            using HttpClient http = new();
-            http.DefaultRequestHeaders.Add("XF-API-Key", key);
-            using StreamReader stream = new(await http.GetStreamAsync(uri));
-            while (!stream.EndOfStream)
-            {
-                if (stream.ReadLine() is not string line) continue;
-                if (line.Trim().StartsWith("\"version\""))
-                {
-                    string ver = line.Split(':').Last().Trim('"', ' ', ',');
-                    version = new Version(ver);
-                    break;
-                }
-            }
-            return version;
+            CbResourceData? data = await GetCbResourceData(91);
+            if(data is null) return null;
+            if(Version.TryParse(data.ResourceVersion, out Version? version)) return version;
+            return null;
         }
 
         /// <summary>
@@ -106,46 +91,9 @@ namespace CSUL.Models.Network
             using HttpClient http = new();
             http.DefaultRequestHeaders.Add("XF-API-Key", key);
             using Stream stream = await http.GetStreamAsync(url);
-            JsonDocument json = JsonDocument.Parse(stream);
+            using JsonDocument json = JsonDocument.Parse(stream);
             JsonElement element = json.RootElement.GetProperty("resource");
             CbResourceData? data = element.Deserialize<CbResourceData>();
-            if (data is null) return null;
-            if (element.TryGetProperty("custom_fields", out JsonElement fields))
-            {
-                try
-                {
-                    if (fields.TryGetProperty("modLoaderItem", out JsonElement mod))
-                    {
-                        CbCustomBepModInfo modInfo = new() { ResourceType = CbResourceType.BepMod };
-                        string bep = mod.EnumerateObject().First().Name;
-                        switch (bep)
-                        {
-                            case "5and6": modInfo.BepInExVersion = new int[] { 5, 6 }; break;
-                            case "5": modInfo.BepInExVersion = new int[] { 5 }; break;
-                            case "6": modInfo.BepInExVersion = new int[] { 6 }; break;
-                        }
-                        if (fields.TryGetProperty("depend_mod", out JsonElement dependMods))
-                        {
-                            List<CbResourceData?> dependModsInfo = new();
-                            foreach (string modId in dependMods.EnumerateObject().Select(x => x.Name))
-                            {
-                                if (int.TryParse(modId, out int num)) dependModsInfo.Add(await GetCbResourceData(num));
-                            }
-                            modInfo.DependBepMods = dependModsInfo.Where(x => x is not null).ToArray()!;
-                        }
-                        data.CustomInfo = modInfo;
-                    }
-                    else if (fields.TryGetProperty("Map_or_Save", out JsonElement gameData))
-                    {
-                        string? type = gameData.GetString();
-                        if (type is "Map") data.CustomInfo = new CbCustomInfo() { ResourceType = CbResourceType.Map };
-                        else if (type is "Save") data.CustomInfo = new CbCustomInfo { ResourceType = CbResourceType.Save };
-                        else throw new Exception();
-                    }
-                    else throw new Exception();
-                }
-                catch { data.CustomInfo = new CbCustomInfo() { ResourceType = CbResourceType.Default }; }
-            }
             return data;
         }
     }

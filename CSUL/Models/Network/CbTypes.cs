@@ -8,6 +8,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,6 +19,8 @@ namespace CSUL.Models.Network.CB
     /// </summary>
     internal class CbResourceData
     {
+        #region ---公共属性---
+
         /// <summary>
         /// 资源Id
         /// </summary>
@@ -83,10 +86,15 @@ namespace CSUL.Models.Network.CB
         /// <summary>
         /// 资源扩展信息
         /// </summary>
-        [JsonIgnore]
+        [JsonPropertyName("custom_fields")]
+        [JsonConverter(typeof(CustomConverter))]
         public CbCustomInfo CustomInfo { get; set; } = default!;
 
+        #endregion ---公共属性---
+
         #region ---转换类型---
+
+        #region --时间转换--
 
         private class TimeConverter : JsonConverter<DateTime>
         {
@@ -101,6 +109,65 @@ namespace CSUL.Models.Network.CB
                 writer.WriteNumberValue(new DateTimeOffset(value).ToUnixTimeSeconds());
             }
         }
+
+        #endregion --时间转换--
+
+        #region --自定义字段转换--
+
+        private class CustomConverter : JsonConverter<CbCustomInfo>
+        {
+            public override CbCustomInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                CbResourceType resourceType = CbResourceType.Default;
+                try
+                {
+                    JsonElement json = JsonElement.ParseValue(ref reader);
+
+                    //地图存档
+                    if (json.TryGetProperty("Map_or_Save", out JsonElement mapOrSave))
+                    {
+                        switch (mapOrSave.GetString())
+                        {
+                            case "Map": resourceType = CbResourceType.Map; break;
+                            case "Save": resourceType = CbResourceType.Save; break;
+                        }
+                        return new CbCustomInfo() { ResourceType = resourceType };
+                    }
+
+                    //BepInEx模组
+                    if (json.TryGetProperty("modLoaderItem", out JsonElement loader))
+                    {
+                        resourceType = CbResourceType.BepMod;
+                        int[] bepVersion = loader.EnumerateObject().First().Name switch
+                        {   //获取加载器版本
+                            "5and6" => new int[] { 5, 6 },
+                            "5" => new int[] { 5 },
+                            "6" => new int[] { 6 },
+                            _ => Array.Empty<int>()
+                        };
+                        int[]? dependBepIds = null;
+                        if (json.TryGetProperty("depend_mod", out JsonElement depends))
+                        {   //有前置模组
+                            try
+                            {
+                                dependBepIds = depends.EnumerateObject().Select(x => int.Parse(x.Name)).ToArray();
+                            }
+                            catch { }
+                        }
+                        return new CbCustomBepModInfo() { ResourceType = resourceType, BepInExVersion = bepVersion, DependBepModIds = dependBepIds };
+                    }
+                }
+                catch { }
+                return new CbCustomInfo { ResourceType = resourceType };
+            }
+
+            public override void Write(Utf8JsonWriter writer, CbCustomInfo value, JsonSerializerOptions options)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion --自定义字段转换--
 
         #endregion ---转换类型---
     }
@@ -127,9 +194,9 @@ namespace CSUL.Models.Network.CB
         public int[]? BepInExVersion { get; set; }
 
         /// <summary>
-        /// 前置BepInEx模组
+        /// 前置BepInEx模组的Id
         /// </summary>
-        public CbResourceData[]? DependBepMods { get; set; }
+        public int[]? DependBepModIds { get; set; }
 
         /// <summary>
         /// 支持的游戏版本

@@ -53,18 +53,23 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                 }
                 try
                 {
+                    //创建播放集文件夹
                     Directory.CreateDirectory(playerPath);
                     string bepPath = Path.Combine(playerPath, "BepInEx");
                     string modPath = Path.Combine(playerPath, "Mods");
                     Directory.CreateDirectory(modPath);
                     Directory.CreateDirectory(playerPath);
                     ButtonEnable = false;
+                    
+                    //下载BepInEx加载器
                     using TempDirectory temp = new();
                     string zipPath = Path.Combine(temp.FullName, chosenBep.FileName);
                     using (Stream stream = File.Create(zipPath)) await NetworkData.DownloadFromUri(chosenBep.Uri, stream);
                     using TempDirectory bepTemp = new();
                     await bepTemp.Decompress(zipPath);
                     bepTemp.DirectoryInfo.CopyTo(bepPath);
+
+                    //创建播放器配置文件
                     ModPlayerType playerType = ModPlayerType.BepInEx;
                     string config = Path.Combine(playerPath, "modPlayer.config");
                     using Stream configStream = File.Create(config);
@@ -72,6 +77,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                     json.WriteStartObject();
                     json.WriteString(typeof(ModPlayerType).Name, playerType.ToString());
                     json.WriteEndObject();
+
                     MessageBox.Show("创建成功");
                 }
                 catch (Exception ex)
@@ -91,8 +97,8 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
 
         private BepData? chosenBep = null;
 
+        //是否启用按钮
         private bool buttonEnable = true;
-
         public bool ButtonEnable
         {
             get => buttonEnable;
@@ -104,21 +110,28 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
             }
         }
 
+        //播放集名称
         public string PlayerName { get; set; } = "";
 
+        //播放集类型列表
         public List<PlayerType> PlayerTypes { get; } = new()
         {
             new(){Name = ModPlayerType.BepInEx.ToString()}
         };
 
+        //BepInEx文件列表
         public IEnumerable<BepData> BepDatas { get; } = NetworkData.GetNetBepInfos().Select(x =>
         {
             return new BepData() { Name = $"{x.Version} {(x.IsBeta ? "测试版" : "正式版")}", Uri = x.Uri, FileName = x.FileName };
         });
 
+        //所处的Window
         public Window Window { get; set; } = default!;
 
+        //创建命令
         public ICommand CreatCommand { get; set; }
+
+        //选择Bep版本命令
         public ICommand ChooseBepCommand { get; set; }
     }
 }

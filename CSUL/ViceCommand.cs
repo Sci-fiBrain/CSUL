@@ -7,6 +7,7 @@
  *  --------------------------------------
  */
 
+using CSUL.Models.Network;
 using CSUL.Models.Network.CB;
 using System.Collections.Generic;
 using System.IO;
@@ -37,46 +38,51 @@ namespace CSUL
         /// </summary>
         public static async Task Parse(string command)
         {
-            int index = command.IndexOf('?');
-            Queue<string> keys;
-            ParPairs pars;
-            if (index == -1 || index + 1 == command.Length)
-            {   //无参数
-                keys = new(command.Split("/").Where(x => x.Length > 0));
-                pars = new();
-            }
-            else
-            {   //有参数
-                keys = new(command[..index].Split("/").Where(x => x.Length > 0));
-                IEnumerable<string> data = command[(index + 1)..].Split('&').Where(x => x.Length > 0);
-                pars = await GetDicFromData(data);
-            }
-            switch (keys.Dequeue())
+            try
             {
-                case "installbepmod": await InstallBepMod(pars); break;
-                case "installbepmods": await InstallBepMods(pars); break;
+                int index = command.IndexOf('?');
+                Queue<string> keys;
+                ParPairs pars;
+                if (index == -1 || index + 1 == command.Length)
+                {   //无参数
+                    keys = new(command.Split("/").Where(x => x.Length > 0));
+                    pars = new();
+                }
+                else
+                {   //有参数
+                    keys = new(command[..index].Split("/").Where(x => x.Length > 0));
+                    IEnumerable<string> data = command[(index + 1)..].Split('&').Where(x => x.Length > 0);
+                    pars = await GetDicFromData(data);
+                }
+                switch (keys.Dequeue())
+                {
+                    case "installresources": await InstallResources(pars); break;
+                }
             }
+            catch { }
         }
 
         #region ---私有方法---
 
         /// <summary>
-        /// 安装BepInEx模组
+        /// 安装资源
         /// </summary>
-        private static async Task InstallBepMod(ParPairs pairs)
+        private static async Task InstallResources(ParPairs pairs)
         {
-            if (!pairs.TryGetValue("json", out string? json)) return;
-
-
-        }
-
-        /// <summary>
-        /// 安装多个模组
-        /// </summary>
-        private static async Task InstallBepMods(ParPairs pairs)
-        {
-            if (!pairs.TryGetValue("json", out string? json)) return;
-
+            if (!pairs.TryGetValue("json", out string? str)) return;
+            using JsonDocument json = JsonDocument.Parse(str);
+            IEnumerable<int> ids = json.RootElement.EnumerateArray().Select(x => x.ValueKind == JsonValueKind.String ? int.Parse(x.GetString()!) : x.GetInt32());
+            List<CbResourceData> data = await Task.Run(async () =>
+            {
+                List<CbResourceData> datas = new();
+                foreach (int id in ids)
+                {
+                    CbResourceData? data = await NetworkData.GetCbResourceData(id);
+                    if (data is null) continue;
+                    else datas.Add(data);
+                }
+                return datas;
+            });
         }
 
         /// <summary>

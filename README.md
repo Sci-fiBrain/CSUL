@@ -23,6 +23,8 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 - [ ] 自动检测Xbox、微软商店游戏路径
 - [ ] 错误日志记录
 - [ ] 蓝图导入（待定）
+- [ ] MAC、GNU/Linux的跨平台支持
+- [ ] 龙芯LoongArch架构
 
 ## 目前已知问题
 暂无

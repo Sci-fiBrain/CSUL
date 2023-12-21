@@ -20,32 +20,25 @@ namespace CSUL.ViewModels.ModPlayerViewModels
 
         public ModPlayerModel()
         {
-            manager = new(CP.ModPlayers.FullName);
-            manager.OnDataChanged += (sender, e) => RefreshData();
-            CP.ModPlayerManager = manager;
+            manager = CP.ModPlayerManager;
             CreatNewModPlayerCommand = new RelayCommand(sender =>
             {   //创建播放集
                 ModPlayerCteator playerCteator = new();
                 playerCteator.ShowDialog();
+                manager.ReloadPlayers();
                 RefreshData();
-            });
-            ComboSelectedCommand = new RelayCommand(sender =>
-            {   //选择播放集
-                if (sender is not SelectionChangedEventArgs args) return;
-                if (args.AddedItems.Count < 1) return;
-                if (args.AddedItems[0] is not BaseModPlayer player) return;
-                SelectedPlayer = player;
             });
             AddModCommand = new RelayCommand(sender =>
             {   //添加模组
                 if (sender is not DragFilesEventArgs args) return;
-                if(selectedPlayer is null)
+                if (SelectedPlayer is null)
                 {
                     MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                foreach (string path in args.Paths) selectedPlayer?.AddMod(path);
+                foreach (string path in args.Paths) SelectedPlayer?.AddMod(path);
             });
+            RefreshCommand = new RelayCommand(sender => RefreshData());
             RefreshData();
         }
 
@@ -61,14 +54,13 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             }
         }
 
-        private BaseModPlayer? selectedPlayer;
         public BaseModPlayer? SelectedPlayer
         {
-            get => selectedPlayer;
+            get => Players.FirstOrDefault(x => x.GetHashCode() == CP.SelectedModPlayer);
             set
             {
-                if (selectedPlayer == value) return;
-                selectedPlayer = value;
+                if (SelectedPlayer == value || value is null) return;
+                CP.SelectedModPlayer = value?.GetHashCode() ?? 0;
                 OnPropertyChanged();
             }
         }
@@ -76,7 +68,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
         public DragFilesType FilesType { get; } = DefaultDragFilesType.BepModFile;
         public ICommand CreatNewModPlayerCommand { get; }
         public ICommand AddModCommand { get; }
-        public ICommand ComboSelectedCommand { get; }
+        public ICommand RefreshCommand { get; } 
 
         /// <summary>
         /// 刷新数据
@@ -84,6 +76,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
         private void RefreshData()
         {
             Players = CP.ModPlayerManager.GetModPlayers();
+            OnPropertyChanged(nameof(SelectedPlayer));
         }
     }
 }

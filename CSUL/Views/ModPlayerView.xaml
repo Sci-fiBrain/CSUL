@@ -10,6 +10,11 @@
              xmlns:local="clr-namespace:CSUL.Views"
              mc:Ignorable="d" 
              d:DesignHeight="555" d:DesignWidth="1063">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RefreshCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.DataContext>
         <vm:ModPlayerModel/>
     </UserControl.DataContext>
@@ -33,17 +38,12 @@
                 <Grid VerticalAlignment="Center">
                     <Label Content="{StaticResource ModPlayer}"/>
                 </Grid>
-                <ComboBox ItemsSource="{Binding Players}" FocusVisualStyle="{x:Null}" Width="300">
+                <ComboBox ItemsSource="{Binding Players}" FocusVisualStyle="{x:Null}" Width="300" SelectedItem="{Binding SelectedPlayer}">
                     <ComboBox.ItemContainerStyle>
                         <Style TargetType="ComboBoxItem">
                             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
                         </Style>
                     </ComboBox.ItemContainerStyle>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding ComboSelectedCommand}" PassEventArgsToCommand="True" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Label Content="{Binding PlayerName}"/>
@@ -55,13 +55,15 @@
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Margin="0,0,0,5">
-            <u:DragFile Icon="/Resources/Icons/mod_black.png" x:Name="DragFile" FileName="模组">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="DragEvent">
-                        <i:InvokeCommandAction Command="{Binding AddModCommand}" PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </u:DragFile>
+            <Grid>
+                <u:DragFile Icon="/Resources/Icons/mod_black.png" x:Name="DragFile" FileName="模组">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="DragEvent">
+                            <i:InvokeCommandAction Command="{Binding AddModCommand}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </u:DragFile>
+            </Grid>
         </Border>
         <Border Grid.Row="2">
             <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SelectedPlayer.ModDatas}">

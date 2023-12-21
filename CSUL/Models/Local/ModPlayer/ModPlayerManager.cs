@@ -21,11 +21,6 @@ namespace CSUL.Models.Local.ModPlayer
     /// </summary>
     internal class ModPlayerManager
     {
-        /// <summary>
-        /// 数据改变事件
-        /// </summary>
-        public event EventHandler? OnDataChanged;
-
         #region ---构造函数---
         /// <summary>
         /// 实例化<see cref="ModPlayerManager"/>对象
@@ -34,18 +29,7 @@ namespace CSUL.Models.Local.ModPlayer
         public ModPlayerManager(string playerRootPath)
         {
             this.playerRootPath = playerRootPath;
-            string[] pathes = Directory.GetDirectories(playerRootPath);
-            foreach (string playerPath in pathes)
-            {
-                try
-                {
-                    LoadModPlayer(playerPath);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToFormative($"路径 {playerPath}"), "播放集加载出错", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
+            ReloadPlayers();
         }
         #endregion
 
@@ -96,6 +80,26 @@ namespace CSUL.Models.Local.ModPlayer
             int hashCode = player.GetHashCode();
             if (players.ContainsKey(hashCode)) throw new Exception("该播放集已加载");
             players.Add(hashCode, player);
+        }
+
+        /// <summary>
+        /// 重新加载播放集
+        /// </summary>
+        public void ReloadPlayers()
+        {
+            players.Clear();
+            string[] pathes = Directory.GetDirectories(playerRootPath);
+            foreach (string playerPath in pathes)
+            {
+                try
+                {
+                    LoadModPlayer(playerPath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToFormative($"路径 {playerPath}"), "播放集加载出错", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
         #endregion
     }

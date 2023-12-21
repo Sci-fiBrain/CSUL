@@ -59,6 +59,7 @@ namespace CSUL.Models
                 gameDataPath = Path.Combine(Template.FullName, "fakeGameData");
                 if (!GameData.Exists) GameData.Create();
             }
+            ModPlayerManager = new(ModPlayers.FullName);
             Instance = this;
         }
 
@@ -97,6 +98,12 @@ namespace CSUL.Models
         /// </summary>
         [Config]
         public bool SteamCompatibilityMode { get; set; } = false;
+
+        /// <summary>
+        /// 选中的模组播放集的HashCode
+        /// </summary>
+        [Config]
+        public int SelectedModPlayer {  get; set; }
 
         #endregion --游戏启动相关--
 
@@ -193,7 +200,7 @@ namespace CSUL.Models
         /// <summary>
         /// 模组播放集管理器
         /// </summary>
-        public ModPlayerManager ModPlayerManager { get; set; } = default!;
+        public ModPlayerManager ModPlayerManager { get; set; }
 
         #endregion --模组播放集管理器--
 

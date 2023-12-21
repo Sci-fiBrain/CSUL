@@ -132,7 +132,20 @@ namespace CSUL.Models.Local.ModPlayer
             else return GetHashCode() == obj.GetHashCode();
         }
 
-        public override int GetHashCode() => PlayerName.GetHashCode();
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 1, index = 0;
+                int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
+                foreach (char c in PlayerName)
+                {
+                    if (index == primes.Length) index = 0;
+                    hashCode *= c * primes[index++];
+                }
+                return hashCode;
+            }
+        }
         #endregion
     }
 }

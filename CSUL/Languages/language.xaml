@@ -20,10 +20,10 @@
     <sys:String x:Key="GameInstRoot">游戏安装根目录（Cities2.exe所在的目录，目录不包含Cities2.exe）</sys:String>
     <sys:String x:Key="GameDataRoot">游戏数据根目录（存储游戏数据: Map、Save等数据的目录）</sys:String>
     <sys:String x:Key="StartPar">启动参数（请勿键入程序名 如: Cities2.exe 或 start.bat）[可选]</sys:String>
-    <sys:String x:Key="DevModelStart">以开发者模式启动</sys:String>
+    <sys:String x:Key="DevModelStart">开发者模式</sys:String>
     <sys:String x:Key="BepVer">BepInEx版本</sys:String>
     <sys:String x:Key="SteamPath">自定义Steam路径（包含steam.exe）[可选]</sys:String>
-    <sys:String x:Key="SteamCompatible">以Steam正版兼容模式启动（推荐）</sys:String>
+    <sys:String x:Key="SteamCompatible">Steam正版兼容模式（推荐）</sys:String>
     <sys:String x:Key="On">启用</sys:String>
     <sys:String x:Key="Off">禁用</sys:String>
     <sys:String x:Key="ModPlayer">播放集</sys:String>

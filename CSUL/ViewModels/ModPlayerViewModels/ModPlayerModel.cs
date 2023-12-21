@@ -56,11 +56,11 @@ namespace CSUL.ViewModels.ModPlayerViewModels
 
         public BaseModPlayer? SelectedPlayer
         {
-            get => Players.FirstOrDefault(x => x.GetHashCode() == CP.SelectedModPlayer);
+            get => Players.FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer) ?? Players.FirstOrDefault();
             set
             {
                 if (SelectedPlayer == value || value is null) return;
-                CP.SelectedModPlayer = value?.GetHashCode() ?? 0;
+                CP.SelectedModPlayer = value.PlayerName;
                 OnPropertyChanged();
             }
         }

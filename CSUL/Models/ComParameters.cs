@@ -100,10 +100,10 @@ namespace CSUL.Models
         public bool SteamCompatibilityMode { get; set; } = false;
 
         /// <summary>
-        /// 选中的模组播放集的HashCode
+        /// 选中的模组播放集的名字
         /// </summary>
         [Config]
-        public int SelectedModPlayer {  get; set; }
+        public string SelectedModPlayer {  get; set; }
 
         #endregion --游戏启动相关--
 

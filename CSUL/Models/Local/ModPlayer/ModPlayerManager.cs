@@ -38,18 +38,6 @@ namespace CSUL.Models.Local.ModPlayer
         private readonly Dictionary<int, BaseModPlayer> players = new();
         #endregion
 
-        /// <summary>
-        /// 获取指定HashCode的播放集
-        /// </summary>
-        public BaseModPlayer? this[int hashCode]
-        {
-            get
-            {
-                players.TryGetValue(hashCode, out BaseModPlayer? modPlayer);
-                return modPlayer;
-            }
-        }
-
         #region ---公共方法---
 
         /// <summary>
@@ -88,6 +76,9 @@ namespace CSUL.Models.Local.ModPlayer
         public void ReloadPlayers()
         {
             players.Clear();
+            BaseModPlayer nullPlayer = new NullModPlayer();
+            nullPlayer.Initialize("禁用播放集");
+            players.Add(nullPlayer.GetHashCode(), nullPlayer);
             string[] pathes = Directory.GetDirectories(playerRootPath);
             foreach (string playerPath in pathes)
             {

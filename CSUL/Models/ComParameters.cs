@@ -21,7 +21,7 @@ namespace CSUL.Models
         /// <summary>
         /// 配置文件路径
         /// </summary>
-        private static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL_CP.config");
+        private static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.config");
 
         /// <summary>
         /// 得到<see cref="ComParameters"/>实例
@@ -103,7 +103,7 @@ namespace CSUL.Models
         /// 选中的模组播放集的名字
         /// </summary>
         [Config]
-        public string SelectedModPlayer {  get; set; }
+        public string? SelectedModPlayer { get; set; }
 
         #endregion --游戏启动相关--
 

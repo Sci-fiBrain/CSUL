@@ -25,6 +25,13 @@ namespace CSUL
         public MainWindow()
         {
             #region --基础代码初始化--
+            if (File.Exists("Cities2.exe"))
+            {
+                MessageBox.Show("为避免未知原因导致出错及便于CSUL更新\n" +
+                    "请不要将CSUL安装在游戏根目录\n" +
+                    "请更改CSUL安装位置后重试\n", "CSUL安装位置错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw new Exception("请不要将CSUL安装在游戏根目录");
+            }
 
             CatchException(Dispatcher);
             Mutex mutex = new(true, "CSUL", out bool mainProcess);
@@ -144,7 +151,7 @@ namespace CSUL
         /// <returns>是否创建成功</returns>
         private static bool TryCreatRegisterFile(out string regPath)
         {
-            regPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "csul.reg");
+            regPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.reg");
             if (File.Exists(regPath)) return false;
             using StreamWriter stream = new(File.Create(regPath));
             stream.WriteLine("Windows Registry Editor Version 5.00");

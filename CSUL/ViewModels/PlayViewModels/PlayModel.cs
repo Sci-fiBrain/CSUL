@@ -39,7 +39,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             "2. 等待天际线2窗口自行关闭后，再通过自动弹出的p社启动器进入游戏\n" +
                             "3. 通过Steam进入过一次游戏后，再通过CSUL开始游戏\n" +
                             "4. 配置Steam中天际线2启动参数，跳过p社启动器\n" +
-                            "5. 均通过Steam启动游戏，不通过CSUL\n\n" +
+                            "5. 均通过Steam启动游戏，不通过CSUL(该方式不支持播放集)\n\n" +
                             "确认: 关闭提示\n" +
                             "取消: 关闭提示且不再弹出";
                         MessageBoxResult ret = MessageBox.Show(steamInfo, "Steam游戏提示", MessageBoxButton.OKCancel, MessageBoxImage.Information);

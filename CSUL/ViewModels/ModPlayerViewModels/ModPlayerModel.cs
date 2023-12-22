@@ -39,6 +39,18 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 foreach (string path in args.Paths) await SelectedPlayer.AddMod(path);
                 RefreshData();
             });
+            DeleteModCommand = new RelayCommand(sender =>
+            {   //删除模组
+                if (sender is not IModData mod) return;
+                if (SelectedPlayer is null)
+                {
+                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                if (MessageBox.Show(mod.Name, "确定删除", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel) return;
+                SelectedPlayer.RemoveMod(mod);
+                RefreshData();
+            });
             RefreshCommand = new RelayCommand(sender => RefreshData());
             RefreshData();
         }
@@ -67,9 +79,11 @@ namespace CSUL.ViewModels.ModPlayerViewModels
         }
 
         public DragFilesType FilesType { get; } = DefaultDragFilesType.BepModFile;
+
         public ICommand CreatNewModPlayerCommand { get; }
         public ICommand AddModCommand { get; }
-        public ICommand RefreshCommand { get; } 
+        public ICommand RefreshCommand { get; }
+        public ICommand DeleteModCommand { get; }
 
         /// <summary>
         /// 刷新数据

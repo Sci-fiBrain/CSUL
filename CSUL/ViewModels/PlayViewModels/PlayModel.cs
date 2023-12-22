@@ -61,8 +61,8 @@ namespace CSUL.ViewModels.PlayViewModels
                                     {
                                         if (data.Files is IEnumerable<string> files)
                                             foreach (string file in files) if (File.Exists(file)) File.Delete(file);
-                                        if(data.Directories is IEnumerable<string> dirs)
-                                            foreach (string dir in dirs) if(Directory.Exists(dir)) Directory.Delete(dir, true);
+                                        if (data.Directories is IEnumerable<string> dirs)
+                                            foreach (string dir in dirs) if (Directory.Exists(dir)) Directory.Delete(dir, true);
                                     }
                                     File.Delete(loadConfig);
                                 }
@@ -97,9 +97,14 @@ namespace CSUL.ViewModels.PlayViewModels
                     await Task.Delay(500);
                     ButtonEnabled = true;
                 });
+            RefreshCommand = new RelayCommand(sender =>
+            {
+                OnPropertyChanged(nameof(SelectedModPlayer));
+            });
         }
 
         public ICommand PlayGameCommand { get; }
+        public ICommand RefreshCommand { get; }
 
         public bool OpenDeveloper
         {
@@ -133,6 +138,10 @@ namespace CSUL.ViewModels.PlayViewModels
                 OnPropertyChanged();
             }
         }
+
+#pragma warning disable CA1822
+        public string? SelectedModPlayer { get => CP.SelectedModPlayer; }
+#pragma warning restore CA1822
 
         /// <summary>
         /// 设定当前窗口

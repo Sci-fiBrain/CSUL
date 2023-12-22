@@ -148,8 +148,9 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             {
                 if (mods.Remove(mod))
                 {
+                    mod.IsEnabled = true;
                     if (mod.IsFile) File.Delete(mod.ModPath);
-                    else Directory.Delete(mod.ModPath);
+                    else Directory.Delete(mod.ModPath, true);
                 }
             });
         }

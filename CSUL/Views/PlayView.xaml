@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:ec="clr-namespace:CSUL.ExControls"
              xmlns:vm="clr-namespace:CSUL.ViewModels.PlayViewModels"
              xmlns:local="clr-namespace:CSUL.Views"
@@ -11,6 +12,11 @@
     <UserControl.DataContext>
         <vm:PlayModel />
     </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding RefreshCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Image  Height="280" Width="auto" Margin="0,-20,0,0"
                 Source="/Resources/Imgs/csl_logo_low.png"
@@ -26,6 +32,9 @@
                     <Setter Property="Margin" Value="5, 0, 0, 15" />
                 </Style>
             </StackPanel.Resources>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <Label Content="{Binding SelectedModPlayer}" FontSize="18"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding OpenDeveloper}" />
                 <Label Content="{StaticResource DevModelStart}" />

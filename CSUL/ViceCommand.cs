@@ -102,15 +102,6 @@ namespace CSUL
             });
         }
 
-        /// <summary>
-        /// 转换json字符串
-        /// </summary>
-        private static async Task<T?> ConvertJson<T>(string json)
-        {
-            using MemoryStream stream = new(Encoding.UTF8.GetBytes(json));
-            return await JsonSerializer.DeserializeAsync<T>(stream, options);
-        }
-
         #endregion ---私有方法---
     }
 }

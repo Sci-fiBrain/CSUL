@@ -178,7 +178,8 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override async Task UpgradeMod(IModData modData, string path)
         {
-            if (modData is not BepModData mod) return;
+            await Task.Delay(0);
+            throw new NotImplementedException();
         }
 
         #endregion ---公共方法---

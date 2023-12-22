@@ -71,7 +71,7 @@ namespace CSUL
             if (!pairs.TryGetValue("json", out string? str)) return;
             using JsonDocument json = JsonDocument.Parse(str);
             IEnumerable<int> ids = json.RootElement.EnumerateArray().Select(x => x.ValueKind == JsonValueKind.String ? int.Parse(x.GetString()!) : x.GetInt32());
-            List<CbResourceData> data = await Task.Run(async () =>
+            List<CbResourceData> datas = await Task.Run(async () =>
             {
                 List<CbResourceData> datas = new();
                 foreach (int id in ids)

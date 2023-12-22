@@ -284,7 +284,7 @@ namespace CSUL.ViewModels.ModViewModels
                     using TempDirectory package = new();
                     if (path.EndsWith(".dll")) await package.AddFile(path);
                     else await package.Decompress(path);
-                    if (package.IsEempty) throw new Exception("该包不含任何文件");
+                    if (package.IsEmpty) throw new Exception("该包不含任何文件");
                     string name = Path.GetFileName(path);
                     name = name[..name.LastIndexOf('.')];
                     BepManager.TryGetBepVersion(CP.GameRoot.FullName, out Version? bepVersion);

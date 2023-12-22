@@ -1,8 +1,13 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
+using CSUL.Models.Local.ModPlayer;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -43,6 +48,38 @@ namespace CSUL.ViewModels.PlayViewModels
                     if (window is not null) window.WindowState = WindowState.Minimized;
                     try
                     {
+                        BaseModPlayer? player = CP.ModPlayerManager.GetModPlayers().FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer);
+                        if (player is not null and not NullModPlayer)
+                        {   //装载播放集
+                            try
+                            {
+                                string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
+                                if (File.Exists(loadConfig))
+                                {   //清理旧播放集
+                                    ModPlayerData? data = JsonSerializer.Deserialize<ModPlayerData>(File.ReadAllText(loadConfig));
+                                    if (data is not null)
+                                    {
+                                        if (data.Files is IEnumerable<string> files)
+                                            foreach (string file in files) if (File.Exists(file)) File.Delete(file);
+                                        if(data.Directories is IEnumerable<string> dirs)
+                                            foreach (string dir in dirs) if(Directory.Exists(dir)) Directory.Delete(dir, true);
+                                    }
+                                    File.Delete(loadConfig);
+                                }
+
+                                //装载播放集
+                                ModPlayerData playerData = await player.Install(CP.GameRoot.FullName, CP.GameData.FullName);
+                                byte[] buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(playerData));
+                                using Stream stream = File.Create(loadConfig);
+                                await stream.WriteAsync(buffer);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.ToFormative(), "播放集装载出错", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+
+                        //启动游戏
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";
                         if (CP.SteamCompatibilityMode)
                         {   //Steam正版兼容模式

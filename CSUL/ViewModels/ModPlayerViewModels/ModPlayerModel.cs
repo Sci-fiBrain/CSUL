@@ -28,7 +28,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 manager.ReloadPlayers();
                 RefreshData();
             });
-            AddModCommand = new RelayCommand(sender =>
+            AddModCommand = new RelayCommand(async sender =>
             {   //添加模组
                 if (sender is not DragFilesEventArgs args) return;
                 if (SelectedPlayer is null)
@@ -36,7 +36,8 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                     MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                foreach (string path in args.Paths) SelectedPlayer?.AddMod(path);
+                foreach (string path in args.Paths) await SelectedPlayer.AddMod(path);
+                RefreshData();
             });
             RefreshCommand = new RelayCommand(sender => RefreshData());
             RefreshData();

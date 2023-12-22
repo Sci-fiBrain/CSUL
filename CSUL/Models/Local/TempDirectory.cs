@@ -59,7 +59,7 @@ namespace CSUL.Models.Local
         /// <summary>
         /// 该临时文件夹是否为空
         /// </summary>
-        public bool IsEempty { get => Directory.GetFiles(FullName).Length <= 0 && Directory.GetDirectories(FullName).Length <= 0; }
+        public bool IsEmpty { get => Directory.GetFiles(FullName).Length <= 0 && Directory.GetDirectories(FullName).Length <= 0; }
 
         #endregion ---公共属性---
 

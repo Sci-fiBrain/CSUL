@@ -20,6 +20,16 @@ namespace CSUL.Models.Local.ModPlayer
         public string Name { get; }
 
         /// <summary>
+        /// 模组路径
+        /// </summary>
+        public string ModPath { get; }
+
+        /// <summary>
+        /// 是否启用该模组
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
         /// 模组版本
         /// </summary>
         public string? ModVersion { get; }

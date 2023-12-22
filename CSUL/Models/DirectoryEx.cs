@@ -79,5 +79,20 @@ namespace CSUL.Models
         }
 
         #endregion ---递归获取文件夹下的所有文件---
+
+        #region ---判断是否为文件夹或者文件---
+        /// <summary>
+        /// 判断该路径是否为文件夹
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <returns>true: 为文件夹, false: 为文件</returns>
+        /// <exception cref="FileNotFoundException">该路径不存在</exception>
+        public static bool IsDirectory(string path)
+        {
+            if (Directory.Exists(path)) return true;
+            else if (File.Exists(path)) return false;
+            else throw new FileNotFoundException(path);
+        }
+        #endregion
     }
 }

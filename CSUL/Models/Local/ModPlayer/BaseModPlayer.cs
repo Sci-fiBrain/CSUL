@@ -7,6 +7,8 @@
  *  --------------------------------------
  */
 
+using System.Threading.Tasks;
+
 namespace CSUL.Models.Local.ModPlayer
 {
     /// <summary>
@@ -14,10 +16,10 @@ namespace CSUL.Models.Local.ModPlayer
     /// </summary>
     internal abstract class BaseModPlayer
     {
-        #region ---加载方法---
+        #region ---初始化方法---
 
         /// <summary>
-        /// 加载播放集
+        /// 初始化播放集
         /// </summary>
         /// <param name="playerPath">播放集目录</param>
         public void Initialize(string playerPath)
@@ -26,12 +28,12 @@ namespace CSUL.Models.Local.ModPlayer
             Initialized();
         }
 
-        #endregion ---加载方法---
+        #endregion ---初始化方法---
 
         #region ---虚拟方法---
 
         /// <summary>
-        /// 播放集加载完成后调用
+        /// 播放集初始化完成后调用
         /// </summary>
         protected virtual void Initialized()
         { }
@@ -39,59 +41,32 @@ namespace CSUL.Models.Local.ModPlayer
         #endregion ---虚拟方法---
 
         #region ---抽象方法---
-
         /// <summary>
-        /// 启用播放集
+        /// 安装该播放集
         /// </summary>
-        /// <param name="gameRoot">游戏安装目录</param>
-        /// <param name="dataRoot">游戏数据目录</param>
-        public abstract void Enable(string gameRoot, string dataRoot);
-
-        /// <summary>
-        /// 禁用播放集
-        /// </summary>
-        /// <param name="gameRoot">游戏安装目录</param>
-        /// <param name="dataRoot">游戏数据目录</param>
-        public abstract void Disable(string gameRoot, string dataRoot);
-
-        /// <summary>
-        /// 获取播放集状态
-        /// </summary>
-        /// <param name="gameRoot">游戏安装目录</param>
-        /// <param name="dataRoot">游戏数据目录</param>
-        /// <returns>一个<see cref="bool"/>值 表示该播放集是否已启用</returns>
-        public abstract bool GetPlayerState(string gameRoot, string dataRoot);
+        /// <param name="rootPath">游戏安装目录</param>
+        /// <param name="dataPath">游戏数据目录</param>
+        /// <returns></returns>
+        public abstract Task<ModPlayerData> Install(string rootPath, string dataPath);
 
         /// <summary>
         /// 添加模组
         /// </summary>
         /// <param name="path">模组文件路径</param>
-        public abstract void AddMod(string path);
+        public abstract Task AddMod(string path);
 
         /// <summary>
         /// 移除模组
         /// </summary>
         /// <param name="modData"></param>
-        public abstract void RemoveMod(IModData modData);
+        public abstract Task RemoveMod(IModData modData);
 
         /// <summary>
         /// 更新模组
         /// </summary>
         /// <param name="modData">要更新的模组</param>
         /// <param name="path">新版本模组文件路径</param>
-        public abstract void UpgradeMod(IModData modData, string path);
-
-        /// <summary>
-        /// 禁用模组
-        /// </summary>
-        /// <param name="modData">要禁用的模组</param>
-        public abstract void DisableMod(IModData modData);
-
-        /// <summary>
-        /// 启用模组
-        /// </summary>
-        /// <param name="modData">要启用的模组</param>
-        public abstract void EnableMod(IModData modData);
+        public abstract Task UpgradeMod(IModData modData, string path);
 
 
         #endregion ---抽象方法---

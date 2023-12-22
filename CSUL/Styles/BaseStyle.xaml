@@ -25,7 +25,7 @@
         <Setter Property="Foreground" Value="{DynamicResource DefaultBrush}" />
         <Setter Property="Content" Value="{DynamicResource Off}" />
         <Setter Property="Tag" Value="{DynamicResource On}" />
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Template">
             <Setter.Value>

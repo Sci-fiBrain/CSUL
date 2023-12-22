@@ -23,20 +23,13 @@ namespace CSUL.Models.Local.ModPlayer
 
         public override IModData[] ModDatas => Array.Empty<IModData>();
 
-        public override void AddMod(string path) { }
+        public override async Task AddMod(string path) => await Task.Delay(0);
 
-        public override void Disable(string gameRoot, string dataRoot) { }
+        public override async Task<ModPlayerData> Install(string rootPath, string dataPath) =>
+            await Task.Run(() => new ModPlayerData { Directories = default!, Files = default!});
 
-        public override void DisableMod(IModData modData) { }
+        public override async Task RemoveMod(IModData modData) => await Task.Delay(0);
 
-        public override void Enable(string gameRoot, string dataRoot) { }
-
-        public override void EnableMod(IModData modData) { }
-
-        public override bool GetPlayerState(string gameRoot, string dataRoot) => false;
-
-        public override void RemoveMod(IModData modData) { }
-
-        public override void UpgradeMod(IModData modData, string path) { }
+        public override async Task UpgradeMod(IModData modData, string path) => await Task.Delay(0);
     }
 }

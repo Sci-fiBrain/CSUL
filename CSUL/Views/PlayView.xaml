@@ -33,7 +33,7 @@
                 </Style>
             </StackPanel.Resources>
             <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <Label Content="{Binding SelectedModPlayer}" FontSize="18"/>
+                <Label Content="{Binding SelectedModPlayer}" FontSize="18" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding OpenDeveloper}" />

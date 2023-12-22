@@ -6,12 +6,12 @@
  *  文件介绍: 模组播放集管理器
  *  --------------------------------------
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace CSUL.Models.Local.ModPlayer
@@ -22,6 +22,7 @@ namespace CSUL.Models.Local.ModPlayer
     internal class ModPlayerManager
     {
         #region ---构造函数---
+
         /// <summary>
         /// 实例化<see cref="ModPlayerManager"/>对象
         /// </summary>
@@ -31,12 +32,15 @@ namespace CSUL.Models.Local.ModPlayer
             this.playerRootPath = playerRootPath;
             ReloadPlayers();
         }
-        #endregion
+
+        #endregion ---构造函数---
 
         #region ---私有字段---
+
         private readonly string playerRootPath;
         private readonly Dictionary<int, BaseModPlayer> players = new();
-        #endregion
+
+        #endregion ---私有字段---
 
         #region ---公共方法---
 
@@ -92,6 +96,7 @@ namespace CSUL.Models.Local.ModPlayer
                 }
             }
         }
-        #endregion
+
+        #endregion ---公共方法---
     }
 }

@@ -75,8 +75,8 @@ namespace CSUL.Models.Network
         public static async Task<Version?> GetCsulLastestVersion()
         {
             CbResourceData? data = await GetCbResourceData(91);
-            if(data is null) return null;
-            if(Version.TryParse(data.ResourceVersion, out Version? version)) return version;
+            if (data is null) return null;
+            if (Version.TryParse(data.ResourceVersion, out Version? version)) return version;
             return null;
         }
 

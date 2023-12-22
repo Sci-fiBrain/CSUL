@@ -41,6 +41,7 @@ namespace CSUL.Models.Local.ModPlayer
         #endregion ---虚拟方法---
 
         #region ---抽象方法---
+
         /// <summary>
         /// 安装该播放集
         /// </summary>
@@ -67,7 +68,6 @@ namespace CSUL.Models.Local.ModPlayer
         /// <param name="modData">要更新的模组</param>
         /// <param name="path">新版本模组文件路径</param>
         public abstract Task UpgradeMod(IModData modData, string path);
-
 
         #endregion ---抽象方法---
 
@@ -101,6 +101,7 @@ namespace CSUL.Models.Local.ModPlayer
         #endregion ---公共属性---
 
         #region ---比较方法---
+
         public override bool Equals(object? obj)
         {
             if (obj is null) return false;
@@ -108,6 +109,7 @@ namespace CSUL.Models.Local.ModPlayer
         }
 
         public override int GetHashCode() => PlayerName.GetHashCode();
-        #endregion
+
+        #endregion ---比较方法---
     }
 }

@@ -2,13 +2,9 @@
 using CSUL.Models.Local.ModPlayer;
 using CSUL.UserControls.DragFiles;
 using CSUL.Windows;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels.ModPlayerViewModels
@@ -56,6 +52,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
         }
 
         private List<BaseModPlayer> players = default!;
+
         public List<BaseModPlayer> Players
         {
             get => players;

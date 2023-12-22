@@ -81,6 +81,7 @@ namespace CSUL.Models
         #endregion ---递归获取文件夹下的所有文件---
 
         #region ---判断是否为文件夹或者文件---
+
         /// <summary>
         /// 判断该路径是否为文件夹
         /// </summary>
@@ -93,6 +94,7 @@ namespace CSUL.Models
             else if (File.Exists(path)) return false;
             else throw new FileNotFoundException(path);
         }
-        #endregion
+
+        #endregion ---判断是否为文件夹或者文件---
     }
 }

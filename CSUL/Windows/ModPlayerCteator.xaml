@@ -13,7 +13,7 @@
         WindowStyle="None"
         Title="ModPlayerCteater" Height="350" Width="500">
     <Window.DataContext>
-        <vm:ModPlayerCreatorModel/>
+        <vm:ModPlayerCreatorModel />
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}" />
@@ -30,7 +30,7 @@
                    HorizontalAlignment="Left" VerticalAlignment="Center"
                    FontSize="18" Margin="10,0,0,0" />
                     <ec:CButton Icon="/Resources/Icons/close.png" HorizontalAlignment="Right"
-                        Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" IsEnabled="{Binding ButtonEnable}"/>
+                        Height="40" Width="40" Margin="5,0,0,0" Click="Close_Click" IsEnabled="{Binding ButtonEnable}" />
                 </Grid>
             </Border>
         </Grid>
@@ -39,32 +39,32 @@
                 <StackPanel Margin="10">
                     <StackPanel Orientation="Vertical" Margin="0, 5">
                         <Grid VerticalAlignment="Center">
-                            <Label Content="播放集名称" FontSize="16"/>
+                            <Label Content="播放集名称" FontSize="16" />
                         </Grid>
                         <TextBox Height="30" FontSize="15" Text="{Binding PlayerName}"
-                                 VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}"/>
+                                 VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}" />
                     </StackPanel>
                     <StackPanel Orientation="Vertical" Margin="0, 5">
                         <Grid VerticalAlignment="Center">
-                            <Label Content="播放集类型" FontSize="16"/>
+                            <Label Content="播放集类型" FontSize="16" />
                         </Grid>
                         <ComboBox Height="30" ItemsSource="{Binding PlayerTypes}"
                                   VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
-                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center"/>
+                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" Margin="0, 5">
                         <Grid VerticalAlignment="Center">
-                            <Label Content="BepInEx版本" FontSize="16"/>
+                            <Label Content="BepInEx版本" FontSize="16" />
                         </Grid>
                         <ComboBox Height="30" ItemsSource="{Binding BepDatas}"
                                   VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
@@ -75,12 +75,12 @@
                             </i:Interaction.Triggers>
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
-                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center"/>
+                                    <Label Content="{Binding Name}" Height="30" FontSize="15" VerticalContentAlignment="Center" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
@@ -91,7 +91,7 @@
                             Foreground="{DynamicResource WhiteBrush}"
                             Background="{DynamicResource BlackBrush}"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                            Command="{Binding CreatCommand}"/>
+                            Command="{Binding CreatCommand}" />
             </Grid>
         </Border>
     </Grid>

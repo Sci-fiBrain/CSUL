@@ -60,7 +60,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                     Directory.CreateDirectory(modPath);
                     Directory.CreateDirectory(playerPath);
                     ButtonEnable = false;
-                    
+
                     //下载BepInEx加载器
                     using TempDirectory temp = new();
                     string zipPath = Path.Combine(temp.FullName, chosenBep.FileName);
@@ -99,6 +99,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
 
         //是否启用按钮
         private bool buttonEnable = true;
+
         public bool ButtonEnable
         {
             get => buttonEnable;

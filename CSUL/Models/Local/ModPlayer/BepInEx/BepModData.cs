@@ -130,9 +130,10 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             }
         }
 
-        #endregion ---私有方法---
+        #endregion ---静态方法---
 
         #region ---比较方法---
+
         public override int GetHashCode() => Name.GetHashCode();
 
         public override bool Equals(object? obj)
@@ -140,6 +141,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             if (obj is not BepModData data) return false;
             else return data.GetHashCode() == GetHashCode();
         }
-        #endregion
+
+        #endregion ---比较方法---
     }
 }

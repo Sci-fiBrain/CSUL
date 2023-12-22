@@ -6,10 +6,8 @@
  *  文件介绍: 空白播放集类
  *  --------------------------------------
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CSUL.Models.Local.ModPlayer
@@ -26,7 +24,7 @@ namespace CSUL.Models.Local.ModPlayer
         public override async Task AddMod(string path) => await Task.Delay(0);
 
         public override async Task<ModPlayerData> Install(string rootPath, string dataPath) =>
-            await Task.Run(() => new ModPlayerData { Directories = default!, Files = default!});
+            await Task.Run(() => new ModPlayerData { Directories = default!, Files = default! });
 
         public override async Task RemoveMod(IModData modData) => await Task.Delay(0);
 

@@ -1,6 +1,5 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
-using CSUL.Models.Network;
 using System;
 using System.Diagnostics;
 using System.IO;

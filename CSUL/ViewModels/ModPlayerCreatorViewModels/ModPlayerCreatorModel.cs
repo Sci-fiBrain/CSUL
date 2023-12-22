@@ -78,7 +78,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                     json.WriteString(typeof(ModPlayerType).Name, playerType.ToString());
                     json.WriteEndObject();
 
-                    MessageBox.Show("创建成功");
+                    MessageBox.Show("创建成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

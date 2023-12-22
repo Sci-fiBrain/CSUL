@@ -7,6 +7,7 @@
  *  --------------------------------------
  */
 
+using System;
 using System.Threading.Tasks;
 
 namespace CSUL.Models.Local.ModPlayer
@@ -83,6 +84,11 @@ namespace CSUL.Models.Local.ModPlayer
         /// </summary>
         /// <returns>一个包含所有模组的数组</returns>
         public abstract IModData[] ModDatas { get; }
+
+        /// <summary>
+        /// 播放集版本
+        /// </summary>
+        public abstract Version? PlayerVersion { get; }
 
         #endregion ---抽象属性---
 

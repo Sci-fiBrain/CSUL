@@ -64,10 +64,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override IModData[] ModDatas => mods.ToArray();
 
-        /// <summary>
-        /// BepInEx的版本
-        /// </summary>
-        public Version? BepVersion => GetBepVersion();
+        public override Version? PlayerVersion => GetBepVersion();
 
         #endregion ---公共属性---
 
@@ -84,7 +81,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                 string name = Path.GetFileName(path);
                 name = name[..name.LastIndexOf('.')];
                 BepModData originData = new(package.FullName);
-                Version? bepVersion = BepVersion, modVersion = originData.BepVersion;
+                Version? bepVersion = PlayerVersion, modVersion = originData.BepVersion;
                 if (bepVersion is null || modVersion is null)
                 {
                     if (MessageBox.Show($"文件 {name} 安装警告\n" +

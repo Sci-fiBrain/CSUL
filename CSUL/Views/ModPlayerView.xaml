@@ -62,6 +62,31 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </u:DragFile>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0">
+                    <ec:CButton Icon="/Resources/Icons/check_file_black.png" Height="auto" Width="50" Margin="0,0,10,0"
+                            ButtonType="IconUnRotate" ToolTip="批量检查模组兼容性"
+                            Command="{Binding CheckCommand}"
+                            Content="{StaticResource Check}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
+                    <ec:CButton Icon="/Resources/Icons/remove_black.png" Height="auto" Width="50" Margin="0,0,10,0"
+                            ButtonType="IconUnRotate" ToolTip="移除播放集"
+                            Command="{Binding RemoveModPlayerCommand}"
+                            Content="{StaticResource Remove}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
+                    <ec:CButton Icon="/Resources/Icons/folder_black.png" Height="auto" Width="50"
+                            ButtonType="IconUnRotate" ToolTip="打开播放集文件夹"
+                            Command="{Binding OpenFolderCommand}"
+                            Content="{StaticResource File}" Foreground="{DynamicResource BlackBrush}" LabelVisibility="Visible" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,10,5"
+                        HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <StackPanel.Resources>
+                        <Style TargetType="Label">
+                            <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
+                            <Setter Property="FontSize" Value="12" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <Label Content="BepInEx版本" />
+                    <Label Content="{Binding SelectedPlayer.PlayerVersion}" />
+                </StackPanel>
             </Grid>
         </Border>
         <Border Grid.Row="2">

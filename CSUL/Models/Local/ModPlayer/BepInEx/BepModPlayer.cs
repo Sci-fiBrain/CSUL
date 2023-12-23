@@ -158,11 +158,12 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             {
                 DirectoryEx.CopyTo(bepPath, rootPath, true);
                 string plugins = Path.Combine(rootPath, "BepInEx", "plugins");
+                if(!Directory.Exists(plugins)) Directory.CreateDirectory(plugins);
                 foreach (BepModData mod in mods)
                 {
                     if (!mod.IsEnabled) continue;
-                    if (mod.IsFile) File.Copy(mod.ModPath, Path.Combine(plugins, mod.Name + ".dll"));
-                    else DirectoryEx.CopyTo(mod.ModPath, Path.Combine(plugins, mod.Name));
+                    if (mod.IsFile) File.Copy(mod.ModPath, Path.Combine(plugins, mod.Name + ".dll"), true);
+                    else DirectoryEx.CopyTo(mod.ModPath, Path.Combine(plugins, mod.Name), true);
                 }
                 return new ModPlayerData()
                 {

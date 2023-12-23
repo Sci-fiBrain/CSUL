@@ -19,6 +19,7 @@ namespace CSUL
     public partial class MainWindow : Window
     {
         private readonly CancellationTokenSource cancellation = new();
+        private readonly Mutex mutex;
 
         #region ---构造函数---
 
@@ -34,7 +35,7 @@ namespace CSUL
             }
 
             CatchException(Dispatcher);
-            Mutex mutex = new(true, "CSUL", out bool mainProcess);
+            mutex = new(true, "CSUL", out bool mainProcess);
 
             #region -主进程-
 
@@ -83,6 +84,7 @@ namespace CSUL
                 {
                     MessageBox.Show(ex.ToFormative(), "传参时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                mutex.Dispose();
                 Environment.Exit(0);
             }
 
@@ -136,6 +138,7 @@ namespace CSUL
                 cancellation.Cancel();
                 cancellation.Dispose();
                 ComParameters.Instance.Dispose();
+                mutex.Dispose();
                 Environment.Exit(exitCode);
             }
         }

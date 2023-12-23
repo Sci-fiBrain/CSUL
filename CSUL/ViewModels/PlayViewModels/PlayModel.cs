@@ -24,6 +24,7 @@ namespace CSUL.ViewModels.PlayViewModels
     {
         private static ComParameters CP { get; } = ComParameters.Instance;
         private Window? window = null;
+        private const string jsName = "chinesization.js";   //汉化文件名称
 
         public PlayModel()
         {
@@ -91,13 +92,38 @@ namespace CSUL.ViewModels.PlayViewModels
                         Chinesization.RemoveOutdate(CP.GameRoot.FullName);
                         if (CP.StartChinesization)
                         {   //启动汉化
-                            CbResourceData data = await NetworkData.GetCbResourceData(157)
-                                ?? throw new Exception("获取论坛汉化文件信息失败");
-                            CbFileData file = data.Files?.FirstOrDefault(x => x.FileName.Contains("源码"))
-                                ?? throw new Exception("获取汉化文件地址失败");
-                            using MemoryStream stream = new();
-                            await NetworkData.DownloadFromUri(file.Url, stream, api: true);
-                            string cnText = Encoding.UTF8.GetString(stream.ToArray());
+                            string cnText;
+                            CbResourceData? data = await NetworkData.GetCbResourceData(157);
+                            CbFileData? file = data?.Files?.FirstOrDefault(x => x.FileName.Contains("源码"));
+                            if (File.Exists(jsName))
+                            {   //存在汉化文件
+                                cnText = File.ReadAllText(jsName, Encoding.UTF8);
+                                Version? nowVersion = Chinesization.GetVersion(cnText);
+                                if(data is not null && nowVersion is not null && Version.TryParse(data.ResourceVersion, out Version? lastedVersion))
+                                {   //版本检测成功
+                                    if(lastedVersion > nowVersion)
+                                    {   //需要更新
+                                        if(file is not null)
+                                        {   //更新文件路径存在
+                                            using MemoryStream stream = new();
+                                            await NetworkData.DownloadFromUri(file.Url, stream, api: true);
+                                            cnText = Encoding.UTF8.GetString(stream.ToArray());
+                                            File.WriteAllText(jsName, cnText);
+                                            OnPropertyChanged(nameof(ChinesizationVersion));
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {   //不存在汉化文件
+                                if(data is null) throw new Exception("获取论坛汉化文件信息失败");
+                                if (file is null) throw new Exception("获取汉化文件地址失败");
+                                using MemoryStream stream = new();
+                                await NetworkData.DownloadFromUri(file.Url, stream, api: true);
+                                cnText = Encoding.UTF8.GetString(stream.ToArray());
+                                File.WriteAllText(jsName, cnText);
+                                OnPropertyChanged(nameof(ChinesizationVersion));
+                            }
                             Chinesization.Chinesize(CP.GameRoot.FullName, cnText);
                         }
 
@@ -129,6 +155,18 @@ namespace CSUL.ViewModels.PlayViewModels
 
         public ICommand PlayGameCommand { get; }
         public ICommand RefreshCommand { get; }
+
+#pragma warning disable CA1822
+        public string? ChinesizationVersion
+        {
+            get
+            {
+                if (File.Exists(jsName))
+                    return Chinesization.GetVersion(File.ReadAllText(jsName))?.ToString();
+                return null;
+            }
+        }
+#pragma warning restore CA1822
 
         public bool StartChinesization
         {

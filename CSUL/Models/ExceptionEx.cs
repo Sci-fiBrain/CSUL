@@ -24,17 +24,19 @@ namespace CSUL.Models
         {
             StringBuilder builder = new();
             builder.AppendLine($"发生时间: {DateTime.Now:yyyy_MM_dd HH:mm:ss:ffff}");
+            if (meg is not null)
+            {
+                builder.AppendLine($"附加信息: \n{meg}");
+            }
             if (ex is not null)
             {
+                builder.AppendLine($"异常内容: {ex.Message}");
+                builder.AppendLine();
+                builder.AppendLine("如遇无法解决的问题，请将该报错截图后再咨询");
                 builder.AppendLine($"异常类型: {ex.GetType().Name}");
                 builder.AppendLine($"异常对象: {ex.Source}");
                 builder.AppendLine($"异常方法: {ex.TargetSite?.Name}");
                 builder.AppendLine($"堆栈信息: \n{ex.StackTrace}");
-                builder.AppendLine($"异常内容: {ex.Message}");
-            }
-            if (meg is not null)
-            {
-                builder.AppendLine($"附加信息: \n{meg}");
             }
             return builder.ToString();
         }

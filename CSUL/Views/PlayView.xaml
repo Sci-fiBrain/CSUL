@@ -38,6 +38,7 @@
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding StartChinesization}" />
                 <Label Content="{StaticResource Chinesization}" />
+                <Label Content="{Binding ChinesizationVersion}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding OpenDeveloper}" />

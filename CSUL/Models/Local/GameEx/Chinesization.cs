@@ -43,7 +43,7 @@ namespace CSUL.Models.Local.GameEx
         public static void RemoveOutdate(string rootPath)
         {
             string path = Path.Combine(rootPath, "Cities2_Data\\StreamingAssets\\~UI~\\GameUI\\index.js");
-            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js 文件");
+            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js (游戏)文件");
             string data = File.ReadAllText(path, Encoding.UTF8);
             data.ReplaceLineEndings();
             const string startString = "//REPLACE_ITEMS_START//";

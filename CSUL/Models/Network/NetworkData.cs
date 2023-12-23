@@ -24,6 +24,7 @@ namespace CSUL.Models.Network
     internal static class NetworkData
     {
         private const string netBepVersionUrl = "https://minebbs-1251544790.file.myqcloud.com/bepinex.html";    //BepInEx版本信息获取地址
+        private const string ApiKey = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";                                       //论坛Api key
 
         /// <summary>
         /// 获取BepInEx文件的版本信息
@@ -50,11 +51,13 @@ namespace CSUL.Models.Network
         /// 下载文件到指定流
         /// </summary>
         /// <param name="uri">文件链接</param>
-        /// <param name="path">文件要下载到的流</param>
+        /// <param name="stream">文件要下载到的流</param>
         /// <param name="DownloadProgress">一个委托 返回已下载的字节数</param>
-        public static async Task DownloadFromUri(string uri, Stream stream, Action<long>? DownloadProgress = null)
+        /// <param name="api">是否需要添加CSLBBS API请求头</param>
+        public static async Task DownloadFromUri(string uri, Stream stream, Action<long>? DownloadProgress = null, bool api = false)
         {
             using HttpClient http = new();
+            if (api) http.DefaultRequestHeaders.Add("XF-API-Key", ApiKey);
             using Stream webStream = await http.GetStreamAsync(uri);
             long total = 0;
             while (true)
@@ -86,10 +89,9 @@ namespace CSUL.Models.Network
         /// <param name="id">资源id</param>
         public static async Task<CbResourceData?> GetCbResourceData(int id)
         {
-            const string key = "Nj-arIg6bYmyhnUYMY0SW72_6a7ruUcY";
             string url = "https://www.cslbbs.net/api/resources/" + id;
             using HttpClient http = new();
-            http.DefaultRequestHeaders.Add("XF-API-Key", key);
+            http.DefaultRequestHeaders.Add("XF-API-Key", ApiKey);
             using Stream stream = await http.GetStreamAsync(url);
             using JsonDocument json = JsonDocument.Parse(stream);
             JsonElement element = json.RootElement.GetProperty("resource");

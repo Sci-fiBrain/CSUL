@@ -1,6 +1,9 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
+using CSUL.Models.Local.GameEx;
 using CSUL.Models.Local.ModPlayer;
+using CSUL.Models.Network;
+using CSUL.Models.Network.CB;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,9 +51,11 @@ namespace CSUL.ViewModels.PlayViewModels
                     if (window is not null) window.WindowState = WindowState.Minimized;
                     try
                     {
+                        #region 运行播放集
+
                         BaseModPlayer? player = CP.ModPlayerManager.GetModPlayers().FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer);
                         if (player is not null and not NullModPlayer)
-                        {   //装载播放集
+                        {   //播放集
                             try
                             {
                                 string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
@@ -79,7 +84,26 @@ namespace CSUL.ViewModels.PlayViewModels
                             }
                         }
 
-                        //启动游戏
+                        #endregion 运行播放集
+
+                        #region 运行汉化
+
+                        Chinesization.RemoveOutdate(CP.GameRoot.FullName);
+                        if (CP.StartChinesization)
+                        {   //启动汉化
+                            CbResourceData data = await NetworkData.GetCbResourceData(157)
+                                ?? throw new Exception("获取论坛汉化文件信息失败");
+                            CbFileData file = data.Files?.FirstOrDefault(x => x.FileName.Contains("源码"))
+                                ?? throw new Exception("获取汉化文件地址失败");
+                            using MemoryStream stream = new();
+                            await NetworkData.DownloadFromUri(file.Url, stream, api: true);
+                            string cnText = Encoding.UTF8.GetString(stream.ToArray());
+                            Chinesization.Chinesize(CP.GameRoot.FullName, cnText);
+                        }
+
+                        #endregion 运行汉化
+
+                        //启动游戏进程
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";
                         if (CP.SteamCompatibilityMode)
                         {   //Steam正版兼容模式
@@ -105,6 +129,16 @@ namespace CSUL.ViewModels.PlayViewModels
 
         public ICommand PlayGameCommand { get; }
         public ICommand RefreshCommand { get; }
+
+        public bool StartChinesization
+        {
+            get => CP.StartChinesization;
+            set
+            {
+                CP.StartChinesization = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool OpenDeveloper
         {

@@ -26,6 +26,7 @@ namespace CSUL
         public MainWindow()
         {
             #region --基础代码初始化--
+
             if (File.Exists("Cities2.exe"))
             {
                 MessageBox.Show("为避免未知原因导致出错及便于CSUL更新\n" +

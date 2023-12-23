@@ -3,7 +3,6 @@ using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Local.ModPlayer.BepInEx;
 using CSUL.UserControls.DragFiles;
 using CSUL.Windows;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;

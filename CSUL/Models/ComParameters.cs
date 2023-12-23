@@ -105,6 +105,12 @@ namespace CSUL.Models
         [Config]
         public string? SelectedModPlayer { get; set; }
 
+        /// <summary>
+        /// 是否启用汉化
+        /// </summary>
+        [Config]
+        public bool StartChinesization { get; set; }
+
         #endregion --游戏启动相关--
 
         #region --游戏平台相关--

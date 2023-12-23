@@ -36,6 +36,10 @@
                 <Label Content="{Binding SelectedModPlayer}" FontSize="18" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding StartChinesization}" />
+                <Label Content="{StaticResource Chinesization}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
                 <CheckBox IsChecked="{Binding OpenDeveloper}" />
                 <Label Content="{StaticResource DevModelStart}" />
             </StackPanel>

@@ -32,9 +32,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         {
             IsFile = !DirectoryEx.IsDirectory(path);
             ModPath = path;
-            Name = Path.GetFileName(path);
-            int index = Name.LastIndexOf('.');
-            if (index > 0) Name = Name[..index];
+            Name = Path.GetFileName(path).Replace(".dll", null);
         }
 
         #endregion ---构造函数---

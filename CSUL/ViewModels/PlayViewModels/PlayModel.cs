@@ -33,6 +33,7 @@ namespace CSUL.ViewModels.PlayViewModels
                 {
                     ButtonEnabled = false;
                     await Task.Delay(500);
+                    if (!File.Exists(Path.Combine(CP.GameRoot.FullName, "Cities2.exe"))) throw new FileNotFoundException("未找到Cities2.exe文件\n请检查游戏路径是否设置正确");
                     if (CP.ShowSteamInfo)
                     {
                         const string steamInfo =

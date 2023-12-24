@@ -27,7 +27,7 @@ namespace CSUL.Models.Local.GameEx
         public static void Chinesize(string rootPath, string cnText)
         {
             string path = Path.Combine(rootPath, "Cities2_Data\\StreamingAssets\\~UI~\\GameUI\\index.js");
-            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js (游戏)文件");
+            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js (游戏)文件\n请检查游戏安装路径设置");
             string data = File.ReadAllText(path);
             int startIndex = data.IndexOf('{') + 1;
             if (startIndex == 0) throw new Exception("错误的 index.js 文件");
@@ -43,7 +43,7 @@ namespace CSUL.Models.Local.GameEx
         public static void RemoveOutdate(string rootPath)
         {
             string path = Path.Combine(rootPath, "Cities2_Data\\StreamingAssets\\~UI~\\GameUI\\index.js");
-            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js (游戏)文件");
+            if (!File.Exists(path)) throw new FileNotFoundException("未找到 index.js (游戏)文件\n请检查游戏安装路径设置");
             string data = File.ReadAllText(path, Encoding.UTF8);
             data.ReplaceLineEndings();
             const string startString = "//REPLACE_ITEMS_START//";

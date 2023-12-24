@@ -31,13 +31,13 @@ namespace CSUL.ViewModels.PlayViewModels
             PlayGameCommand = new RelayCommand(
                 async (sender) =>
                 {
-                    ButtonEnabled = false;
                     await Task.Delay(500);
                     if (!File.Exists(Path.Combine(CP.GameRoot.FullName, "Cities2.exe")))
                     {
                         MessageBox.Show("未找到Cities2.exe文件\n请检查游戏安装目录是否设置正确", "游戏打开失败", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
+                    ButtonEnabled = false;
                     if (CP.ShowSteamInfo)
                     {
                         const string steamInfo =

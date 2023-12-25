@@ -89,14 +89,18 @@ namespace CSUL.Models.Network
         /// <param name="id">资源id</param>
         public static async Task<CbResourceData?> GetCbResourceData(int id)
         {
-            string url = "https://www.cslbbs.net/api/resources/" + id;
-            using HttpClient http = new();
-            http.DefaultRequestHeaders.Add("XF-API-Key", ApiKey);
-            using Stream stream = await http.GetStreamAsync(url);
-            using JsonDocument json = JsonDocument.Parse(stream);
-            JsonElement element = json.RootElement.GetProperty("resource");
-            CbResourceData? data = element.Deserialize<CbResourceData>();
-            return data;
+            try
+            {
+                string url = "https://www.cslbbs.net/api/resources/" + id;
+                using HttpClient http = new();
+                http.DefaultRequestHeaders.Add("XF-API-Key", ApiKey);
+                using Stream stream = await http.GetStreamAsync(url);
+                using JsonDocument json = JsonDocument.Parse(stream);
+                JsonElement element = json.RootElement.GetProperty("resource");
+                CbResourceData? data = element.Deserialize<CbResourceData>();
+                return data;
+            }
+            catch(HttpRequestException) { return null; }
         }
     }
 }

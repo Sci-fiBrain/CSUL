@@ -32,7 +32,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 if (sender is not DragFilesEventArgs args) return;
                 if (SelectedPlayer is null or NullModPlayer)
                 {
-                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n请选择或创建一个播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 foreach (string path in args.Paths) await SelectedPlayer.AddMod(path);
@@ -43,7 +43,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 if (sender is not IModData mod) return;
                 if (SelectedPlayer is null or NullModPlayer)
                 {
-                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n请选择或创建一个播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 if (MessageBox.Show(mod.Name, "确定删除", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel) return;
@@ -54,7 +54,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             {   //检查模组兼容性
                 if (SelectedPlayer is not BepModPlayer player)
                 {
-                    MessageBox.Show("还没有选择播放集\n或该播放集不是BepInEx播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n或该播放集不是BepInEx播放集\n请选择或创建一个BepInEx播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 Dictionary<int, (string name, string version)> allData = new();
@@ -91,7 +91,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             {
                 if (SelectedPlayer is null or NullModPlayer)
                 {
-                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n请选择或创建一个播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 Process.Start("Explorer.exe", SelectedPlayer.PlayerPath);
@@ -100,7 +100,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             {
                 if (SelectedPlayer is null or NullModPlayer)
                 {
-                    MessageBox.Show("还没有选择播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n请选择或创建一个播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 if (MessageBox.Show($"将移除播放集 {SelectedPlayer.PlayerName}\n" +

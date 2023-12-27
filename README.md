@@ -4,21 +4,17 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 为避免用户受病毒、漏洞等恶意代码的危害，在分享本启动器时应使用[CSLBBS官方发布页面](https://www.cslbbs.net/csul/)或[Github仓库链接](https://github.com/Sci-fiBrain/CSUL/)。
 
 ## 已实现功能
-- [x] BepInEx前置一键安装/卸载
-- [x] Mod模组一键导入安装/卸载
-- [x] Mod模组兼容性检测（支持多种压缩包格式及DLL导入）
-- [x] 地图存档一键安装/卸载（支持新版格式融合）
-- [x] 一键打开相关目录
-- [x] 自定义游戏根目录/数据目录（兼容不同游戏平台）
-- [x] Steam平台自动检测路径
-- [x] 一键启动游戏
-- [x] 以开发者模式启动游戏
-- [x] 以Steam正版兼容模式启动游戏
-- [x] 在线检测启动器更新
+- BepInEx、模组、地图存档一键安装/卸载（支持多种格式导入）
+- 模组兼容性检测，并对不同问题进行归类，便于排查
+- 自定义游戏目录/数据目录（兼容不同游戏平台）Steam平台自动检测
+- 一键启动游戏，以开发者模式、以Steam兼容模式启动游戏
+- 在线检测启动器更新
 
 ## 待完成功能
 - [ ] 多语言支持（Multi-Language）
-- [ ] 跳过P社启动器启动游戏
+- [ ] 一键自动安装论坛模组
+- [ ] 检测论坛模组更新并提醒更新
+- [ ] 一键跳过P社启动器启动游戏
 - [ ] 自定义启动器主题色、背景图
 - [ ] 自动检测Xbox、微软商店游戏路径
 - [ ] 错误日志记录
@@ -28,8 +24,8 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 暂无
 
 ## 鸣谢
-[@科幻大脑](https://github.com/Sci-fiBrain) 主操程序开发
+[@科幻大脑](https://github.com/Sci-fiBrain) 程序开发
 
-[@YYT](https://github.com/SuperYYT) 主操功能策划 
+[@YYT](https://github.com/SuperYYT) 功能策划 
 
-[@喵小夕](https://space.bilibili.com/209728596/) 提供模组相关问题帮助
+[@喵小夕](https://space.bilibili.com/209728596/) 提供模组相关协助

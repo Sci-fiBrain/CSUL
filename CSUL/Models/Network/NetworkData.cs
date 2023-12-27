@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CSUL.Models.Network
@@ -101,6 +102,32 @@ namespace CSUL.Models.Network
                 return data;
             }
             catch(HttpRequestException) { return null; }
+        }
+
+        /// <summary>
+        /// 获取多个CSLBBS资源
+        /// </summary>
+        /// <param name="ids">要获取的资源ID</param>
+        public static async Task<List<CbResourceData>> GetCbResourceDatas(IEnumerable<int> ids)
+        {
+            List<CbResourceData> datas = new();
+            Semaphore semaphore = new(7, 7);
+            IEnumerable<Task> tasks = ids.Select(id => Task.Run(async () =>
+            {   //创建异步线程 同时获取多个资源信息
+                try
+                {
+                    semaphore.WaitOne();
+                    CbResourceData? data = await NetworkData.GetCbResourceData(id);
+                    if (data is null) return;
+                    else datas.Add(data);
+                }
+                finally
+                {   //同步信号量 防止同时访问次数过多 限制在7次以内
+                    semaphore.Release();
+                }
+            }));
+            await Task.WhenAll(tasks);
+            return datas;
         }
     }
 }

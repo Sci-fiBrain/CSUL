@@ -176,7 +176,7 @@ namespace CSUL
         /// <summary>
         /// 管道读取方法
         /// </summary>
-        private static async Task PipeReader(CancellationToken token)
+        private async Task PipeReader(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -196,7 +196,7 @@ namespace CSUL
                         catch (IOException) { break; }
                     }
                     string command = Encoding.UTF8.GetString(stream.ToArray());
-                    await ViceCommand.Parse(command);
+                    await ViceCommand.Parse(command, Dispatcher);
                 }
                 catch (OperationCanceledException) { break; }
                 catch (Exception ex)

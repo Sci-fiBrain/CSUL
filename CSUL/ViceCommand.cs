@@ -7,12 +7,16 @@
  *  --------------------------------------
  */
 
+using CSUL.Models;
 using CSUL.Models.Network;
 using CSUL.Models.Network.CB;
+using CSUL.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using ParPairs = System.Collections.Generic.Dictionary<string, string>;
 
 namespace CSUL
@@ -20,20 +24,17 @@ namespace CSUL
     /// <summary>
     /// 副进程传参处理
     /// </summary>
-    internal class ViceCommand
+    internal static class ViceCommand
     {
         private static readonly JsonSerializerOptions options = new()
         {
             PropertyNameCaseInsensitive = true,
         };
 
-        private ViceCommand()
-        { }
-
         /// <summary>
         /// 解析命令
         /// </summary>
-        public static async Task Parse(string command)
+        public static async Task Parse(string command, Dispatcher dispatcher)
         {
             try
             {
@@ -53,7 +54,7 @@ namespace CSUL
                 }
                 switch (keys.Dequeue())
                 {
-                    case "installresources": await InstallResources(pars); break;
+                    case "installresources": await InstallResources(pars, dispatcher); break;
                 }
             }
             catch { }
@@ -64,21 +65,21 @@ namespace CSUL
         /// <summary>
         /// 安装资源
         /// </summary>
-        private static async Task InstallResources(ParPairs pairs)
+        private static async Task InstallResources(ParPairs pairs, Dispatcher dispatcher)
         {
             if (!pairs.TryGetValue("json", out string? str)) return;
             using JsonDocument json = JsonDocument.Parse(str);
+            //获取需要安装的所有资源id
             IEnumerable<int> ids = json.RootElement.EnumerateArray().Select(x => x.ValueKind == JsonValueKind.String ? int.Parse(x.GetString()!) : x.GetInt32());
-            List<CbResourceData> datas = await Task.Run(async () =>
-            {
-                List<CbResourceData> datas = new();
-                foreach (int id in ids)
+            List<CbResourceData> datas = await NetworkData.GetCbResourceDatas(ids);
+            await dispatcher.InvokeAsync(() =>
+            {   //同步线程打开UI
+                try
                 {
-                    CbResourceData? data = await NetworkData.GetCbResourceData(id);
-                    if (data is null) continue;
-                    else datas.Add(data);
+                    CbResourceInstaller installer = new(datas);
+                    installer.Show();
                 }
-                return datas;
+                catch { }
             });
         }
 

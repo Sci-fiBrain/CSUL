@@ -84,24 +84,32 @@ namespace CSUL.Models.Network
             return null;
         }
 
+        private readonly static Semaphore semaphore = new(7, 7);
+
         /// <summary>
         /// 获取CSLBBS资源数据
         /// </summary>
         /// <param name="id">资源id</param>
         public static async Task<CbResourceData?> GetCbResourceData(int id)
         {
+            CbResourceData? data = null;
             try
             {
+                await Task.Run(semaphore.WaitOne);
                 string url = "https://www.cslbbs.net/api/resources/" + id;
                 using HttpClient http = new();
                 http.DefaultRequestHeaders.Add("XF-API-Key", ApiKey);
                 using Stream stream = await http.GetStreamAsync(url);
                 using JsonDocument json = JsonDocument.Parse(stream);
                 JsonElement element = json.RootElement.GetProperty("resource");
-                CbResourceData? data = element.Deserialize<CbResourceData>();
-                return data;
+                data = element.Deserialize<CbResourceData>();
             }
-            catch (HttpRequestException) { return null; }
+            catch (HttpRequestException) { }
+            finally
+            {
+                semaphore.Release();
+            }
+            return data;
         }
 
         /// <summary>
@@ -111,12 +119,11 @@ namespace CSUL.Models.Network
         public static async Task<List<CbResourceData>> GetCbResourceDatas(IEnumerable<int> ids)
         {
             List<CbResourceData> datas = new();
-            Semaphore semaphore = new(7, 7);
             IEnumerable<Task> tasks = ids.Select(id => Task.Run(async () =>
             {   //创建异步线程 同时获取多个资源信息
                 try
                 {
-                    semaphore.WaitOne();
+                    await Task.Run(semaphore.WaitOne);
                     CbResourceData? data = await NetworkData.GetCbResourceData(id);
                     if (data is null) return;
                     else datas.Add(data);

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -102,7 +101,14 @@ namespace CSUL.ViewModels.PlayViewModels
                             {   //启动汉化
                                 string cnText;
                                 CbResourceData? data = null;
-                                data = await NetworkData.GetCbResourceData(157);
+                                try
+                                {
+                                    data = await NetworkData.GetCbResourceData(157);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.ToFormative(), "最新汉化包数据获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                }
                                 CbFileData? file = data?.Files?.FirstOrDefault(x => x.FileName.Contains("源码"));
                                 if (File.Exists(jsName))
                                 {   //存在汉化文件
@@ -171,6 +177,7 @@ namespace CSUL.ViewModels.PlayViewModels
         public ICommand RefreshCommand { get; }
 
 #pragma warning disable CA1822
+
         public string? ChinesizationVersion
         {
             get
@@ -180,6 +187,7 @@ namespace CSUL.ViewModels.PlayViewModels
                 return null;
             }
         }
+
 #pragma warning restore CA1822
 
         public bool StartChinesization

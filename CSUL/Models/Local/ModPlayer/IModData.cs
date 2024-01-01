@@ -20,6 +20,11 @@ namespace CSUL.Models.Local.ModPlayer
         public string Name { get; }
 
         /// <summary>
+        /// 模组Id
+        /// </summary>
+        public int? Id { get; }
+
+        /// <summary>
         /// 模组路径
         /// </summary>
         public string ModPath { get; }
@@ -32,6 +37,7 @@ namespace CSUL.Models.Local.ModPlayer
         /// <summary>
         /// 模组版本
         /// </summary>
+        [Config]
         public string? ModVersion { get; }
 
         /// <summary>
@@ -42,11 +48,13 @@ namespace CSUL.Models.Local.ModPlayer
         /// <summary>
         /// 模组描述
         /// </summary>
+        [Config]
         public string? Description { get; }
 
         /// <summary>
         /// 模组地址
         /// </summary>
+        [Config]
         public string? ModUrl { get; }
     }
 }

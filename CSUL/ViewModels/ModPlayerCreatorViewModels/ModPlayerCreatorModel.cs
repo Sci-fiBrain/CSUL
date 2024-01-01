@@ -82,7 +82,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                 }
                 catch (Exception ex)
                 {
-                    if(Directory.Exists(playerPath)) Directory.Delete(playerPath, true);
+                    if (Directory.Exists(playerPath)) Directory.Delete(playerPath, true);
                     MessageBox.Show(ex.ToFormative(), "创建失败", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 Window.Close();

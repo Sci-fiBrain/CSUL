@@ -27,12 +27,20 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         /// <summary>
         /// 实例化<see cref="BepModData"/>对象
         /// </summary>
-        /// <param name="path"></param>
         public BepModData(string path)
         {
             IsFile = !DirectoryEx.IsDirectory(path);
             ModPath = path;
             Name = Path.GetFileName(path).Replace(".dll", null);
+
+            if (File.Exists(path + ".data"))
+            {
+                try
+                {
+                    this.LoadConfig(path + ".data");
+                }
+                catch { }
+            }
         }
 
         #endregion ---构造函数---
@@ -41,14 +49,20 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public string Name { get; set; }
 
+        [Config]
+        public int? Id { get; set; }
+
         public string ModPath { get; set; }
 
+        [Config]
         public string? ModVersion { get; set; }
 
         public string? LatestVersion { get; set; }
 
+        [Config]
         public string? Description { get; set; }
 
+        [Config]
         public string? ModUrl { get; set; }
 
         public bool IsEnabled
@@ -80,6 +94,32 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         public Version? BepVersion => GetBepVersion(ModPath, IsFile);
 
         #endregion ---公共属性---
+
+        #region ---公共方法---
+
+        /// <summary>
+        /// 删除模组
+        /// </summary>
+        public void Delete()
+        {
+            if (IsFile)
+            {
+                if (File.Exists(ModPath)) File.Delete(ModPath);
+            }
+            else
+            {
+                if (Directory.Exists(ModPath)) Directory.Delete(ModPath, true);
+            }
+            if (File.Exists(ModPath + ".disabled")) File.Delete(ModPath + ".disabled");
+            if (File.Exists(ModPath + ".data")) File.Delete(ModPath + ".data");
+        }
+
+        /// <summary>
+        /// 保存数据
+        /// </summary>
+        public void SaveData() => this.SaveConfig(ModPath + ".data");
+
+        #endregion ---公共方法---
 
         #region ---静态方法---
 

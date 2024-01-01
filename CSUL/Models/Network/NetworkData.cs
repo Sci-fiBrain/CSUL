@@ -101,7 +101,7 @@ namespace CSUL.Models.Network
                 CbResourceData? data = element.Deserialize<CbResourceData>();
                 return data;
             }
-            catch(HttpRequestException) { return null; }
+            catch (HttpRequestException) { return null; }
         }
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace CSUL.Models.Network
                 }
                 finally
                 {   //同步信号量 防止同时访问次数过多 限制在7次以内
+                    await Task.Delay(10);
                     semaphore.Release();
                 }
             }));

@@ -55,7 +55,8 @@ namespace CSUL.Models.Local.ModPlayer
         /// 添加模组
         /// </summary>
         /// <param name="path">模组文件路径</param>
-        public abstract Task AddMod(string path);
+        /// <param name="data">模组信息数据</param>
+        public abstract Task AddMod(string path, IModData? data = null);
 
         /// <summary>
         /// 移除模组

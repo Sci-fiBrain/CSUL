@@ -70,7 +70,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         #region ---公共方法---
 
-        public override async Task AddMod(string path)
+        public override async Task AddMod(string path, IModData? data)
         {
             try
             {
@@ -127,6 +127,14 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                     package.DirectoryInfo.CopyTo(targetPath, true);
                 }
                 BepModData modData = new(targetPath);
+                if (data is not null)
+                {   //储存元数据
+                    modData.ModVersion = data.ModVersion;
+                    modData.Description = data.Description;
+                    modData.ModUrl = data.ModUrl;
+                    modData.Id = data.Id;
+                }
+                modData.SaveData();
                 if (mods.Contains(modData)) mods.Remove(modData);
                 mods.Add(modData);
                 MessageBox.Show($"模组 {name} 安装完成\n兼容性检查已完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -145,9 +153,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             {
                 if (mods.Remove(mod))
                 {
-                    mod.IsEnabled = true;
-                    if (mod.IsFile) File.Delete(mod.ModPath);
-                    else Directory.Delete(mod.ModPath, true);
+                    mod.Delete();
                 }
             });
         }

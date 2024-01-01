@@ -23,7 +23,7 @@ namespace CSUL.Models.Local.ModPlayer
 
         public override Version? PlayerVersion => null;
 
-        public override async Task AddMod(string path) => await Task.Delay(0);
+        public override async Task AddMod(string path, IModData? data = null) => await Task.Delay(0);
 
         public override async Task<ModPlayerData> Install(string rootPath, string dataPath) =>
             await Task.Run(() => new ModPlayerData { Directories = default!, Files = default! });

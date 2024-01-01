@@ -101,13 +101,17 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300" />
+                                <ColumnDefinition Width="260" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="80" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                            <CheckBox Grid.Column="1" IsChecked="{Binding IsEnabled}" Style="{StaticResource ChkBullet}" HorizontalAlignment="Right" Margin="0,0,5,0" />
-                            <Grid Grid.Column="2">
+                            <Label Grid.Column="1" Content="{Binding ModVersion}" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                            <Label Grid.Column="2" Content="{Binding Description}" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                            <CheckBox Grid.Column="3" IsChecked="{Binding IsEnabled}" Style="{StaticResource ChkBullet}" HorizontalAlignment="Right" Margin="0,0,5,0" />
+                            <Grid Grid.Column="4">
                                 <Button Content="{StaticResource Delete}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteModCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />

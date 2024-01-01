@@ -9,7 +9,6 @@
 
 using System;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace CSUL.Models
 {
@@ -29,7 +28,7 @@ namespace CSUL.Models
             {
                 builder.AppendLine($"附加信息: \n{meg}");
             }
-            if(ex is UnauthorizedAccessException)
+            if (ex is UnauthorizedAccessException)
             {
                 builder.AppendLine($"异常信息: 该操作缺少权限，可能被安全软件拦截或是需要管理员权限");
             }
@@ -40,7 +39,7 @@ namespace CSUL.Models
             if (ex is not null)
             {
                 builder.AppendLine($"异常内容: {ex.Message}");
-                if(ex.InnerException is not null)
+                if (ex.InnerException is not null)
                 {
                     builder.AppendLine($"内敛信息: {ex.InnerException.Message}");
                 }

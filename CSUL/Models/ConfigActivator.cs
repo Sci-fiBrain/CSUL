@@ -83,7 +83,8 @@ namespace CSUL.Models
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             if (incPrivate) flags |= BindingFlags.NonPublic;
             var properties = (from pro in obj.GetType().GetProperties(flags) where Attribute.IsDefined(pro, typeof(ConfigAttribute)) select pro).ToDictionary(x => x.Name);
-            using JsonDocument jsonFile = JsonDocument.Parse(new FileStream(configPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite));
+            using Stream stream = new FileStream(configPath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using JsonDocument jsonFile = JsonDocument.Parse(stream);
             JsonElement.ObjectEnumerator jsons = jsonFile.RootElement.EnumerateObject();
             foreach (JsonProperty json in jsons)
             {

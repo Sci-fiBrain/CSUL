@@ -9,6 +9,7 @@
 
 using System;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
 namespace CSUL.Models
 {
@@ -28,11 +29,24 @@ namespace CSUL.Models
             {
                 builder.AppendLine($"附加信息: \n{meg}");
             }
+            if(ex is UnauthorizedAccessException accessEx)
+            {
+                builder.AppendLine($"异常信息: 该操作缺少权限，可能被安全软件拦截或是需要管理员权限");
+            }
+            else if (ex is System.Net.Http.HttpRequestException httpEx)
+            {
+                builder.AppendLine($"异常信息: 网站访问失败 错误码{(int?)httpEx.StatusCode}({httpEx.StatusCode})");
+            }
             if (ex is not null)
             {
                 builder.AppendLine($"异常内容: {ex.Message}");
+                if(ex.InnerException is not null)
+                {
+                    builder.AppendLine($"内敛信息: {ex.InnerException.Message}");
+                }
                 builder.AppendLine();
-                builder.AppendLine("如遇无法解决的问题，请将该报错截图后再咨询");
+                builder.AppendLine("如遇无法解决的问题，请将该报错完整截图后再咨询");
+                builder.AppendLine("以下为开发者所需信息，无需用户处理");
                 builder.AppendLine($"异常类型: {ex.GetType().Name}");
                 builder.AppendLine($"异常对象: {ex.Source}");
                 builder.AppendLine($"异常方法: {ex.TargetSite?.Name}");

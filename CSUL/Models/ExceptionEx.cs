@@ -29,7 +29,7 @@ namespace CSUL.Models
             {
                 builder.AppendLine($"附加信息: \n{meg}");
             }
-            if(ex is UnauthorizedAccessException accessEx)
+            if(ex is UnauthorizedAccessException)
             {
                 builder.AppendLine($"异常信息: 该操作缺少权限，可能被安全软件拦截或是需要管理员权限");
             }

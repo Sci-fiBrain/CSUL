@@ -122,7 +122,6 @@ namespace CSUL.Models.Network
             List<CbResourceData> datas = new();
             IEnumerable<Task> tasks = ids.Select(id => Task.Run(async () =>
             {   //创建异步线程 同时获取多个资源信息
-                await Task.Run(semaphore.WaitOne);
                 CbResourceData? data = await GetCbResourceData(id);
                 if (data is null) return;
                 else datas.Add(data);

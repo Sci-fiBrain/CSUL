@@ -1,13 +1,4 @@
-﻿/*  CSUL 标准文件头注释
- *  --------------------------------------
- *  文件名称: CbResourceInstaller.xaml.cs
- *  创建时间: 2023年12月28日 0:14
- *  创建开发:
- *  文件介绍:
- *  --------------------------------------
- */
-
-using CSUL.Models;
+﻿using CSUL.Models;
 using CSUL.Models.Local;
 using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Local.ModPlayer.BepInEx;
@@ -18,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -28,33 +20,6 @@ namespace CSUL.Windows
     /// </summary>
     public partial class CbResourceInstaller : Window
     {
-        #region ---模组数据---
-
-        private class ModData : IModData
-        {
-            public int? Id { get; set; }
-
-            public string? ModVersion { get; set; }
-
-            public string? Description { get; set; }
-
-            public string? ModUrl { get; set; }
-
-            #region ---忽略属性---
-
-            public string Name => throw new NotImplementedException();
-
-            public string ModPath => throw new NotImplementedException();
-
-            public bool IsEnabled { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            public string? LatestVersion => throw new NotImplementedException();
-
-            #endregion ---忽略属性---
-        }
-
-        #endregion ---模组数据---
-
         private static readonly ComParameters CP = ComParameters.Instance;
 
         private CbResourceInstaller()
@@ -112,12 +77,13 @@ namespace CSUL.Windows
                         if (data.CustomInfo is not CbCustomBepModInfo customInfo) continue;
                         try
                         {
-                            ModData modData = new()
+                            BepModData modData = new(string.Empty)
                             {   //得到模组信息
                                 Id = data.Id,
                                 ModVersion = data.ResourceVersion,
                                 Description = data.Desciption,
-                                ModUrl = data.ResourceUrl
+                                ModUrl = data.ResourceUrl,
+                                Name = data.Title
                             };
                             CbFileData fileData;
                             if (customInfo.BepInExVersion?.Length > 1)
@@ -130,11 +96,37 @@ namespace CSUL.Windows
                             {
                                 fileData = data.Files?.FirstOrDefault() ?? throw new Exception("获取模组文件下载地址失败");
                             }
+
                             using TempDirectory temp = new();
-                            string path = Path.Combine(temp.FullName, fileData.FileName);
-                            using (Stream stream = File.Create(path)) await NetworkData.DownloadFromUri(fileData.Url, stream, api: true);
-                            await player.AddMod(path, modData);
-                            MessageBox.Show($"模组{data.Title}自动安装成功", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                            async Task<string> DownloadFile()
+                            {   //下载资源的内敛方法
+                                string path = Path.Combine(temp.FullName, fileData.FileName);
+                                using Stream stream = File.Create(path);
+                                await NetworkData.DownloadFromUri(fileData.Url, stream, api: true);
+                                return path;
+                            }
+
+                            //查找模组是否已存在
+                            BepModData? oldModData = player.FirstOrDefault(x =>
+                            {
+                                if (x is not BepModData bepModData) return false;
+                                if (bepModData.Id == modData.Id) return true;
+                                return bepModData.Name == modData.Name;
+                            }) as BepModData;
+                            if (oldModData is not null)
+                            {
+                                MessageBoxResult ret = MessageBox.Show($"模组[{modData.Id}] {modData.Name}已存在\n" +
+                                    $"现存版本: {oldModData.ModVersion}\n" +
+                                    $"新装版本: {modData.ModVersion}\n" +
+                                    $"是否覆盖原有模组?", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                                if (ret == MessageBoxResult.Cancel) continue;
+                                await player.UpgradeMod(oldModData, await DownloadFile(), modData);
+                            }
+                            else
+                            {
+                                await player.AddMod(await DownloadFile(), modData);
+                            }
+                            MessageBox.Show($"模组{data.Title}自动安装结束", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         catch (Exception ex)
                         {

@@ -3,17 +3,71 @@ using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Local.ModPlayer.BepInEx;
 using CSUL.UserControls.DragFiles;
 using CSUL.Windows;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels.ModPlayerViewModels
 {
-    internal class ModPlayerModel : BaseViewModel
+    internal partial class ModPlayerModel : BaseViewModel
     {
+        internal partial class ModDataItem : BaseViewModel
+        {
+            public ModDataItem(IModData modData)
+            {
+                BaseData = modData;
+                if (modData.ModUrl is not null)
+                {
+                    OpenUrl = new RelayCommand(sender => Process.Start("explorer.exe", modData.ModUrl));
+                }
+                Task.Run(() =>
+                {   //异步获取版本信息
+                    try
+                    {
+                        string? versionStr = modData.ModVersion;
+                        string? latestVStr = modData.LatestVersion;
+                        if (versionStr is null || latestVStr is null) return;
+                        versionStr = VersionRegex().Replace(versionStr, string.Empty);
+                        latestVStr = VersionRegex().Replace(latestVStr, string.Empty);
+                        if (Version.TryParse(versionStr, out Version? version) && Version.TryParse(latestVStr, out Version? latest))
+                        {   //正确获取到版本
+                            if (latest > version)
+                            {   //有新版本
+                                UpgragdeVisibility = Visibility.Visible;
+                                OnPropertyChanged(nameof(UpgragdeVisibility));
+                            }
+                        }
+                    }
+                    catch { }
+                });
+            }
+
+            /// <summary>
+            /// 基础数据
+            /// </summary>
+            public IModData BaseData { get; private init; }
+
+            /// <summary>
+            /// 更新按钮显示状态
+            /// </summary>
+            public Visibility UpgragdeVisibility { get; private set; } = Visibility.Hidden;
+
+            public ICommand? OpenUrl { get; }
+
+            /// <summary>
+            /// Regex编译时实现
+            /// </summary>
+            /// <returns></returns>
+            [GeneratedRegex("[^\\d.]")]
+            private static partial Regex VersionRegex();
+        }
+
         private static readonly ComParameters CP = ComParameters.Instance;
         private readonly ModPlayerManager manager;
 
@@ -36,7 +90,6 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                     return;
                 }
                 foreach (string path in args.Paths) await SelectedPlayer.AddMod(path);
-                RefreshData();
             });
             DeleteModCommand = new RelayCommand(sender =>
             {   //删除模组
@@ -48,7 +101,6 @@ namespace CSUL.ViewModels.ModPlayerViewModels
                 }
                 if (MessageBox.Show(mod.Name, "确定删除", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel) return;
                 SelectedPlayer.RemoveMod(mod);
-                RefreshData();
             });
             CheckCommand = new RelayCommand(sender =>
             {   //检查模组兼容性
@@ -130,12 +182,28 @@ namespace CSUL.ViewModels.ModPlayerViewModels
 
         public BaseModPlayer? SelectedPlayer
         {
-            get => Players.FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer) ?? Players.FirstOrDefault();
+            get
+            {
+                BaseModPlayer? player = Players.FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer) ?? Players.FirstOrDefault();
+                if (player is not null or NullModPlayer) player.SetOnDataChangedHandle(RefreshData);    //添加播放集改变处理 用于自动安装后刷新数据
+                return player;
+            }
             set
             {
                 if (SelectedPlayer == value || value is null) return;
                 CP.SelectedModPlayer = value.PlayerName;
+                value.SetOnDataChangedHandle(RefreshData); //添加播放集改变处理 用于自动安装后刷新数据
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ModDataItems));
+            }
+        }
+
+        public IEnumerable<ModDataItem>? ModDataItems
+        {
+            get
+            {
+                if (SelectedPlayer is null or NullModPlayer) return null;
+                return SelectedPlayer.ModDatas.Select(x => new ModDataItem(x));
             }
         }
 
@@ -156,6 +224,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
         {
             Players = CP.ModPlayerManager.GetModPlayers();
             OnPropertyChanged(nameof(SelectedPlayer));
+            OnPropertyChanged(nameof(ModDataItems));
         }
     }
 }

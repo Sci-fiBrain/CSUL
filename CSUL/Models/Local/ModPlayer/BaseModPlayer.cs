@@ -17,6 +17,11 @@ namespace CSUL.Models.Local.ModPlayer
     /// </summary>
     internal abstract class BaseModPlayer
     {
+        /// <summary>
+        /// 播放集数据改变委托
+        /// </summary>
+        protected Action? OnDataChanged;
+
         #region ---初始化方法---
 
         /// <summary>
@@ -69,9 +74,31 @@ namespace CSUL.Models.Local.ModPlayer
         /// </summary>
         /// <param name="modData">要更新的模组</param>
         /// <param name="path">新版本模组文件路径</param>
-        public abstract Task UpgradeMod(IModData modData, string path);
+        /// <param name="newData">新版本模组的模组数据</param>
+        public abstract Task UpgradeMod(IModData modData, string path, IModData? newData = null);
+
+        /// <summary>
+        /// 找到第一个符合条件的模组
+        /// </summary>
+        /// <param name="precidate">查找条件</param>
+        /// <returns>目标实例</returns>
+        public abstract IModData? FirstOrDefault(Func<IModData?, bool> precidate);
 
         #endregion ---抽象方法---
+
+        #region ---公共方法---
+
+        /// <summary>
+        /// 设置数据更改事件处理委托
+        /// </summary>
+        /// <param name="action">要调用的委托</param>
+        /// <param name="overwrite">是否覆盖原有委托</param>
+        public void SetOnDataChangedHandle(Action? action, bool overwrite = false)
+        {
+            if (OnDataChanged is null || overwrite) OnDataChanged = action;
+        }
+
+        #endregion ---公共方法---
 
         #region ---抽象属性---
 

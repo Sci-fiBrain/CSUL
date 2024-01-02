@@ -90,7 +90,7 @@
             </Grid>
         </Border>
         <Border Grid.Row="2">
-            <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding SelectedPlayer.ModDatas}">
+            <ListView Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding ModDataItems}" FocusVisualStyle="{x:Null}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -101,20 +101,24 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="260" />
-                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="270" />
+                                <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="80" />
                                 <ColumnDefinition Width="80" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="{Binding Name}" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                            <Label Grid.Column="1" Content="{Binding ModVersion}" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                            <Label Grid.Column="2" Content="{Binding Description}" HorizontalAlignment="Left" Margin="20,0,0,0" />
-                            <CheckBox Grid.Column="3" IsChecked="{Binding IsEnabled}" Style="{StaticResource ChkBullet}" HorizontalAlignment="Right" Margin="0,0,5,0" />
-                            <Grid Grid.Column="4">
+                            <Label Grid.Column="0" Content="{Binding BaseData.Name}" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                            <Label Grid.Column="1" Content="{Binding BaseData.ModVersion}" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                            <Label Grid.Column="2" Content="{Binding BaseData.Description}" HorizontalAlignment="Left" Margin="20,0,0,0" />
+                            <Button Grid.Column="3" Content="有新版本" HorizontalAlignment="Left" Margin="20,0,0,0" Visibility="{Binding UpgragdeVisibility}"
+                                    Background="Transparent" BorderBrush="Transparent" Padding="3" FocusVisualStyle="{x:Null}"
+                                    Command="{Binding OpenUrl}" Foreground="IndianRed" />
+                            <CheckBox Grid.Column="4" IsChecked="{Binding BaseData.IsEnabled}" Style="{StaticResource ChkBullet}" HorizontalAlignment="Right" Margin="0,0,5,0" />
+                            <Grid Grid.Column="5">
                                 <Button Content="{StaticResource Delete}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteModCommand}"
-                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}" />
+                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext.BaseData}" />
                             </Grid>
                         </Grid>
                     </DataTemplate>

@@ -62,7 +62,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override ModPlayerType PlayerType => ModPlayerType.BepInEx;
 
-        public override IModData[] ModDatas => mods.ToArray();
+        public override IModData[] ModDatas => mods.Order(Comparer<BepModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
 
         public override Version? PlayerVersion => GetBepVersion();
 
@@ -70,7 +70,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         #region ---公共方法---
 
-        public override async Task AddMod(string path, IModData? data)
+        public override async Task AddMod(string path, IModData? data = null)
         {
             try
             {
@@ -111,6 +111,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                             $"是否覆盖安装？", "提示",
                             MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.Cancel) return;
                     }
+                    File.Delete(targetPath);
                     File.Copy(path, targetPath, true);
                 }
                 else
@@ -121,7 +122,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                         if (MessageBox.Show($"模组{name}已存在\n" +
                             $"是否覆盖安装？", "提示",
                             MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.Cancel) return;
-                        Directory.Delete(targetPath);
+                        Directory.Delete(targetPath, true);
                     }
                     Directory.CreateDirectory(targetPath);
                     package.DirectoryInfo.CopyTo(targetPath, true);
@@ -132,12 +133,20 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                     modData.ModVersion = data.ModVersion;
                     modData.Description = data.Description;
                     modData.ModUrl = data.ModUrl;
-                    modData.Id = data.Id;
+                    if (!string.IsNullOrEmpty(data.Name))
+                    {
+                        modData.Name = data.Name;
+                    }
+                }
+                if (data is BepModData bepData)
+                {
+                    modData.Id = bepData.Id;
                 }
                 modData.SaveData();
                 if (mods.Contains(modData)) mods.Remove(modData);
                 mods.Add(modData);
                 MessageBox.Show($"模组 {name} 安装完成\n兼容性检查已完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                OnDataChanged?.Invoke();
             }
             catch (Exception e)
             {
@@ -154,6 +163,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                 if (mods.Remove(mod))
                 {
                     mod.Delete();
+                    OnDataChanged?.Invoke();
                 }
             });
         }
@@ -183,11 +193,13 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             });
         }
 
-        public override async Task UpgradeMod(IModData modData, string path)
+        public override async Task UpgradeMod(IModData modData, string path, IModData? newData = null)
         {
-            await Task.Delay(0);
-            throw new NotImplementedException();
+            await RemoveMod(modData);
+            await AddMod(path, newData);
         }
+
+        public override IModData? FirstOrDefault(Func<IModData?, bool> precidate) => mods.FirstOrDefault(precidate);
 
         #endregion ---公共方法---
 

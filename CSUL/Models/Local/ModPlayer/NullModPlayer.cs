@@ -30,6 +30,8 @@ namespace CSUL.Models.Local.ModPlayer
 
         public override async Task RemoveMod(IModData modData) => await Task.Delay(0);
 
-        public override async Task UpgradeMod(IModData modData, string path) => await Task.Delay(0);
+        public override async Task UpgradeMod(IModData modData, string path, IModData? newData = null) => await Task.Delay(0);
+
+        public override IModData? FirstOrDefault(Func<IModData?, bool> precidate) => null;
     }
 }

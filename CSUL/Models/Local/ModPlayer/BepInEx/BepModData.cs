@@ -29,6 +29,12 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         /// </summary>
         public BepModData(string path)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                Name = "Unknow";
+                ModPath = "Unknow";
+                return;
+            }
             IsFile = !DirectoryEx.IsDirectory(path);
             ModPath = path;
             Name = Path.GetFileName(path).Replace(".dll", null);
@@ -47,6 +53,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         #region ---公共属性---
 
+        [Config]
         public string Name { get; set; }
 
         [Config]
@@ -57,7 +64,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
         [Config]
         public string? ModVersion { get; set; }
 
-        public string? LatestVersion { get; set; }
+        public string? LatestVersion => Id is int id ? Network.NetworkData.GetCbResourceData(id).Result?.ResourceVersion : null;
 
         [Config]
         public string? Description { get; set; }

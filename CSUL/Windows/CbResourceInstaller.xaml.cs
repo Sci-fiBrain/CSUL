@@ -88,7 +88,7 @@ namespace CSUL.Windows
                             CbFileData fileData;
                             if (customInfo.BepInExVersion?.Length > 1)
                             {
-                                string pattern = "(b(e?|(ep)?)((in)?(ex)?)?|ex)" + bepVersion.Major;
+                                string pattern = "(b(e?|(ep)?)((in)?(ex)?)?|ex)-?" + bepVersion.Major;
                                 fileData = (data.Files?.FirstOrDefault(x => Regex.IsMatch(x.FileName, pattern, RegexOptions.IgnoreCase)))
                                     ?? throw new Exception("获取模组文件下载地址失败");
                             }

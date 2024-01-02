@@ -24,11 +24,6 @@ namespace CSUL
     /// </summary>
     internal static class ViceCommand
     {
-        private static readonly JsonSerializerOptions options = new()
-        {
-            PropertyNameCaseInsensitive = true,
-        };
-
         /// <summary>
         /// 解析命令
         /// </summary>

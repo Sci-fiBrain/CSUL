@@ -49,7 +49,7 @@ namespace CSUL
                         "是否同意创建?", "提示", MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (ret == MessageBoxResult.Yes)
                     {
-                        ProcessStartInfo startInfo = new() { UseShellExecute = false, CreateNoWindow = true, FileName = "cmd", Arguments = $"/c {reg}" };
+                        ProcessStartInfo startInfo = new() { UseShellExecute = false, CreateNoWindow = true, FileName = "cmd", Arguments = $"/c \"{reg}\"" };
                         Process.Start(startInfo)?.WaitForExit();
                     }
                 }
@@ -157,7 +157,7 @@ namespace CSUL
         {
             regPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.reg");
             if (File.Exists(regPath)) return false;
-            using StreamWriter stream = new(File.Create(regPath));
+            using StreamWriter stream = new(File.Create(regPath), Encoding.Unicode);
             stream.WriteLine("Windows Registry Editor Version 5.00");
             stream.WriteLine();
             stream.WriteLine("[HKEY_CLASSES_ROOT\\csul]");

@@ -107,6 +107,7 @@ namespace CSUL.Models.Network
             catch (HttpRequestException) { }
             finally
             {
+                await Task.Delay(50);
                 semaphore.Release();
             }
             return data;
@@ -121,18 +122,10 @@ namespace CSUL.Models.Network
             List<CbResourceData> datas = new();
             IEnumerable<Task> tasks = ids.Select(id => Task.Run(async () =>
             {   //创建异步线程 同时获取多个资源信息
-                try
-                {
-                    await Task.Run(semaphore.WaitOne);
-                    CbResourceData? data = await NetworkData.GetCbResourceData(id);
-                    if (data is null) return;
-                    else datas.Add(data);
-                }
-                finally
-                {   //同步信号量 防止同时访问次数过多 限制在7次以内
-                    await Task.Delay(10);
-                    semaphore.Release();
-                }
+                await Task.Run(semaphore.WaitOne);
+                CbResourceData? data = await GetCbResourceData(id);
+                if (data is null) return;
+                else datas.Add(data);
             }));
             await Task.WhenAll(tasks);
             return datas;

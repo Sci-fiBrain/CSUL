@@ -105,6 +105,7 @@ namespace CSUL.Models.Network
                 data = element.Deserialize<CbResourceData>();
             }
             catch (HttpRequestException) { }
+            catch { throw; }
             finally
             {
                 await Task.Delay(50);

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,10 +123,23 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
         };
 
         //BepInEx文件列表
-        public IEnumerable<BepData> BepDatas { get; } = NetworkData.GetNetBepInfos().Select(x =>
+        public IEnumerable<BepData>? BepDatas { get; } = new Func<IEnumerable<BepData>?>(() =>
         {
-            return new BepData() { Name = $"{x.Version} {(x.IsBeta ? "测试版" : "正式版")}", Uri = x.Uri, FileName = x.FileName };
-        });
+            IEnumerable<BepData>? ret = null;
+            try
+            {
+                ret = NetworkData.GetNetBepInfos()?.Select(x => new BepData() { Name = $"{x.Version} {(x.IsBeta ? "测试版" : "正式版")}", Uri = x.Uri, FileName = x.FileName });
+            }
+            catch (HttpRequestException)
+            {
+                MessageBox.Show("无法获取在线BepInEx文件信息\n请检查自己的网络或DNS\n或在官方群中下载播放集文件手动安装", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToFormative(), "获取BepInEx文件列表失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return ret;
+        }).Invoke();
 
         //所处的Window
         public Window Window { get; set; } = default!;

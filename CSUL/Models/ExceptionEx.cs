@@ -39,9 +39,10 @@ namespace CSUL.Models
             if (ex is not null)
             {
                 builder.AppendLine($"异常内容: {ex.Message}");
-                if (ex.InnerException is not null)
+                if (ex.InnerException is Exception inner)
                 {
-                    builder.AppendLine($"内敛信息: {ex.InnerException.Message}");
+                    builder.AppendLine($"内敛信息: {inner.Message}");
+                    builder.AppendLine($"内敛类型: {inner.GetType().Name}");
                 }
                 builder.AppendLine();
                 builder.AppendLine("如遇无法解决的问题，请将该报错完整截图后再咨询");

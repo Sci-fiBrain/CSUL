@@ -11,7 +11,9 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
         Title="CSUL"
+        MinHeight="650" MinWidth="1200"
         Height="650" Width="1200">
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}" />

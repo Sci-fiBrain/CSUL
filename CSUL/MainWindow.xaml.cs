@@ -2,6 +2,7 @@
 using CSUL.Models.Local;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Pipes;
 using System.Text;
@@ -153,7 +154,7 @@ namespace CSUL
         /// </summary>
         /// <param name="regPath">注册表文件的路径</param>
         /// <returns>是否创建成功</returns>
-        private static bool TryCreatRegisterFile(out string regPath)
+        private static bool TryCreatRegisterFile([NotNullWhen(true)] out string? regPath)
         {
             regPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CSUL.reg");
             if (File.Exists(regPath)) return false;

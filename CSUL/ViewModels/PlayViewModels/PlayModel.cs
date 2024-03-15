@@ -1,5 +1,6 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local;
+using CSUL.Models.Local.Game;
 using CSUL.Models.Local.GameEx;
 using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Network;
@@ -25,6 +26,7 @@ namespace CSUL.ViewModels.PlayViewModels
         private static ComParameters CP { get; } = ComParameters.Instance;
         private Window? window = null;
         private const string jsName = "chinesization.js";   //汉化文件名称
+        private PlayerLogParser? logParser = null;
 
         public PlayModel()
         {
@@ -148,6 +150,14 @@ namespace CSUL.ViewModels.PlayViewModels
                         }
 
                         #endregion 运行汉化
+
+                        #region 运行日志解析
+
+                        logParser?.Dispose();
+                        logParser = new(CP.PlayerLog);
+                        logParser.StartListening();
+
+                        #endregion
 
                         //启动游戏进程
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";

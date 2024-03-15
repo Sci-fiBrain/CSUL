@@ -199,6 +199,15 @@ namespace CSUL.Models
 
         #endregion -派生文件夹-
 
+        #region -派生文件-
+
+        /// <summary>
+        /// 玩家日志文件
+        /// </summary>
+        public FileInfo PlayerLog => new(Path.Combine(gameDataPath, "Player.log"));
+
+        #endregion
+
         #endregion --文件夹相关--
 
         #region --模组播放集管理器--

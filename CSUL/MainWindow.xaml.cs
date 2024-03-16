@@ -43,7 +43,7 @@ namespace CSUL
 
             if (mainProcess)
             {   //主进程
-                if (TryCreatRegisterFile(out string reg))
+                if (TryCreatRegisterFile(out string? reg))
                 {   //创建注册表
                     MessageBoxResult ret = MessageBox.Show("为实现论坛内容自动下载安装，需要创建一个注册表添加自定义协议\n" +
                         "在此保证该注册表内容安全，如有疑虑可查看源码\n" +

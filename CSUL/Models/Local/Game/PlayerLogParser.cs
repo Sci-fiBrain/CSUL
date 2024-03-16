@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
 
 namespace CSUL.Models.Local.Game
 {
@@ -74,18 +75,26 @@ namespace CSUL.Models.Local.Game
                 }
                 if (await reader.ReadLineAsync() is string line && !string.IsNullOrWhiteSpace(line))
                 {
-                    if(line.StartsWith("Could not load file or assembly"))
+                    //if(line.StartsWith("Could not load file or assembly"))
+                    //{
+                    //    string? name = null;
+                    //    match = AssemblyNameRegex().Match(line);
+                    //    if(match.Success) name = match.Groups["name"].Value;
+                    //    logs.Add($"缺少前置模组: {name ?? "未知模组"}");
+                    //}
+                    if (MatchSuccess(AssemblyNameRegex, line, out Match match))
                     {
-                        string? name = null;
-                        Match match = AssemblyNameRegex().Match(line);
-                        if(match.Success) name = match.Groups["name"].Value;
-                        logs.Add($"缺少前置模组: {name ?? "未知模组"}");
+                        logs.Add($"缺少前置模组: {match.Groups["name"].Value}");
                     }
-                    else if(line.Contains("A platform service integration failed to initialize"))
+                    else if (MatchSuccess(DependencyRegex, line, out match))
+                    {
+                        logs.Add($"模组 [{match.Groups["name"].Value}] 加载失败，缺少前置 [{match.Groups["dependency"].Value}]");
+                    }
+                    else if (line.Contains("A platform service integration failed to initialize"))
                     {
                         logs.Add("Steam正版验证未通过");
                     }
-                    else if(line.Contains("Out of memory"))
+                    else if (line.Contains("Out of memory"))
                     {
                         logs.Add("内存溢出");
                     }
@@ -93,7 +102,16 @@ namespace CSUL.Models.Local.Game
             }
         }
 
-        [GeneratedRegex("'(?<name>[\\w]+),")]
+        private static bool MatchSuccess(Func<Regex> getRegex, string input, out Match match)
+        {
+            match = getRegex().Match(input);
+            return match.Success;
+        }
+
+        [GeneratedRegex("Could not load file or assembly '(?<name>[\\w]+),")]
         private static partial Regex AssemblyNameRegex();
+
+        [GeneratedRegex("Could not load \\[(?<name>.*?)\\] because it has missing dependencies: (?<dependency>.*?)$")]
+        private static partial Regex DependencyRegex();
     }
 }

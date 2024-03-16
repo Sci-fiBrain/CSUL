@@ -13,6 +13,7 @@ Cities: Skylines II Universal Launcher 都市天际线2万能启动器（简称C
 - 一键自动安装论坛模组
 - 在线检测模组版本更新
 - 游戏错误日志解析
+- 内置[喵小夕全局汉化](https://github.com/thx114/mio-i18-cn) （自动更新）
 
 ## 待完成功能
 - [ ] 多语言支持（Multi-Language）

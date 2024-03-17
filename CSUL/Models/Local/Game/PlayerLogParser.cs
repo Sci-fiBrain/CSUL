@@ -67,7 +67,11 @@ namespace CSUL.Models.Local.Game
                 {
                     if(logs.Count > 0)
                     {
-                        MessageBox.Show(string.Join('\n', logs), "CSUL 游戏日志检测器", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        StringBuilder builder = new();
+                        builder.Append("以下消息由CSUL解析游戏日志自动生成，和CSUL本身无关").AppendLine();
+                        builder.Append('-', 60).AppendLine();
+                        builder.AppendJoin('\n', logs);
+                        MessageBox.Show(builder.ToString(), "CSUL 游戏日志解析器", MessageBoxButton.OK, MessageBoxImage.Warning);
                         logs.Clear();
                     }
                     await Task.Delay(10);
@@ -75,20 +79,13 @@ namespace CSUL.Models.Local.Game
                 }
                 if (await reader.ReadLineAsync() is string line && !string.IsNullOrWhiteSpace(line))
                 {
-                    //if(line.StartsWith("Could not load file or assembly"))
-                    //{
-                    //    string? name = null;
-                    //    match = AssemblyNameRegex().Match(line);
-                    //    if(match.Success) name = match.Groups["name"].Value;
-                    //    logs.Add($"缺少前置模组: {name ?? "未知模组"}");
-                    //}
                     if (MatchSuccess(AssemblyNameRegex, line, out Match match))
                     {
-                        logs.Add($"缺少前置模组: {match.Groups["name"].Value}");
+                        logs.Add($"有模组依赖[{match.Groups["name"].Value}]运行，但您并没有安装该模组");
                     }
                     else if (MatchSuccess(DependencyRegex, line, out match))
                     {
-                        logs.Add($"模组 [{match.Groups["name"].Value}] 加载失败，缺少前置 [{match.Groups["dependency"].Value}]");
+                        logs.Add($"模组[{match.Groups["name"].Value}]依赖[{match.Groups["dependency"].Value}]运行，但您并没有安装该模组");
                     }
                     else if (line.Contains("A platform service integration failed to initialize"))
                     {
@@ -96,7 +93,7 @@ namespace CSUL.Models.Local.Game
                     }
                     else if (line.Contains("Out of memory"))
                     {
-                        logs.Add("内存溢出");
+                        logs.Add("游戏内存溢出");
                     }
                 }
             }

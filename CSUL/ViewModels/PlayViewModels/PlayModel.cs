@@ -153,9 +153,16 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #region 运行日志解析
 
-                        logParser?.Dispose();
-                        logParser = new(CP.PlayerLog);
-                        logParser.StartListening();
+                        try
+                        {
+                            logParser?.Dispose();
+                            logParser = new(CP.PlayerLog);
+                            logParser.StartListening();
+                        }
+                        catch (IOException)
+                        {
+                            MessageBox.Show("本次游戏将不会自动解析游戏日志", "游戏日志读取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
 
                         #endregion
 

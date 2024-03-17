@@ -8,6 +8,7 @@
  */
 
 using System;
+using System.Reflection;
 using System.Text;
 
 namespace CSUL.Models
@@ -47,6 +48,8 @@ namespace CSUL.Models
                 builder.AppendLine();
                 builder.AppendLine("如遇无法解决的问题，请将该报错完整截图后再咨询");
                 builder.AppendLine("以下为开发者所需信息，无需用户处理");
+                builder.Append('-', 60).AppendLine();
+                builder.AppendLine($"软件版本: {Assembly.GetExecutingAssembly().GetName().Version}");
                 builder.AppendLine($"异常类型: {ex.GetType().Name}");
                 builder.AppendLine($"异常对象: {ex.Source}");
                 builder.AppendLine($"异常方法: {ex.TargetSite?.Name}");

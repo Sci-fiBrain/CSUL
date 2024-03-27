@@ -62,24 +62,25 @@ namespace CSUL.ViewModels.PlayViewModels
                         #region 运行播放集
 
                         BaseModPlayer? player = CP.ModPlayerManager.GetModPlayers().FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer);
+
+                        string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
+                        if (File.Exists(loadConfig))
+                        {   //清理旧播放集
+                            ModPlayerData? data = JsonSerializer.Deserialize<ModPlayerData>(File.ReadAllText(loadConfig));
+                            if (data is not null)
+                            {
+                                if (data.Files is IEnumerable<string> files)
+                                    foreach (string file in files) if (File.Exists(file)) File.Delete(file);
+                                if (data.Directories is IEnumerable<string> dirs)
+                                    foreach (string dir in dirs) if (Directory.Exists(dir)) Directory.Delete(dir, true);
+                            }
+                            File.Delete(loadConfig);
+                        }
+
                         if (player is not null and not NullModPlayer)
                         {   //播放集
                             try
                             {
-                                string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
-                                if (File.Exists(loadConfig))
-                                {   //清理旧播放集
-                                    ModPlayerData? data = JsonSerializer.Deserialize<ModPlayerData>(File.ReadAllText(loadConfig));
-                                    if (data is not null)
-                                    {
-                                        if (data.Files is IEnumerable<string> files)
-                                            foreach (string file in files) if (File.Exists(file)) File.Delete(file);
-                                        if (data.Directories is IEnumerable<string> dirs)
-                                            foreach (string dir in dirs) if (Directory.Exists(dir)) Directory.Delete(dir, true);
-                                    }
-                                    File.Delete(loadConfig);
-                                }
-
                                 //装载播放集
                                 ModPlayerData playerData = await player.Install(CP.GameRoot.FullName, CP.GameData.FullName);
                                 byte[] buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(playerData));

@@ -66,7 +66,8 @@ namespace CSUL.Models.Local.ModPlayer
             BaseModPlayer player = playerType switch
             {
                 ModPlayerType.BepInEx => new BepInEx.BepModPlayer(),
-                _ => throw new Exception("未知的播放集类型")
+                ModPlayerType.Pmod => new Pmod.PmodPlayer(),
+                _ => throw new Exception("不受支持的播放集类型")
             };
             player.Initialize(playerPath);
             int hashCode = player.GetHashCode();

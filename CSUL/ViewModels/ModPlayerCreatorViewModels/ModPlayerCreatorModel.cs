@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,7 +28,15 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
 
         public class PlayerType
         {
-            public string Name { get; set; } = default!;
+            public PlayerType(ModPlayerType playerType)
+            {
+                Name = playerType.ToString();
+                Type = playerType;
+            }
+
+            public string Name { get; }
+
+            public ModPlayerType Type { get; }
         }
 
         private static readonly ComParameters CP = ComParameters.Instance;
@@ -36,9 +45,9 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
         {
             CreatCommand = new RelayCommand(async sender =>
             {
-                if (chosenBep is null)
+                if (SelectedPlayerType is null)
                 {
-                    MessageBox.Show("还没有选择BepInEx版本", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("请选择播放集类型", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(PlayerName))
@@ -54,24 +63,17 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                 }
                 try
                 {
-                    //创建播放集文件夹
-                    Directory.CreateDirectory(playerPath);
-                    string bepPath = Path.Combine(playerPath, "BepInEx");
-                    string modPath = Path.Combine(playerPath, "Mods");
-                    Directory.CreateDirectory(modPath);
-                    Directory.CreateDirectory(playerPath);
                     ButtonEnable = false;
-
-                    //下载BepInEx加载器
-                    using TempDirectory temp = new();
-                    string zipPath = Path.Combine(temp.FullName, chosenBep.FileName);
-                    using (Stream stream = File.Create(zipPath)) await NetworkData.DownloadFromUri(chosenBep.Uri, stream);
-                    using TempDirectory bepTemp = new();
-                    await bepTemp.Decompress(zipPath);
-                    bepTemp.DirectoryInfo.CopyTo(bepPath);
+                    Directory.CreateDirectory(playerPath);
+                    switch (SelectedPlayerType.Type)
+                    {
+                        case ModPlayerType.BepInEx: await CreatBepPlayer(playerPath); break;
+                        case ModPlayerType.Pmod: await CreatPmodPlayer(playerPath); break;
+                        default: throw new Exception("不受支持的播放集类型");
+                    }
 
                     //创建播放器配置文件
-                    ModPlayerType playerType = ModPlayerType.BepInEx;
+                    ModPlayerType playerType = SelectedPlayerType.Type;
                     string config = Path.Combine(playerPath, "modPlayer.config");
                     using Stream configStream = File.Create(config);
                     using Utf8JsonWriter json = new(configStream);
@@ -88,16 +90,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                 }
                 Window.Close();
             });
-            ChooseBepCommand = new RelayCommand(sender =>
-            {
-                if (sender is not SelectionChangedEventArgs args) return;
-                if (args.AddedItems.Count < 1) return;
-                if (args.AddedItems[0] is not BepData bepData) return;
-                chosenBep = bepData;
-            });
         }
-
-        private BepData? chosenBep = null;
 
         //是否启用按钮
         private bool buttonEnable = true;
@@ -116,11 +109,28 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
         //播放集名称
         public string PlayerName { get; set; } = "";
 
-        //播放集类型列表
-        public List<PlayerType> PlayerTypes { get; } = new()
+        public BepData? SelectedBepData { get; set; }
+
+        private PlayerType? selectedPlayerType;
+        public PlayerType? SelectedPlayerType
         {
-            new(){Name = ModPlayerType.BepInEx.ToString()}
-        };
+            get => selectedPlayerType;
+            set
+            {
+                if (value == selectedPlayerType) return;
+                if (value is null) return;
+                selectedPlayerType = value;
+                BepinexVersionVisbility = value.Type == ModPlayerType.BepInEx ? Visibility.Visible : Visibility.Collapsed;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BepinexVersionVisbility));
+            }
+        }
+
+        public Visibility BepinexVersionVisbility { get; set; } = Visibility.Collapsed;
+
+        public IEnumerable<PlayerType> PlayerTypes { get; }
+            = ((ModPlayerType[])Enum.GetValues(typeof(ModPlayerType)))[1..]
+                .Select(x => new PlayerType(x));
 
         //BepInEx文件列表
         public IEnumerable<BepData>? BepDatas { get; } = new Func<IEnumerable<BepData>?>(() =>
@@ -143,11 +153,35 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
 
         //所处的Window
         public Window Window { get; set; } = default!;
-
         //创建命令
         public ICommand CreatCommand { get; set; }
 
-        //选择Bep版本命令
-        public ICommand ChooseBepCommand { get; set; }
+        private async Task CreatBepPlayer(string playerPath)
+        {
+            if (SelectedBepData is null)
+            {
+                MessageBox.Show("还没有选择BepInEx版本", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            //创建播放集文件夹
+            string bepPath = Path.Combine(playerPath, "BepInEx");
+            string modPath = Path.Combine(playerPath, "Mods");
+            Directory.CreateDirectory(modPath);
+            Directory.CreateDirectory(playerPath);
+
+            //下载BepInEx加载器
+            using TempDirectory temp = new();
+            string zipPath = Path.Combine(temp.FullName, SelectedBepData.FileName);
+            using (Stream stream = File.Create(zipPath)) await NetworkData.DownloadFromUri(SelectedBepData.Uri, stream);
+            using TempDirectory bepTemp = new();
+            await bepTemp.Decompress(zipPath);
+            bepTemp.DirectoryInfo.CopyTo(bepPath);
+        }
+
+        private async Task CreatPmodPlayer(string playerPath)
+        {
+            await Task.Delay(0);
+            return;
+        }
     }
 }

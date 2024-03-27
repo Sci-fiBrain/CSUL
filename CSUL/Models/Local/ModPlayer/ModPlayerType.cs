@@ -15,6 +15,7 @@ namespace CSUL.Models.Local.ModPlayer
     internal enum ModPlayerType
     {
         None,
-        BepInEx
+        BepInEx,
+        Pmod
     }
 }

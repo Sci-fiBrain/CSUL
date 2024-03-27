@@ -48,7 +48,7 @@
                         <Grid VerticalAlignment="Center">
                             <Label Content="播放集类型" FontSize="16" />
                         </Grid>
-                        <ComboBox Height="30" ItemsSource="{Binding PlayerTypes}"
+                        <ComboBox Height="30" ItemsSource="{Binding PlayerTypes}" SelectedValue="{Binding SelectedPlayerType}"
                                   VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
@@ -62,17 +62,12 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
-                    <StackPanel Orientation="Vertical" Margin="0, 5">
+                    <StackPanel Orientation="Vertical" Margin="0, 5" Visibility="{Binding BepinexVersionVisbility}">
                         <Grid VerticalAlignment="Center">
                             <Label Content="BepInEx版本" FontSize="16" />
                         </Grid>
-                        <ComboBox Height="30" ItemsSource="{Binding BepDatas}"
+                        <ComboBox Height="30" ItemsSource="{Binding BepDatas}" SelectedValue="{Binding SelectedBepData}"
                                   VerticalContentAlignment="Center" Padding="10,0,0,0" FocusVisualStyle="{x:Null}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding ChooseBepCommand}" PassEventArgsToCommand="True" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />

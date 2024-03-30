@@ -39,6 +39,12 @@ namespace CSUL.ViewModels.PlayViewModels
                         MessageBox.Show("未找到Cities2.exe文件\n请检查游戏安装目录是否设置正确", "游戏打开失败", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
+                    if (Process.GetProcessesByName("Cities2") is Process[] processes && processes.Length > 0)
+                    {
+                        if (MessageBox.Show("检测到正在运行的天际线2进程\n" +
+                            "强行启动可能会出现问题，建议关闭已开启的游戏进程\n" +
+                            "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel) return;
+                    }
                     ButtonEnabled = false;
                     if (CP.ShowSteamInfo)
                     {

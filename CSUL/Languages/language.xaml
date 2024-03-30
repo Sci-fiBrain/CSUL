@@ -30,4 +30,5 @@
     <sys:String x:Key="ModPlayer">播放集</sys:String>
     <sys:String x:Key="Creat">创建</sys:String>
     <sys:String x:Key="Chinesization">喵小夕汉化</sys:String>
+    <sys:String x:Key="LogoutParadox">退出Paradox账号</sys:String>
 </ResourceDictionary>

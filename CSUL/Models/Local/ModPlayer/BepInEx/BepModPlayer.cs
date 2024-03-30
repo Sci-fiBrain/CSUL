@@ -59,7 +59,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override ModPlayerType PlayerType => ModPlayerType.BepInEx;
 
-        public override IModData[] ModDatas => mods.Order(Comparer<BepModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
+        public override IModData[] ModDatas => mods.Order(Comparer<IModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
 
         public override Version? PlayerVersion => GetBepVersion();
 
@@ -126,7 +126,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                 }
                 BepModData modData = new(targetPath);
                 if (data is not null)
-                {   //储存元数据
+                {   //转存元数据
                     modData.ModVersion = data.ModVersion;
                     modData.Description = data.Description;
                     modData.ModUrl = data.ModUrl;
@@ -147,7 +147,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
             }
             catch (Exception e)
             {
-                MessageBox.Show($"插件{path}安装失败，原因: \n{e.ToFormative()}", "安装出错",
+                MessageBox.Show($"模组 {path} 安装失败，原因: \n{e.ToFormative()}", "安装出错",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

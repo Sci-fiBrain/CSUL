@@ -40,6 +40,8 @@
                 <TextBox Text="{Binding StartArgument}" />
                 <Label Content="{StaticResource SteamPath}" />
                 <TextBox Text="{Binding SteamPath}" />
+                <Button Grid.Column="4" Height="30" Margin="5,30,5,0" Width="200" HorizontalAlignment="Left" Foreground="{DynamicResource BlackBrush}"
+                        Content="{StaticResource LogoutParadox}" Command="{Binding LogoutParadox}" />
             </StackPanel>
         </Border>
         <Border Grid.Row="1" Margin="0,5,0,0" Background="{DynamicResource DefaultBrush}" Height="150" VerticalAlignment="Bottom">

@@ -66,9 +66,9 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
                     ButtonEnable = false;
                     Directory.CreateDirectory(playerPath);
                     switch (SelectedPlayerType.Type)
-                    {
+                    {   //针对性文件创建
                         case ModPlayerType.BepInEx: await CreatBepPlayer(playerPath); break;
-                        case ModPlayerType.Pmod: await CreatPmodPlayer(playerPath); break;
+                        case ModPlayerType.Pmod: break;
                         default: throw new Exception("不受支持的播放集类型");
                     }
 
@@ -176,12 +176,6 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
             using TempDirectory bepTemp = new();
             await bepTemp.Decompress(zipPath);
             bepTemp.DirectoryInfo.CopyTo(bepPath);
-        }
-
-        private async Task CreatPmodPlayer(string playerPath)
-        {
-            await Task.Delay(0);
-            return;
         }
     }
 }

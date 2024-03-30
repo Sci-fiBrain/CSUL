@@ -116,7 +116,11 @@ namespace CSUL
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                DragMove();
+                try
+                {
+                    DragMove();
+                }
+                catch { }
             }
         }
 

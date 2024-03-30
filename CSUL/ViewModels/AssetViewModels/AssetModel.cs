@@ -11,30 +11,24 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace CSUL.ViewModels.MapViewModels
+namespace CSUL.ViewModels.AssetViewModels
 {
-    /// <summary>
-    /// MapView的ViewModel
-    /// </summary>
-    public class MapModel : BaseViewModel
+    internal class AssetModel : BaseViewModel
     {
         private static ComParameters CP { get; } = ComParameters.Instance;
 
-        public MapModel()
+        public AssetModel()
         {
-            //获取初始数据
-            RefreshData();
-
             //设定命令处理方法
             DeleteCommand = new RelayCommand((sender) =>
             {
                 if (sender is not GameDataFileInfo data) return;
                 StringBuilder sb = new();
-                sb.Append("地图名称: ").Append(data.Name).AppendLine();
-                sb.Append("地图ID: ").Append(data.Cid).AppendLine();
+                sb.Append("资产名称: ").Append(data.Name).AppendLine();
+                sb.Append("资产ID: ").Append(data.Cid).AppendLine();
                 sb.Append("最后修改时间: ").Append(data.LastWriteTime).AppendLine();
-                sb.Append("地图路径: ").AppendLine().Append(data.FilePath).AppendLine();
-                MessageBoxResult ret = MessageBox.Show(sb.ToString(), "删除存档", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                sb.Append("资产路径: ").AppendLine().Append(data.FilePath).AppendLine();
+                MessageBoxResult ret = MessageBox.Show(sb.ToString(), "删除资产", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 if (ret == MessageBoxResult.OK)
                 {
                     try
@@ -61,7 +55,7 @@ namespace CSUL.ViewModels.MapViewModels
 
         public ICommand AddCommand { get; }
         public ICommand DeleteCommand { get; }
-        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", CP.Maps.FullName));
+        public ICommand OpenFolder { get; } = new RelayCommand((sender) => Process.Start("Explorer.exe", CP.Asset.FullName));
         public ICommand Refresh { get; }
 
         private IEnumerable<GameDataFileInfo> gameData = default!;
@@ -77,16 +71,13 @@ namespace CSUL.ViewModels.MapViewModels
             }
         }
 
-        #region ---私有方法---
-
         /// <summary>
-        /// 刷新地图数据
+        /// 刷新资产数据
         /// </summary>
-        private void RefreshData() => GameData = from cok in CP.Maps.GetAllFiles()
-                                                 where cok.Name.EndsWith(".cok")
+        private void RefreshData() => GameData = from cok in CP.Asset.GetAllFiles()
+                                                 where cok.Name.EndsWith(".Prefab")
                                                  let data = new GameDataFileInfo(cok.FullName)
                                                  select data;
 
-        #endregion ---私有方法---
     }
 }

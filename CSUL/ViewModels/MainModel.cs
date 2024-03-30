@@ -23,6 +23,7 @@ namespace CSUL.ViewModels
                 new MapView(),
                 new SaveView(),
                 new ModPlayerView(),
+                new AssetView(),
                 new SetView()
             };
             viewContent = ViewContents[0];

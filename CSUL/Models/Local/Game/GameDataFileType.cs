@@ -8,5 +8,10 @@
         Unknown,
         Save,
         Map,
+
+        /// <summary>
+        /// 资产
+        /// </summary>
+        Asset,
     }
 }

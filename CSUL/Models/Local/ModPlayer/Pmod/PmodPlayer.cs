@@ -20,7 +20,12 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
 
         public override IModData[] ModDatas => throw new NotImplementedException();
 
-        public override Version? PlayerVersion => throw new NotImplementedException();
+        public override Version? PlayerVersion => null;
+
+        protected override void Initialized()
+        {
+
+        }
 
         public override Task AddMod(string path, IModData? data = null)
         {

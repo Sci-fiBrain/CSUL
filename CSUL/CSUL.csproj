@@ -30,6 +30,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\asset.png" />
+    <None Remove="Resources\Icons\asset_black.png" />
     <None Remove="Resources\Icons\check_file_black.png" />
     <None Remove="Resources\Icons\cog.png" />
     <None Remove="Resources\Icons\earth.png" />
@@ -69,6 +71,8 @@
     <Content Include="Languages\language.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Icons\asset.png" />
+    <Resource Include="Resources\Icons\asset_black.png" />
     <Resource Include="Resources\Imgs\cslbbs_logo_low.png" />
     <Resource Include="Resources\Imgs\csl_logo_low.png" />
   </ItemGroup>

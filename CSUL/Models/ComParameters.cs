@@ -173,6 +173,11 @@ namespace CSUL.Models
         public DirectoryInfo Saves => GetDirectoryInfo(Path.Combine(gameDataPath, "Saves"));
 
         /// <summary>
+        /// 资产文件夹
+        /// </summary>
+        public DirectoryInfo Asset => GetDirectoryInfo(Path.Combine(gameDataPath, "StreamingData"));
+
+        /// <summary>
         /// BepInEx根文件夹
         /// </summary>
         public DirectoryInfo BepInEx => GetDirectoryInfo(Path.Combine(gameRootPath, "BepInEx"));

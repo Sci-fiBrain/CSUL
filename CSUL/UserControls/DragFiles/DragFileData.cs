@@ -59,14 +59,19 @@ namespace CSUL.UserControls.DragFiles
 
         private static readonly DragFilesType zipFile = new()
             {
-                {"压缩文件", new (){".zip", ".rar", ".7z", ".tar"}
-}
+                {"压缩文件", new (){".zip", ".rar", ".7z", ".tar"}}
             };
 
         private static readonly DragFilesType bepModFile = new()
         {
             {"压缩文件", new(){".zip", ".rar", ".7z", ".tar"} },
             {"DLL文件", new() {".dll" } }
+        };
+
+        private static readonly DragFilesType gameFile = new()
+        {
+            {"压缩文件", new(){".zip", ".rar", ".7z", ".tar"} },
+            {"游戏文件", new(){ ".cok", ".Prefab" } }
         };
 
         #endregion ---私有字段---
@@ -82,6 +87,11 @@ namespace CSUL.UserControls.DragFiles
         /// BepMod文件
         /// </summary>
         public static DragFilesType BepModFile { get => bepModFile.AddAllFileItem(); }
+
+        /// <summary>
+        /// 游戏文件
+        /// </summary>
+        public static DragFilesType GameFile { get => gameFile.AddAllFileItem(); }
 
         #endregion ---公共属性---
     }

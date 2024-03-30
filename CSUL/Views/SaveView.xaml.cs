@@ -11,7 +11,7 @@ namespace CSUL.Views
         public SaveView()
         {
             InitializeComponent();
-            DragFile.FileNameWithTypes = DefaultDragFilesType.ZipFile;
+            DragFile.FileNameWithTypes = DefaultDragFilesType.GameFile;
         }
     }
 }

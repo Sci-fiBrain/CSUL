@@ -13,8 +13,8 @@
         Background="Transparent"
         ResizeMode="CanResizeWithGrip"
         Title="CSUL"
-        MinHeight="650" MinWidth="1200"
-        Height="650" Width="1200">
+        MinHeight="730" MinWidth="1300"
+        Height="730" Width="1300">
     <Window.Resources>
         <Style TargetType="{x:Type ec:CButton}" BasedOn="{StaticResource BaseCBuutonStyle}" />
     </Window.Resources>
@@ -68,7 +68,8 @@
                                 <ec:CButton Icon="Resources/Icons/earth.png" CommandParameter="1" ToolTip="{StaticResource MapPage}" Content="{StaticResource MapPage}" />
                                 <ec:CButton Icon="Resources/Icons/map.png" CommandParameter="2" ToolTip="{StaticResource SavePage}" Content="{StaticResource SavePage}" />
                                 <ec:CButton Icon="Resources/Icons/mod.png" CommandParameter="3" ToolTip="{StaticResource ModPage}" Content="{StaticResource ModPage}" />
-                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="4" ToolTip="{StaticResource SettingPage}" Content="{StaticResource SettingPage}" />
+                                <ec:CButton Icon="Resources/Icons/asset.png" CommandParameter="4" ToolTip="{StaticResource AssetPage}" Content="{StaticResource AssetPage}" />
+                                <ec:CButton Icon="Resources/Icons/cog.png" CommandParameter="5" ToolTip="{StaticResource SettingPage}" Content="{StaticResource SettingPage}" />
                             </StackPanel>
                             <StackPanel Grid.Row="1">
                                 <!--<Label Foreground="{DynamicResource WhiteBrush}"

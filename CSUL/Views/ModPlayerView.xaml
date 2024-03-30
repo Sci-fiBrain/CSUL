@@ -82,9 +82,12 @@
                         <Style TargetType="Label">
                             <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
                             <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="Padding" Value="2,0"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Label Content="BepInEx版本" />
+                    <Label Content="播放集版本" />
+                    <Label Content="{Binding SelectedPlayer.PlayerType}" />
                     <Label Content="{Binding SelectedPlayer.PlayerVersion}" />
                 </StackPanel>
             </Grid>

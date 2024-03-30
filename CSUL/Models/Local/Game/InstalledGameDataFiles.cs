@@ -16,14 +16,23 @@ namespace CSUL.Models.Local.Game
     /// </summary>
     public readonly struct InstalledGameDataFiles
     {
+        public InstalledGameDataFiles()
+        {
+        }
+
         /// <summary>
         /// 已安装的地图名称
         /// </summary>
-        public List<string> MapNames { get; init; }
+        public List<string> MapNames { get; init; } = new();
 
         /// <summary>
         /// 已安装的存档名称
         /// </summary>
-        public List<string> SaveNames { get; init; }
+        public List<string> SaveNames { get; init; } = new();
+
+        /// <summary>
+        /// 已安装的资产名称
+        /// </summary>
+        public List<string> AssetNames { get; init; } = new();
     }
 }

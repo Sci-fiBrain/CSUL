@@ -24,9 +24,6 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
     {
         #region ---构造函数---
 
-        public BepModPlayer()
-        { }
-
         protected override void Initialized()
         {
             bepPath = Path.Combine(PlayerPath, "BepInEx");

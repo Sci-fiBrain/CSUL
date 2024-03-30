@@ -216,7 +216,7 @@ namespace CSUL.Models
         /// </summary>
         public FileInfo PlayerLog => new(Path.Combine(gameDataPath, "Player.log"));
 
-        #endregion
+        #endregion -派生文件-
 
         #endregion --文件夹相关--
 

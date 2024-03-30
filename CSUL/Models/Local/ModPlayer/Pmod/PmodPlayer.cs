@@ -6,12 +6,11 @@
  *  文件介绍: Pmod播放集
  *  --------------------------------------
  */
-using CSUL.Models.Local.ModPlayer.BepInEx;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -27,7 +26,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
         private List<PmodData> mods = default!;
         private string modPath = default!;
 
-        #endregion
+        #endregion ---私有字段---
 
         #region ---构造方法---
 
@@ -38,7 +37,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             mods = Directory.GetDirectories(modPath).Select(x => new PmodData(x)).ToList();
         }
 
-        #endregion
+        #endregion ---构造方法---
 
         #region ---公共属性---
 
@@ -48,9 +47,10 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
 
         public override Version? PlayerVersion => null;
 
-        #endregion
+        #endregion ---公共属性---
 
         #region ---公共方法---
+
         public override async Task AddMod(string path, IModData? data = null)
         {
             try
@@ -129,6 +129,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             await RemoveMod(modData);
             await AddMod(path, newData);
         }
-        #endregion
+
+        #endregion ---公共方法---
     }
 }

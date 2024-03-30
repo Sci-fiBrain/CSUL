@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace CSUL.ViewModels.ModPlayerCreatorViewModels
@@ -112,6 +111,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
         public BepData? SelectedBepData { get; set; }
 
         private PlayerType? selectedPlayerType;
+
         public PlayerType? SelectedPlayerType
         {
             get => selectedPlayerType;
@@ -153,6 +153,7 @@ namespace CSUL.ViewModels.ModPlayerCreatorViewModels
 
         //所处的Window
         public Window Window { get; set; } = default!;
+
         //创建命令
         public ICommand CreatCommand { get; set; }
 

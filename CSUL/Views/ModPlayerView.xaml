@@ -82,8 +82,8 @@
                         <Style TargetType="Label">
                             <Setter Property="Foreground" Value="{DynamicResource BlackBrush}" />
                             <Setter Property="FontSize" Value="12" />
-                            <Setter Property="Margin" Value="2"/>
-                            <Setter Property="Padding" Value="2,0"/>
+                            <Setter Property="Margin" Value="2" />
+                            <Setter Property="Padding" Value="2,0" />
                         </Style>
                     </StackPanel.Resources>
                     <Label Content="播放集版本" />

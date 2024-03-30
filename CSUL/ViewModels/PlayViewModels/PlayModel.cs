@@ -171,7 +171,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             MessageBox.Show("本次游戏将不会自动解析游戏日志", "游戏日志读取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
 
-                        #endregion
+                        #endregion 运行日志解析
 
                         //启动游戏进程
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";

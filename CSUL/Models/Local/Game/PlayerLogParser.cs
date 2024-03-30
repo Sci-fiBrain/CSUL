@@ -6,6 +6,7 @@
  *  文件介绍: 玩家日志解析器
  *  --------------------------------------
  */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +17,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace CSUL.Models.Local.Game
 {
@@ -55,7 +55,7 @@ namespace CSUL.Models.Local.Game
             public override string ToString() => builder.ToString();
         }
 
-        #endregion
+        #endregion ---私有类型---
 
         private readonly StreamReader reader;
         private readonly CancellationTokenSource cancellation = new();
@@ -92,6 +92,7 @@ namespace CSUL.Models.Local.Game
         }
 
         private MultilineReader? multilineReader = null;
+
         private async Task ListeningHandler()
         {
             HashSet<string> logs = new();

@@ -81,6 +81,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
                         return assembly;
                     }
                 }
+                catch { }
                 finally
                 {
                     custom.Unload();
@@ -128,7 +129,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
 
         public override bool Equals(object? obj)
         {
-            if (obj is not BepModData data) return false;
+            if (obj is not PmodData data) return false;
             else return data.GetHashCode() == GetHashCode();
         }
 

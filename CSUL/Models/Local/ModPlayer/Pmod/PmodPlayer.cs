@@ -60,6 +60,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
                 else await package.Decompress(path);
                 if (package.IsEmpty) throw new Exception("该包不包含任何文件");
                 string name = Path.GetFileName(path);
+                name = name[..name.LastIndexOf('.')];
                 if (PmodData.GetPmodAssembly(package.FullName) is null)
                 {
                     if (MessageBox.Show($"文件 {name} 安装警告\n" +

@@ -76,7 +76,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
                 else await package.Decompress(path);
                 if (package.IsEmpty) throw new Exception("该包不含任何文件");
                 string name = Path.GetFileName(path);
-                name = name[..name.LastIndexOf('.')];
+                name = name[..name.LastIndexOf('.')].Trim();
                 BepModData originData = new(package.FullName);
                 Version? bepVersion = PlayerVersion, modVersion = originData.BepVersion;
                 if (bepVersion is null || modVersion is null)

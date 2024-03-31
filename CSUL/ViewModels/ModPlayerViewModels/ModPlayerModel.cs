@@ -106,7 +106,7 @@ namespace CSUL.ViewModels.ModPlayerViewModels
             {   //检查模组兼容性
                 if (SelectedPlayer is not BepModPlayer player)
                 {
-                    MessageBox.Show("还没有选择播放集\n或该播放集不是BepInEx播放集\n请选择或创建一个BepInEx播放集", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("还没有选择播放集\n或该播放集不支持兼容性检查", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 Dictionary<int, (string name, string version)> allData = new();

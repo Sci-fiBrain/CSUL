@@ -43,7 +43,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
 
         public override ModPlayerType PlayerType => ModPlayerType.Pmod;
 
-        public override IModData[] ModDatas => mods.Order(Comparer<IModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
+        public override IModData[] ModDatas => mods.Order(Comparer<PmodData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
 
         public override Version? PlayerVersion => null;
 

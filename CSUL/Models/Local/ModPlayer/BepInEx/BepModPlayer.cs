@@ -59,7 +59,7 @@ namespace CSUL.Models.Local.ModPlayer.BepInEx
 
         public override ModPlayerType PlayerType => ModPlayerType.BepInEx;
 
-        public override IModData[] ModDatas => mods.Order(Comparer<IModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
+        public override IModData[] ModDatas => mods.Order(Comparer<BepModData>.Create((x, y) => string.Compare(x.Name, y.Name))).ToArray();
 
         public override Version? PlayerVersion => GetBepVersion();
 

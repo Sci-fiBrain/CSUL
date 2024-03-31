@@ -2,6 +2,7 @@
 using CSUL.Models.Local;
 using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Local.ModPlayer.BepInEx;
+using CSUL.Models.Local.ModPlayer.Pmod;
 using CSUL.Models.Network;
 using CSUL.Models.Network.CB;
 using System;
@@ -132,6 +133,13 @@ namespace CSUL.Windows
                         {
                             MessageBox.Show(ex.ToFormative(data.Title), "模组安装失败", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
+                    }
+                }
+                else if (player is PmodPlayer)
+                {
+                    foreach (CbResourceData data in datas)
+                    {
+
                     }
                 }
                 else throw new Exception("不支持的播放集类型" + player.GetType().Name);

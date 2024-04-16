@@ -135,7 +135,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             {
                 if (mods.Remove(mod))
                 {
-                    mods.Remove(mod);
+                    mod.Delete();
                     OnDataChanged?.Invoke();
                 }
             });

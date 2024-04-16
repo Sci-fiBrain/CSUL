@@ -68,10 +68,22 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
         [Config]
         public string? ModUrl { get; set; }
 
+        #region ---公共方法---
         /// <summary>
         /// 保存模组数据
         /// </summary>
         public void SaveData() => this.SaveConfig(Path.Combine(ModPath, "pmod.data"));
+
+        /// <summary>
+        /// 删除模组
+        /// </summary>
+        public void Delete()
+        {
+            if (Directory.Exists(ModPath)) Directory.Delete(ModPath, true);
+            if (File.Exists(ModPath + ".disabled")) File.Delete(ModPath + ".disabled");
+            if (File.Exists(Path.Combine(ModPath, "pmod.data"))) File.Delete(Path.Combine(ModPath, "pmod.data"));
+        }
+        #endregion
 
         #region ---静态方法---
 
@@ -105,16 +117,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
 
         #endregion ---静态方法---
 
-        #region ---私有方法---
-
-        /// <summary>
-        /// 删除模组
-        /// </summary>
-        public void Delete()
-        {
-            if (Directory.Exists(ModPath)) Directory.Delete(ModPath, true);
-            if (File.Exists(ModPath + ".disabled")) File.Delete(ModPath + ".disabled");
-        }
+        #region ---私有方法--
 
         /// <summary>
         /// 加载模组信息

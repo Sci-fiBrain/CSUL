@@ -7,6 +7,7 @@
  *  --------------------------------------
  */
 
+using CSUL.Models.Local.ModPlayer.BepInEx;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,6 +79,21 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
                 }
                 package.DirectoryInfo.CopyTo(targetPath, true);
                 PmodData pmodData = new(targetPath);
+                if (data is not null)
+                {   //转存元数据
+                    pmodData.ModVersion = data.ModVersion;
+                    pmodData.Description = data.Description;
+                    pmodData.ModUrl = data.ModUrl;
+                    if (!string.IsNullOrEmpty(data.Name))
+                    {
+                        pmodData.Name = data.Name;
+                    }
+                }
+                if (data is PmodData pData)
+                {
+                    pmodData.Id = pData.Id;
+                }
+                if (mods.Contains(pmodData)) mods.Remove(pmodData);
                 mods.Add(pmodData);
                 MessageBox.Show($"模组 {name} 安装完成", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
                 OnDataChanged?.Invoke();

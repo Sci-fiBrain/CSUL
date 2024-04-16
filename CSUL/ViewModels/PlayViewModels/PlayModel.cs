@@ -25,7 +25,7 @@ namespace CSUL.ViewModels.PlayViewModels
     {
         private static ComParameters CP { get; } = ComParameters.Instance;
         private Window? window = null;
-        private const string jsName = "chinesization.js";   //汉化文件名称
+        //private const string jsName = "chinesization.js";   //汉化文件名称
         private PlayerLogParser? logParser = null;
 
         public PlayModel()
@@ -136,7 +136,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             File.Delete(loadConfig);
                         }
 
-                        
+
 
                         if (player is not null and not NullModPlayer)
                         {   //播放集
@@ -157,63 +157,77 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #endregion 运行播放集
 
-                        #region 运行汉化
+                        #region 运行猫猫工具包
 
                         try
                         {
+                            startInfoBox.Text = "正在加载喵小夕套件";
                             Chinesization.RemoveOutdate(CP.GameRoot.FullName);
                             if (CP.StartChinesization)
-                            {   //启动汉化
-                                startInfoBox.Text = "正在加载喵小夕工具包";
-                                string cnText;
-                                CbResourceData? data = null;
-                                try
-                                {
-                                    data = await NetworkData.GetCbResourceData(157);
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(ex.ToFormative(), "最新汉化包数据获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                }
-                                CbFileData? file = data?.Files?.FirstOrDefault(x => x.FileName.Contains("源码"));
-                                if (File.Exists(jsName))
-                                {   //存在汉化文件
-                                    cnText = File.ReadAllText(jsName, Encoding.UTF8);
-                                    Version? nowVersion = Chinesization.GetVersion(cnText);
-                                    if (data is not null && nowVersion is not null && Version.TryParse(data.ResourceVersion, out Version? lastedVersion))
-                                    {   //版本检测成功
-                                        if (lastedVersion > nowVersion)
-                                        {   //需要更新
-                                            if (file is not null)
-                                            {   //更新文件路径存在
-                                                using MemoryStream stream = new();
-                                                await NetworkData.DownloadFromUri(file.Url, stream, api: true);
-                                                cnText = Encoding.UTF8.GetString(stream.ToArray());
-                                                File.WriteAllText(jsName, cnText);
-                                                OnPropertyChanged(nameof(ChinesizationVersion));
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {   //不存在汉化文件
-                                    if (data is null) throw new Exception("获取论坛汉化文件信息失败");
-                                    if (file is null) throw new Exception("获取汉化文件地址失败");
-                                    using MemoryStream stream = new();
-                                    await NetworkData.DownloadFromUri(file.Url, stream, api: true);
-                                    cnText = Encoding.UTF8.GetString(stream.ToArray());
-                                    File.WriteAllText(jsName, cnText);
-                                    OnPropertyChanged(nameof(ChinesizationVersion));
-                                }
-                                Chinesization.Chinesize(CP.GameRoot.FullName, cnText);
+                            {
+                                //CbResourceData? data = null;
+                                //try
+                                //{
+                                //    data = await NetworkData.GetCbResourceData(184);
+                                //}
+                                //catch(Exception ex)
+                                //{
+                                //    MessageBox.Show(ex.ToFormative(), "喵小夕汉化获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                //}
                             }
+
+                            //    if (CP.StartChinesization)
+                            //    {   //启动汉化
+                            //        
+                            //        string cnText;
+                            //        CbResourceData? data = null;
+                            //        try
+                            //        {
+                            //            data = await NetworkData.GetCbResourceData(157);
+                            //        }
+                            //        catch (Exception ex)
+                            //        {
+                            //            MessageBox.Show(ex.ToFormative(), "最新汉化包数据获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            //        }
+                            //        CbFileData? file = data?.Files?.FirstOrDefault(x => x.FileName.Contains("源码"));
+                            //        if (File.Exists(jsName))
+                            //        {   //存在汉化文件
+                            //            cnText = File.ReadAllText(jsName, Encoding.UTF8);
+                            //            Version? nowVersion = Chinesization.GetVersion(cnText);
+                            //            if (data is not null && nowVersion is not null && Version.TryParse(data.ResourceVersion, out Version? lastedVersion))
+                            //            {   //版本检测成功
+                            //                if (lastedVersion > nowVersion)
+                            //                {   //需要更新
+                            //                    if (file is not null)
+                            //                    {   //更新文件路径存在
+                            //                        using MemoryStream stream = new();
+                            //                        await NetworkData.DownloadFromUri(file.Url, stream, api: true);
+                            //                        cnText = Encoding.UTF8.GetString(stream.ToArray());
+                            //                        File.WriteAllText(jsName, cnText);
+                            //                        OnPropertyChanged(nameof(ChinesizationVersion));
+                            //                    }
+                            //                }
+                            //            }
+                            //        }
+                            //        else
+                            //        {   //不存在汉化文件
+                            //            if (data is null) throw new Exception("获取论坛汉化文件信息失败");
+                            //            if (file is null) throw new Exception("获取汉化文件地址失败");
+                            //            using MemoryStream stream = new();
+                            //            await NetworkData.DownloadFromUri(file.Url, stream, api: true);
+                            //            cnText = Encoding.UTF8.GetString(stream.ToArray());
+                            //            File.WriteAllText(jsName, cnText);
+                            //            OnPropertyChanged(nameof(ChinesizationVersion));
+                            //        }
+                            //        Chinesization.Chinesize(CP.GameRoot.FullName, cnText);
+                            //    }
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.ToFormative(), "汉化包装载出错", MessageBoxButton.OK, MessageBoxImage.Error);
+                            MessageBox.Show(ex.ToFormative(), "喵小夕套件装载出错", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
 
-                        #endregion 运行汉化
+                        #endregion 运行猫猫工具包
 
                         #region 运行日志解析
 
@@ -266,8 +280,8 @@ namespace CSUL.ViewModels.PlayViewModels
         {
             get
             {
-                if (File.Exists(jsName))
-                    return Chinesization.GetVersion(File.ReadAllText(jsName))?.ToString();
+                //if (File.Exists(jsName))
+                //    return Chinesization.GetVersion(File.ReadAllText(jsName))?.ToString();
                 return null;
             }
         }

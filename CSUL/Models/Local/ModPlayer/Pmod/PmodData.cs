@@ -30,9 +30,14 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             LoadModInfo();
         }
 
-        public string Name { get; private set; } = default!;
+        [Config]
+        public string Name { get; set; } = default!;
 
-        public string ModPath { get; private set; } = default!;
+        [Config]
+        public int? Id { get; set; }
+
+        [Config]
+        public string ModPath { get; set; } = default!;
 
         public bool IsEnabled
         {
@@ -52,13 +57,21 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             }
         }
 
-        public string? ModVersion { get; private set; }
+        [Config]
+        public string? ModVersion { get; set; }
 
-        public string? LatestVersion => null;
+        public string? LatestVersion => Id is int id ? Network.NetworkData.GetCbResourceData(id).Result?.ResourceVersion : null;
 
-        public string? Description { get; private set; }
+        [Config]
+        public string? Description { get; set; }
 
-        public string? ModUrl => null;
+        [Config]
+        public string? ModUrl { get; set; }
+
+        /// <summary>
+        /// 保存模组数据
+        /// </summary>
+        public void SaveData() => this.SaveConfig(Path.Combine(ModPath, "pmod.data"));
 
         #region ---静态方法---
 
@@ -108,16 +121,28 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
         /// </summary>
         private void LoadModInfo()
         {
-            Name = Path.GetFileName(ModPath);
-            if (GetPmodAssembly(ModPath) is Assembly assembly)
+            string path = Path.Combine(ModPath, "pmod.data");
+            try
             {
-                string? assName = assembly.GetName().Name;
-                Description = assName ?? "暂无描述";
-                ModVersion = assembly.GetName().Version?.ToString();
+                if (File.Exists(path))
+                {
+                    this.LoadConfig(path);
+                }
+                else throw new System.Exception();
             }
-            else
+            catch
             {
-                Description = "未获取到Pmod信息，该文件可能不是Pmod";
+                Name = Path.GetFileName(ModPath);
+                if (GetPmodAssembly(ModPath) is Assembly assembly)
+                {
+                    string? assName = assembly.GetName().Name;
+                    Description = assName ?? "暂无描述";
+                    ModVersion = assembly.GetName().Version?.ToString();
+                }
+                else
+                {
+                    Description = "未获取到Pmod信息，该文件可能不是Pmod";
+                }
             }
         }
 

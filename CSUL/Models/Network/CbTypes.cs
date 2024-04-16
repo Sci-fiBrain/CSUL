@@ -118,7 +118,6 @@ namespace CSUL.Models.Network.CB
         {
             public override CbCustomInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
-                CbResourceType resourceType = CbResourceType.Default;
                 try
                 {
                     JsonElement json = JsonElement.ParseValue(ref reader);
@@ -126,18 +125,18 @@ namespace CSUL.Models.Network.CB
                     //地图存档
                     if (json.TryGetProperty("Map_or_Save", out JsonElement mapOrSave))
                     {
-                        switch (mapOrSave.GetString())
+                        CbResourceType resourceType = mapOrSave.GetString() switch
                         {
-                            case "Map": resourceType = CbResourceType.Map; break;
-                            case "Save": resourceType = CbResourceType.Save; break;
-                        }
+                            "Map" => CbResourceType.Map,
+                            "Save" => CbResourceType.Save,
+                            _ => CbResourceType.Default,
+                        };
                         return new CbCustomInfo() { ResourceType = resourceType };
                     }
 
-                    //BepInEx模组
+                    //模组
                     if (json.TryGetProperty("modLoaderItem", out JsonElement loader))
                     {
-                        resourceType = CbResourceType.BepMod;
                         int[] bepVersion = loader.EnumerateObject().First().Name switch
                         {   //获取加载器版本
                             "5and6" => new int[] { 5, 6 },
@@ -145,20 +144,35 @@ namespace CSUL.Models.Network.CB
                             "6" => new int[] { 6 },
                             _ => Array.Empty<int>()
                         };
-                        int[]? dependBepIds = null;
-                        if (json.TryGetProperty("depend_mod", out JsonElement depends))
-                        {   //有前置模组
-                            try
-                            {
-                                dependBepIds = depends.EnumerateObject().Select(x => int.Parse(x.Name)).ToArray();
+                        if (bepVersion.Length > 0)
+                        {   //bepinex
+                            int[]? dependBepIds = null;
+                            if (json.TryGetProperty("depend_mod", out JsonElement depends))
+                            {   //有前置模组
+                                try
+                                {
+                                    dependBepIds = depends.EnumerateObject().Select(x => int.Parse(x.Name)).ToArray();
+                                }
+                                catch { }
                             }
-                            catch { }
+                            return new CbCustomBepModInfo()
+                            {
+                                ResourceType = CbResourceType.BepMod,
+                                BepInExVersion = bepVersion,
+                                DependBepModIds = dependBepIds
+                            };
                         }
-                        return new CbCustomBepModInfo() { ResourceType = resourceType, BepInExVersion = bepVersion, DependBepModIds = dependBepIds };
+                        if(loader.EnumerateObject().First().Name == "pmod")
+                        {   //pmod
+                            return new CbCustomPmodInfo()
+                            {
+                                ResourceType = CbResourceType.Pmod
+                            };
+                        }
                     }
                 }
                 catch { }
-                return new CbCustomInfo { ResourceType = resourceType };
+                return new CbCustomInfo { ResourceType = CbResourceType.Default };
             }
 
             public override void Write(Utf8JsonWriter writer, CbCustomInfo value, JsonSerializerOptions options)
@@ -204,6 +218,11 @@ namespace CSUL.Models.Network.CB
         public string GameVersion { get; set; } = default!;
     }
 
+    internal class CbCustomPmodInfo : CbCustomInfo
+    {
+
+    }
+
     /// <summary>
     /// CSLBBS文件数据
     /// </summary>
@@ -232,6 +251,7 @@ namespace CSUL.Models.Network.CB
         /// </summary>
         Default,
 
+        Pmod,
         BepMod,
         Map,
         Save,

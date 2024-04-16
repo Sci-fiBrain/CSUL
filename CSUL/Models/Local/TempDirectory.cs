@@ -7,6 +7,7 @@
  *  --------------------------------------
  */
 
+using CSUL.Models.Network.CB;
 using SharpCompress.Archives;
 using System;
 using System.IO;
@@ -72,8 +73,6 @@ namespace CSUL.Models.Local
         public async Task Decompress(string file)
         {
             if (!File.Exists(file)) throw new FileNotFoundException(file);
-            if (Directory.Exists(FullName)) Directory.Delete(FullName, true);
-            Directory.CreateDirectory(FullName);
             await Task.Run(() =>
             {
                 using Stream stream = File.OpenRead(file);

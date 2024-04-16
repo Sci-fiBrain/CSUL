@@ -41,9 +41,57 @@ namespace CSUL.ViewModels.PlayViewModels
                     }
                     if (Process.GetProcessesByName("Cities2") is Process[] processes && processes.Length > 0)
                     {
-                        if (MessageBox.Show("检测到正在运行的天际线2进程\n" +
-                            "强行启动可能会出现问题，建议关闭已开启的游戏进程\n" +
-                            "是否继续？", "警告", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.Cancel) return;
+                        MessageBoxResult result = MessageBox.Show("检测到正在运行的天际线2进程\n" +
+                            "是: 强制终止已存在的游戏进程，请确保游戏数据已保存\n" +
+                            "否: 忽略并继续启动游戏，启动过程可能会出现问题\n" +
+                            "取消: 不启动游戏\n",
+                            "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Yes)
+                        {   //终止游戏进程
+                            try
+                            {
+                                foreach (Process process in processes)
+                                {
+                                    if (!process.HasExited)
+                                    {
+                                        process.Kill();
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                switch (ex)
+                                {
+                                    case System.ComponentModel.Win32Exception:
+                                    case UnauthorizedAccessException:
+                                        {   //权限不足
+
+                                            //配置cmd启动参数
+                                            StringBuilder builder = new();
+                                            builder.Append("/C ");
+                                            foreach (Process process in processes)
+                                            {
+                                                builder.Append($"taskkill /F /PID {process.Id} & ");
+                                            }
+
+                                            ProcessStartInfo startInfo = new()
+                                            {   //管理员模式启动cmd 强制终止进程
+                                                FileName = "cmd.exe",
+                                                Verb = "runas",
+                                                Arguments = builder.ToString(),
+                                            };
+                                            try
+                                            {
+                                                Process.Start(startInfo);
+                                            }
+                                            catch (System.ComponentModel.Win32Exception) { }
+                                            break;
+                                        }
+                                    default: throw;
+                                }
+                            }
+                        }
+                        else if (result == MessageBoxResult.Cancel) return;
                     }
                     ButtonEnabled = false;
                     if (CP.ShowSteamInfo)

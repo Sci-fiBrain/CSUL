@@ -36,6 +36,10 @@
                     </Style>
                 </WrapPanel.Resources>
                 <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding SteamCompatibilityMode}" />
+                    <Label Content="{StaticResource SteamCompatible}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding AlwaysReloadPmod}" />
                     <Label Content="{StaticResource AlwaysReloadPmod}" />
                 </StackPanel>
@@ -47,10 +51,6 @@
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding OpenDeveloper}" />
                     <Label Content="{StaticResource DevModelStart}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox IsChecked="{Binding SteamCompatibilityMode}" />
-                    <Label Content="{StaticResource SteamCompatible}" />
                 </StackPanel>
             </WrapPanel>
             <StackPanel>

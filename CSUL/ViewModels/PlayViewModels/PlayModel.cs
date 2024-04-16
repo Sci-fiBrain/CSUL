@@ -44,6 +44,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     if (Process.GetProcessesByName("Cities2") is Process[] processes && processes.Length > 0)
                     {
                         MessageBoxResult result = MessageBox.Show("检测到正在运行的天际线2进程\n" +
+                            "-------------------------------------------\n" +
                             "是: 强制终止已存在的游戏进程，请确保游戏数据已保存\n" +
                             "否: 忽略并继续启动游戏，启动过程可能会出现问题\n" +
                             "取消: 不启动游戏\n",
@@ -113,12 +114,33 @@ namespace CSUL.ViewModels.PlayViewModels
                         if (ret == MessageBoxResult.Cancel) CP.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
-                    StartInfoBox startInfoBox = new() { Text = "正在启动游戏" };
+                    StartInfoBox startInfoBox = new() { Text = "启动游戏" };
                     startInfoBox.Show();
                     startInfoBox.Topmost = false;
+                    await Task.Delay(500);
 
                     try
                     {
+                        #region 检查模组是否被占用
+
+                        try
+                        {
+                            startInfoBox.Text = "检查Pmod文件占用情况";
+                            await Task.Delay(500);
+                            FileInfo[] fileInfos = CP.Pmod.GetAllFiles();
+                            if (CP.AlwaysReloadPmod || fileInfos.Any(file => file.IsInUse()))
+                            {   //模组文件被占用
+                                startInfoBox.Text = "解除Pmod文件占用";
+                                await GameDataManager.ReloadPmodData();
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            MessageBox.Show(ex.ToFormative(), "解除Pmod文件被占用时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        
+                        #endregion
+
                         #region 运行播放集
 
                         BaseModPlayer? player = CP.ModPlayerManager.GetModPlayers().FirstOrDefault(x => x.PlayerName == CP.SelectedModPlayer);
@@ -126,7 +148,7 @@ namespace CSUL.ViewModels.PlayViewModels
                         string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
                         if (File.Exists(loadConfig))
                         {   //清理旧播放集
-                            startInfoBox.Text = "正在清理旧播放集";
+                            startInfoBox.Text = "清理旧播放集";
                             ModPlayerData? data = JsonSerializer.Deserialize<ModPlayerData>(File.ReadAllText(loadConfig));
                             if (data is not null)
                             {
@@ -145,7 +167,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             try
                             {
                                 //装载播放集
-                                startInfoBox.Text = "正在装载播放集";
+                                startInfoBox.Text = "装载播放集";
                                 ModPlayerData playerData = await player.Install(CP.GameRoot.FullName, CP.GameData.FullName);
                                 byte[] buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(playerData));
                                 using Stream stream = File.Create(loadConfig);
@@ -161,8 +183,6 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #region 运行猫猫工具包
 
-                        startInfoBox.Text = "正在加载喵小夕套件";
-                        await Task.Delay(1000);
                         await LoadNyanTool(184, "喵小夕汉化", "I18nCN", startInfoBox);
                         await LoadNyanTool(185, "猫猫快捷键", "mioHotkeysMod", startInfoBox);
 
@@ -172,7 +192,7 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         try
                         {
-                            startInfoBox.Text = "正在加载日志解析器";
+                            startInfoBox.Text = "加载日志解析器";
                             logParser?.Dispose();
                             logParser = new(CP.PlayerLog);
                             logParser.StartListening();
@@ -184,7 +204,7 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #endregion 运行日志解析
 
-                        startInfoBox.Text = "正在启动游戏进程";
+                        startInfoBox.Text = "启动游戏进程";
                         //启动游戏进程
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";
                         if (CP.SteamCompatibilityMode)
@@ -233,6 +253,16 @@ namespace CSUL.ViewModels.PlayViewModels
             set
             {
                 CP.StartChinesization = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AlwaysReloadPmod
+        {
+            get => CP.AlwaysReloadPmod;
+            set
+            {
+                CP.AlwaysReloadPmod = value;
                 OnPropertyChanged();
             }
         }
@@ -292,7 +322,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     CbFileData? fileData = null;
                     try
                     {   //获取在线数据
-                        box.Text = $"正在获取{name}在线信息";
+                        box.Text = $"获取{name}在线信息";
                         data = await NetworkData.GetCbResourceData(id);
                         fileData = data?.Files?.FirstOrDefault();
                         if (fileData is null) data = null;
@@ -305,7 +335,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     PmodData? modData = null;
                     async Task Install()
                     {
-                        box.Text = "正在加载" + name;
+                        box.Text = "加载" + name;
                         await Task.Delay(500);
                         using TempDirectory temp = new();
                         string zipPath = Path.Combine(temp.FullName, fileData!.FileName);
@@ -327,7 +357,7 @@ namespace CSUL.ViewModels.PlayViewModels
                         modData = new(path);
                         if (Version.TryParse(modData.ModVersion, out Version? version) && Version.TryParse(data?.ResourceVersion, out Version? latestVersion))
                         {
-                            box.Text = "正在检查" + name + "更新";
+                            box.Text = "检查" + name + "更新";
                             await Task.Delay(1000);
                             if (latestVersion > version)
                             {   //需要更新
@@ -343,9 +373,12 @@ namespace CSUL.ViewModels.PlayViewModels
                 }
                 else
                 {   //不激活 => 删除
-                    box.Text = $"正在移除{name}";
-                    await Task.Delay(1000);
-                    if (Directory.Exists(path)) Directory.Delete(path, true);
+                    if (Directory.Exists(path))
+                    {
+                        box.Text = $"移除{name}";
+                        await Task.Delay(1000);
+                        Directory.Delete(path, true);
+                    }
                 }
             }
             catch (Exception ex)

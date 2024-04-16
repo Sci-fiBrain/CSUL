@@ -111,6 +111,12 @@ namespace CSUL.Models
         [Config]
         public bool StartChinesization { get; set; }
 
+        /// <summary>
+        /// 总是重新加载Pmod
+        /// </summary>
+        [Config]
+        public bool AlwaysReloadPmod { get; set; }
+
         #endregion --游戏启动相关--
 
         #region --游戏平台相关--

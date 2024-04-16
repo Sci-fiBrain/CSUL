@@ -21,36 +21,46 @@
         <Image  Height="280" Width="auto" Margin="0,-20,0,0"
                 Source="/Resources/Imgs/csl_logo_low.png"
                 HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <StackPanel Margin="25" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <StackPanel Margin="25" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
             <StackPanel.Resources>
                 <Style TargetType="CheckBox" BasedOn="{StaticResource ChkBullet}" />
                 <Style TargetType="Label">
                     <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}" />
                     <Setter Property="FontSize" Value="13" />
                 </Style>
-                <Style TargetType="StackPanel">
-                    <Setter Property="Margin" Value="5, 0, 0, 15" />
-                </Style>
             </StackPanel.Resources>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                <Label Content="{Binding SelectedModPlayer}" FontSize="18" />
+            <WrapPanel Orientation="Vertical" Height="100" Margin="0,30,0,0">
+                <WrapPanel.Resources>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Margin" Value="5, 15, 50, 0" />
+                    </Style>
+                </WrapPanel.Resources>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding AlwaysReloadPmod}" />
+                    <Label Content="{StaticResource AlwaysReloadPmod}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding StartChinesization}" />
+                    <Label Content="{StaticResource Chinesization}" />
+                    <Label Content="{Binding ChinesizationVersion}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding OpenDeveloper}" />
+                    <Label Content="{StaticResource DevModelStart}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding SteamCompatibilityMode}" />
+                    <Label Content="{StaticResource SteamCompatible}" />
+                </StackPanel>
+            </WrapPanel>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <Label Content="{Binding SelectedModPlayer}" FontSize="18" />
+                </StackPanel>
+                <ec:CButton ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
+                            Height="80" Width="255" Content="{StaticResource StartGame}" FontSize="40px"
+                            Command="{Binding PlayGameCommand}" IsEnabled="{Binding ButtonEnabled}" HorizontalAlignment="Left" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding StartChinesization}" />
-                <Label Content="{StaticResource Chinesization}" />
-                <Label Content="{Binding ChinesizationVersion}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding OpenDeveloper}" />
-                <Label Content="{StaticResource DevModelStart}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox IsChecked="{Binding SteamCompatibilityMode}" />
-                <Label Content="{StaticResource SteamCompatible}" />
-            </StackPanel>
-            <ec:CButton ButtonType="Text" Foreground="{DynamicResource WhiteBrush}" Background="{DynamicResource DefaultBrush}"
-                Height="80" Width="255" Content="{StaticResource StartGame}" FontSize="40px"
-                Command="{Binding PlayGameCommand}" IsEnabled="{Binding ButtonEnabled}" HorizontalAlignment="Left" />
         </StackPanel>
     </Grid>
 </UserControl>

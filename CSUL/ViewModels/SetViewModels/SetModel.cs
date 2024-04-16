@@ -1,4 +1,5 @@
 ﻿using CSUL.Models;
+using CSUL.Models.Local.GameEx;
 using System;
 using System.IO;
 using System.Windows;
@@ -63,10 +64,7 @@ namespace CSUL.ViewModels.SetViewModels
             {
                 var ret = MessageBox.Show("这将会删除已登录的Paradox账号数据", "确认登出Paradox账号吗？", MessageBoxButton.OKCancel, MessageBoxImage.Question);
                 if (ret != MessageBoxResult.OK) return;
-                string cachePath = Path.Combine(CP.GameData.FullName, ".cache");
-                string pdxSdk = Path.Combine(CP.GameData.FullName, ".pdxsdk");
-                if (Directory.Exists(cachePath)) Directory.Delete(cachePath, true);
-                if (Directory.Exists(pdxSdk)) Directory.Delete(pdxSdk, true);
+                GameDataManager.LogoutParadox();
                 MessageBox.Show("Paradox账号已退出", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)

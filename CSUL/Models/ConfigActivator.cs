@@ -66,7 +66,8 @@ namespace CSUL.Models
             BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             if (incPrivate) flags |= BindingFlags.NonPublic;
             var properties = from pro in obj.GetType().GetProperties(flags) where Attribute.IsDefined(pro, typeof(ConfigAttribute)) select pro;
-            using Utf8JsonWriter writer = new(new FileStream(configPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite), new() { Indented = true });
+            using Stream stream = new FileStream(configPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using Utf8JsonWriter writer = new(stream, new() { Indented = true });
             writer.WriteStartObject();
             foreach (var pro in properties)
             {

@@ -45,7 +45,7 @@
 
                 <Label FontSize="20" Foreground="{DynamicResource BlackBrush}" FontWeight="Bold"
                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="100"
-                       x:Name="text" Width="400" Margin="0,10">这是一个文字</Label>
+                       x:Name="text" Width="400" Margin="0,20">这是一个文字</Label>
 
                 <Ellipse Name="e1" Canvas.Left="130" Canvas.Top="70" Style="{StaticResource ellipse}"/>
                 <Ellipse Name="e2" Canvas.Left="160" Canvas.Top="70" Style="{StaticResource ellipse}"/>

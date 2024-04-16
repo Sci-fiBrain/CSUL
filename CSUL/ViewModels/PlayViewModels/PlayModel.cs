@@ -6,6 +6,7 @@ using CSUL.Models.Local.ModPlayer;
 using CSUL.Models.Local.ModPlayer.Pmod;
 using CSUL.Models.Network;
 using CSUL.Models.Network.CB;
+using CSUL.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -112,7 +113,7 @@ namespace CSUL.ViewModels.PlayViewModels
                         if (ret == MessageBoxResult.Cancel) CP.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
-                    Windows.StartInfoBox startInfoBox = new() { Text = "正在启动游戏" };
+                    StartInfoBox startInfoBox = new() { Text = "正在启动游戏" };
                     startInfoBox.Show();
                     startInfoBox.Topmost = false;
 
@@ -160,71 +161,10 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #region 运行猫猫工具包
 
-                        try
-                        {
-                            startInfoBox.Text = "正在加载喵小夕套件";
-                            string i18nPath = Path.Combine(CP.Pmod.FullName, "I18nCN");
-                            Chinesization.RemoveOutdate(CP.GameRoot.FullName);
-                            if (CP.StartChinesization)
-                            {
-                                CbResourceData? data = null;
-                                CbFileData? fileData = null;
-                                try
-                                {   //获取在线数据
-                                    data = await NetworkData.GetCbResourceData(184);
-                                    fileData = data?.Files?.FirstOrDefault();
-                                    if (fileData is null) data = null;
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(ex.ToFormative(), "喵小夕汉化最新文件获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                }
-
-                                PmodData? i18n = null;
-                                async Task InstallI18n()
-                                {
-                                    startInfoBox.Text = "正在加载喵小夕汉化";
-                                    using TempDirectory temp = new();
-                                    string zipPath = Path.Combine(temp.FullName, fileData!.FileName);
-                                    using(Stream stream = File.Create(zipPath))
-                                    {
-                                        await NetworkData.DownloadFromUri(fileData.Url, stream, api: true);
-                                    }
-                                    await temp.Decompress(zipPath);
-                                    temp.DirectoryInfo.GetDirectories().First().CopyTo(i18nPath);
-                                    i18n = new(i18nPath)
-                                    {
-                                        ModVersion = data.ResourceVersion
-                                    };
-                                    i18n.SaveData();
-                                }
-
-                                if (Directory.Exists(i18nPath))
-                                {   //存在汉化文件
-                                    i18n = new(i18nPath);
-                                    if(Version.TryParse(i18n.ModVersion, out Version? version) && Version.TryParse(data?.ResourceVersion, out Version? latestVersion))
-                                    {
-                                        if(latestVersion > version)
-                                        {   //需要更新
-                                            i18n.Delete();
-                                            await InstallI18n();
-                                        }
-                                    }
-                                }
-                                else
-                                {   //不存在汉化文件
-                                    if(data is not null) await InstallI18n();
-                                }
-                            }
-                            else
-                            {
-                                if(File.Exists(i18nPath)) File.Delete(i18nPath);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.ToFormative(), "喵小夕套件装载出错", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        startInfoBox.Text = "正在加载喵小夕套件";
+                        await Task.Delay(1000);
+                        await LoadNyanTool(184, "喵小夕汉化", "I18nCN", startInfoBox);
+                        await LoadNyanTool(185, "猫猫快捷键", "mioHotkeysMod", startInfoBox);
 
                         #endregion 运行猫猫工具包
 
@@ -339,5 +279,79 @@ namespace CSUL.ViewModels.PlayViewModels
         /// </summary>
         /// <param name="window"></param>
         public void SetWindow(Window window) => this.window = window;
+
+        private static async Task LoadNyanTool(int id, string name, string fileName, StartInfoBox box)
+        {
+            try
+            {
+                string path = Path.Combine(CP.Pmod.FullName, fileName);
+                Chinesization.RemoveOutdate(CP.GameRoot.FullName);
+                if (CP.StartChinesization)
+                {
+                    CbResourceData? data = null;
+                    CbFileData? fileData = null;
+                    try
+                    {   //获取在线数据
+                        box.Text = $"正在获取{name}在线信息";
+                        data = await NetworkData.GetCbResourceData(id);
+                        fileData = data?.Files?.FirstOrDefault();
+                        if (fileData is null) data = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToFormative(), $"{name}最新文件获取失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+
+                    PmodData? modData = null;
+                    async Task Install()
+                    {
+                        box.Text = "正在加载" + name;
+                        await Task.Delay(500);
+                        using TempDirectory temp = new();
+                        string zipPath = Path.Combine(temp.FullName, fileData!.FileName);
+                        using (Stream stream = File.Create(zipPath))
+                        {
+                            await NetworkData.DownloadFromUri(fileData.Url, stream, api: true);
+                        }
+                        await temp.Decompress(zipPath);
+                        temp.DirectoryInfo.GetDirectories().First().CopyTo(path);
+                        modData = new(path)
+                        {
+                            ModVersion = data.ResourceVersion
+                        };
+                        modData.SaveData();
+                    }
+
+                    if (Directory.Exists(path))
+                    {   //文件存在 检测更新
+                        modData = new(path);
+                        if (Version.TryParse(modData.ModVersion, out Version? version) && Version.TryParse(data?.ResourceVersion, out Version? latestVersion))
+                        {
+                            box.Text = "正在检查" + name + "更新";
+                            await Task.Delay(1000);
+                            if (latestVersion > version)
+                            {   //需要更新
+                                modData.Delete();
+                                await Install();
+                            }
+                        }
+                    }
+                    else
+                    {   //不存在 新安装
+                        if (data is not null) await Install();
+                    }
+                }
+                else
+                {   //不激活 => 删除
+                    box.Text = $"正在移除{name}";
+                    await Task.Delay(1000);
+                    if (Directory.Exists(path)) Directory.Delete(path, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToFormative(), $"{name}装载出错", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

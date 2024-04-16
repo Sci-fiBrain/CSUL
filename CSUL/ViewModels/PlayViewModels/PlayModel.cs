@@ -111,6 +111,10 @@ namespace CSUL.ViewModels.PlayViewModels
                         if (ret == MessageBoxResult.Cancel) CP.ShowSteamInfo = false;
                     }
                     if (window is not null) window.WindowState = WindowState.Minimized;
+                    Windows.StartInfoBox startInfoBox = new() { Text = "正在启动游戏" };
+                    startInfoBox.Show();
+                    startInfoBox.Topmost = false;
+
                     try
                     {
                         #region 运行播放集
@@ -120,6 +124,7 @@ namespace CSUL.ViewModels.PlayViewModels
                         string loadConfig = Path.Combine(CP.GameRoot.FullName, "modPlayer.load");
                         if (File.Exists(loadConfig))
                         {   //清理旧播放集
+                            startInfoBox.Text = "正在清理旧播放集";
                             ModPlayerData? data = JsonSerializer.Deserialize<ModPlayerData>(File.ReadAllText(loadConfig));
                             if (data is not null)
                             {
@@ -131,11 +136,14 @@ namespace CSUL.ViewModels.PlayViewModels
                             File.Delete(loadConfig);
                         }
 
+                        
+
                         if (player is not null and not NullModPlayer)
                         {   //播放集
                             try
                             {
                                 //装载播放集
+                                startInfoBox.Text = "正在装载播放集";
                                 ModPlayerData playerData = await player.Install(CP.GameRoot.FullName, CP.GameData.FullName);
                                 byte[] buffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(playerData));
                                 using Stream stream = File.Create(loadConfig);
@@ -156,6 +164,7 @@ namespace CSUL.ViewModels.PlayViewModels
                             Chinesization.RemoveOutdate(CP.GameRoot.FullName);
                             if (CP.StartChinesization)
                             {   //启动汉化
+                                startInfoBox.Text = "正在加载喵小夕工具包";
                                 string cnText;
                                 CbResourceData? data = null;
                                 try
@@ -210,6 +219,7 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         try
                         {
+                            startInfoBox.Text = "正在加载日志解析器";
                             logParser?.Dispose();
                             logParser = new(CP.PlayerLog);
                             logParser.StartListening();
@@ -221,6 +231,7 @@ namespace CSUL.ViewModels.PlayViewModels
 
                         #endregion 运行日志解析
 
+                        startInfoBox.Text = "正在启动游戏进程";
                         //启动游戏进程
                         string arg = $"{(OpenDeveloper ? "-developerMode " : null)}{CP.StartArguemnt}";
                         if (CP.SteamCompatibilityMode)
@@ -238,6 +249,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     }
                     await Task.Delay(500);
                     ButtonEnabled = true;
+                    startInfoBox.Close();
                 });
             RefreshCommand = new RelayCommand(sender =>
             {

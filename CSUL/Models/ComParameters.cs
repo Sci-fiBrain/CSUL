@@ -103,7 +103,7 @@ namespace CSUL.Models
         /// 选中的模组播放集的名字
         /// </summary>
         [Config]
-        public string? SelectedModPlayer { get; set; }
+        public string? SelectedModPlayer { get; set; } = "禁用播放集";
 
         /// <summary>
         /// 是否启用汉化

@@ -11,8 +11,12 @@
         WindowStartupLocation="CenterScreen"
         Topmost="True"
         Title="StartInfo"
-        Height="200" Width="400">
-    <Border>
+        Height="210" Width="410">
+    <Border Margin="5">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.7" Color="Black"/>
+        </Border.Effect>
+        
         <Grid>
             <Grid.Resources>
                 <Style x:Key="ellipse" TargetType="Ellipse">

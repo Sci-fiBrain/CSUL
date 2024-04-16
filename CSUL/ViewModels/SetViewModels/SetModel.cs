@@ -1,7 +1,6 @@
 ﻿using CSUL.Models;
 using CSUL.Models.Local.GameEx;
 using System;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 

@@ -7,7 +7,6 @@
  *  --------------------------------------
  */
 
-using CSUL.Models.Local.ModPlayer.BepInEx;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -162,7 +162,7 @@ namespace CSUL.Models.Network.CB
                                 DependBepModIds = dependBepIds
                             };
                         }
-                        if(loader.EnumerateObject().First().Name == "pmod")
+                        if (loader.EnumerateObject().First().Name == "pmod")
                         {   //pmod
                             return new CbCustomPmodInfo()
                             {
@@ -220,7 +220,6 @@ namespace CSUL.Models.Network.CB
 
     internal class CbCustomPmodInfo : CbCustomInfo
     {
-
     }
 
     /// <summary>

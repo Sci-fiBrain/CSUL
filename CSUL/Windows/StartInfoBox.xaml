@@ -10,22 +10,22 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
-        Title="StartInfo" 
+        Title="StartInfo"
         Height="200" Width="400">
     <Border>
         <Grid>
             <Grid.Resources>
                 <Style x:Key="ellipse" TargetType="Ellipse">
-                    <Setter Property="Width" Value="20"/>
-                    <Setter Property="Height" Value="20"/>
-                    <Setter Property="Fill" Value="{DynamicResource DefaultBrush}"/>
+                    <Setter Property="Width" Value="20" />
+                    <Setter Property="Height" Value="20" />
+                    <Setter Property="Fill" Value="{DynamicResource DefaultBrush}" />
                     <Setter Property="RenderTransform">
                         <Setter.Value>
-                            <TranslateTransform X="0" Y="0"/>
+                            <TranslateTransform X="0" Y="0" />
                         </Setter.Value>
                     </Setter>
                 </Style>
-                <PowerEase x:Key="powerEase" Power="2" EasingMode="EaseInOut"/>
+                <PowerEase x:Key="powerEase" Power="2" EasingMode="EaseInOut" />
             </Grid.Resources>
 
             <Canvas Width="400" Height="200">
@@ -33,11 +33,11 @@
                     <EventTrigger RoutedEvent="Loaded">
                         <BeginStoryboard>
                             <Storyboard RepeatBehavior="Forever" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <DoubleAnimation Storyboard.TargetName="e1" To="-50" BeginTime="0:0:0.0" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}"/>
-                                <DoubleAnimation Storyboard.TargetName="e2" To="-50" BeginTime="0:0:0.1" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}"/>
-                                <DoubleAnimation Storyboard.TargetName="e3" To="-50" BeginTime="0:0:0.2" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}"/>
-                                <DoubleAnimation Storyboard.TargetName="e4" To="-50" BeginTime="0:0:0.3" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}"/>
-                                <DoubleAnimation Storyboard.TargetName="e5" To="-50" BeginTime="0:0:0.4" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}"/>
+                                <DoubleAnimation Storyboard.TargetName="e1" To="-50" BeginTime="0:0:0.0" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}" />
+                                <DoubleAnimation Storyboard.TargetName="e2" To="-50" BeginTime="0:0:0.1" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}" />
+                                <DoubleAnimation Storyboard.TargetName="e3" To="-50" BeginTime="0:0:0.2" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}" />
+                                <DoubleAnimation Storyboard.TargetName="e4" To="-50" BeginTime="0:0:0.3" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}" />
+                                <DoubleAnimation Storyboard.TargetName="e5" To="-50" BeginTime="0:0:0.4" Duration="0:0:0.5" AutoReverse="True" EasingFunction="{StaticResource powerEase}" />
                             </Storyboard>
                         </BeginStoryboard>
                     </EventTrigger>
@@ -47,13 +47,12 @@
                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="100"
                        x:Name="text" Width="400" Margin="0,20">这是一个文字</Label>
 
-                <Ellipse Name="e1" Canvas.Left="130" Canvas.Top="70" Style="{StaticResource ellipse}"/>
-                <Ellipse Name="e2" Canvas.Left="160" Canvas.Top="70" Style="{StaticResource ellipse}"/>
-                <Ellipse Name="e3" Canvas.Left="190" Canvas.Top="70" Style="{StaticResource ellipse}"/>
-                <Ellipse Name="e4" Canvas.Left="220" Canvas.Top="70" Style="{StaticResource ellipse}"/>
-                <Ellipse Name="e5" Canvas.Left="250" Canvas.Top="70" Style="{StaticResource ellipse}"/>
+                <Ellipse Name="e1" Canvas.Left="130" Canvas.Top="70" Style="{StaticResource ellipse}" />
+                <Ellipse Name="e2" Canvas.Left="160" Canvas.Top="70" Style="{StaticResource ellipse}" />
+                <Ellipse Name="e3" Canvas.Left="190" Canvas.Top="70" Style="{StaticResource ellipse}" />
+                <Ellipse Name="e4" Canvas.Left="220" Canvas.Top="70" Style="{StaticResource ellipse}" />
+                <Ellipse Name="e5" Canvas.Left="250" Canvas.Top="70" Style="{StaticResource ellipse}" />
             </Canvas>
-            
         </Grid>
     </Border>
 </Window>

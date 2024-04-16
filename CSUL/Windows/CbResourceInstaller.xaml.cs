@@ -139,7 +139,6 @@ namespace CSUL.Windows
                 {
                     foreach (CbResourceData data in datas)
                     {
-
                     }
                 }
                 else throw new Exception("不支持的播放集类型" + player.GetType().Name);

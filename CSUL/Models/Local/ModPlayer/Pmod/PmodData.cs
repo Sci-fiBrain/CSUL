@@ -7,7 +7,6 @@
  *  --------------------------------------
  */
 
-using CSUL.Models.Local.ModPlayer.BepInEx;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -69,6 +68,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
         public string? ModUrl { get; set; }
 
         #region ---公共方法---
+
         /// <summary>
         /// 保存模组数据
         /// </summary>
@@ -83,7 +83,8 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             if (File.Exists(ModPath + ".disabled")) File.Delete(ModPath + ".disabled");
             if (File.Exists(Path.Combine(ModPath, "pmod.data"))) File.Delete(Path.Combine(ModPath, "pmod.data"));
         }
-        #endregion
+
+        #endregion ---公共方法---
 
         #region ---静态方法---
 
@@ -149,7 +150,7 @@ namespace CSUL.Models.Local.ModPlayer.Pmod
             }
         }
 
-        #endregion ---私有方法---
+        #endregion ---私有方法--
 
         #region ---比较方法---
 

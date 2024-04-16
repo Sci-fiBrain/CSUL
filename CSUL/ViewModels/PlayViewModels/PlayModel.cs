@@ -27,6 +27,7 @@ namespace CSUL.ViewModels.PlayViewModels
     {
         private static ComParameters CP { get; } = ComParameters.Instance;
         private Window? window = null;
+
         //private const string jsName = "chinesization.js";   //汉化文件名称
         private PlayerLogParser? logParser = null;
 
@@ -68,7 +69,6 @@ namespace CSUL.ViewModels.PlayViewModels
                                     case System.ComponentModel.Win32Exception:
                                     case UnauthorizedAccessException:
                                         {   //权限不足
-
                                             //配置cmd启动参数
                                             StringBuilder builder = new();
                                             builder.Append("/C ");
@@ -134,12 +134,12 @@ namespace CSUL.ViewModels.PlayViewModels
                                 await GameDataManager.ReloadPmodData();
                             }
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToFormative(), "解除Pmod文件被占用时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                        
-                        #endregion
+
+                        #endregion 检查模组是否被占用
 
                         #region 运行播放集
 
@@ -159,8 +159,6 @@ namespace CSUL.ViewModels.PlayViewModels
                             }
                             File.Delete(loadConfig);
                         }
-
-
 
                         if (player is not null and not NullModPlayer)
                         {   //播放集

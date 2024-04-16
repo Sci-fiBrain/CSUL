@@ -6,12 +6,8 @@
  *  文件介绍: 文件扩展方法
  *  --------------------------------------
  */
-using System;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSUL.Models
 {
@@ -28,7 +24,7 @@ namespace CSUL.Models
         /// <param name="path">文件路径</param>
         public static bool IsInUse(string path)
         {
-            if(!File.Exists(path)) throw new FileNotFoundException();
+            if (!File.Exists(path)) throw new FileNotFoundException();
             try
             {
                 using FileStream stream = File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);

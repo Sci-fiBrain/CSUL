@@ -7,7 +7,6 @@
  *  --------------------------------------
  */
 
-using CSUL.Models.Network.CB;
 using SharpCompress.Archives;
 using System;
 using System.IO;

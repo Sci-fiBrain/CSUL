@@ -6,9 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ec="clr-namespace:CSUL.ExControls"
              xmlns:vm="clr-namespace:CSUL.ViewModels.PlayViewModels"
-             mc:Ignorable="d" Loaded="UserControl_L
-
-             oaded"
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
              d:DesignHeight="570" d:DesignWidth="1078">
     <UserControl.DataContext>
         <vm:PlayModel />

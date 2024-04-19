@@ -137,47 +137,7 @@ namespace CSUL.ViewModels.PlayViewModels
                     "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {   //终止游戏进程
-                    try
-                    {
-                        foreach (Process process in processes)
-                        {
-                            if (!process.HasExited)
-                            {
-                                process.Kill();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        switch (ex)
-                        {
-                            case System.ComponentModel.Win32Exception:
-                            case UnauthorizedAccessException:
-                                {   //权限不足
-                                    //配置cmd启动参数
-                                    StringBuilder builder = new();
-                                    builder.Append("/C ");
-                                    foreach (Process process in processes)
-                                    {
-                                        builder.Append($"taskkill /F /PID {process.Id} & ");
-                                    }
-
-                                    ProcessStartInfo startInfo = new()
-                                    {   //管理员模式启动cmd 强制终止进程
-                                        FileName = "cmd.exe",
-                                        Verb = "runas",
-                                        Arguments = builder.ToString(),
-                                    };
-                                    try
-                                    {
-                                        Process.Start(startInfo);
-                                    }
-                                    catch (System.ComponentModel.Win32Exception) { }
-                                    break;
-                                }
-                            default: throw;
-                        }
-                    }
+                    processes.TaskKills();
                 }
                 else if (result == MessageBoxResult.Cancel) return;
             }

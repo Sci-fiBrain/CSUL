@@ -166,14 +166,23 @@ namespace CSUL.ViewModels.PlayViewModels
 
             try
             {
-                #region 检查模组是否被占用
+                #region 检查游戏文件是否被占用
 
                 try
                 {
-                    startInfoBox.Text = "检查Pmod文件占用情况";
+                    startInfoBox.Text = "检查游戏文件占用";
                     await Task.Delay(500);
-                    FileInfo[] fileInfos = CP.Pmod.GetAllFiles();
-                    if (CP.AlwaysReloadPmod || fileInfos.Any(file => file.IsInUse()))
+                    IEnumerable<FileInfo> fileInfos = CP.Pmod.GetAllFiles().Concat(CP.GameRoot.GetAllFiles());
+                    async Task<bool> ShouldReload()
+                    {
+                        bool ret = false;
+                        foreach(FileInfo fileInfo in fileInfos)
+                        {
+                            if (await fileInfo.Release()) ret = true;
+                        }
+                        return ret;
+                    }
+                    if (CP.AlwaysReloadPmod || await ShouldReload())
                     {   //模组文件被占用
                         startInfoBox.Text = "解除Pmod文件占用";
                         await GameDataManager.ReloadPmodData();
@@ -181,7 +190,7 @@ namespace CSUL.ViewModels.PlayViewModels
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToFormative(), "解除Pmod文件被占用时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(ex.ToFormative(), "解除游戏文件占用时出现问题", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
                 #endregion 检查模组是否被占用

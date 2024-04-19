@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>1.2.6.6</AssemblyVersion>
-    <FileVersion>1.2.6.6</FileVersion>
+    <AssemblyVersion>1.2.6.7</AssemblyVersion>
+    <FileVersion>1.2.6.7</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\Imgs\win_logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -122,6 +122,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Dependences\handle.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Languages\switch.txt">
       <Generator>MSBuild:Compile</Generator>
     </None>

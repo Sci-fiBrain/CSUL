@@ -29,7 +29,7 @@ namespace CSUL.Models
                 foreach(Process process in processes)
                 {
                     if (process.HasExited) continue;
-                    process.Kill();
+                    throw new Win32Exception();
                 }
                 return;
             }

@@ -31,7 +31,7 @@ namespace CSUL.Models
             }
             if (ex is UnauthorizedAccessException)
             {
-                builder.AppendLine($"异常信息: 该操作缺少权限，可能被安全软件拦截或是需要管理员权限");
+                builder.AppendLine($"异常信息: 请关闭安全软件或使用管理员模式启动CSUL");
             }
             else if (ex is System.Net.Http.HttpRequestException httpEx)
             {

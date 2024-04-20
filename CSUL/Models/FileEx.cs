@@ -11,8 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -109,11 +107,9 @@ namespace CSUL.Models
         public static async Task<bool> Release(string filePath)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException();
-            if (!IsInUse(filePath)) return false;
             Process[] processes = await GetFileProcesses(filePath);
-            if(processes.Length == 0) return false;
-            processes.TaskKills();
-            return true;
+            if(processes.Length == 0) return true;
+            return processes.TaskKills();
         }
     }
 }

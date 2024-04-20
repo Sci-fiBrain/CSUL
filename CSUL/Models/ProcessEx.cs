@@ -22,16 +22,16 @@ namespace CSUL.Models
         /// <summary>
         /// 强制结束进程
         /// </summary>
-        public static void TaskKills(this IEnumerable<Process> processes)
+        public static bool TaskKills(this IEnumerable<Process> processes)
         {
             try
             {
-                foreach(Process process in processes)
+                foreach (Process process in processes)
                 {
                     if (process.HasExited) continue;
-                    throw new Win32Exception();
+                    process.Kill();
                 }
-                return;
+                return true;
             }
             catch (Win32Exception) { }
             catch (UnauthorizedAccessException) { }
@@ -52,21 +52,25 @@ namespace CSUL.Models
             };
             try
             {
-                Process.Start(startInfo);
+                Process.Start(startInfo)?.WaitForExit(1000);
+                return true;
             }
-            catch (Win32Exception) { }
+            catch (Win32Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>
         /// 强制结束进程
         /// </summary>
-        public static void TaskKill(this Process process)
+        public static bool TaskKill(this Process process)
         {
-            if (process.HasExited) return;
+            if (process.HasExited) return true;
             try
             {
                 process.Kill();
-                return;
+                return true;
             }
             catch (Win32Exception) { }
             catch (UnauthorizedAccessException) { }
@@ -80,9 +84,13 @@ namespace CSUL.Models
             };
             try
             {
-                Process.Start(startInfo);
+                Process.Start(startInfo)?.WaitForExit(1000);
+                return true;
             }
-            catch (Win32Exception) { }
+            catch (Win32Exception)
+            {
+                return false;
+            }
         }
     }
 }

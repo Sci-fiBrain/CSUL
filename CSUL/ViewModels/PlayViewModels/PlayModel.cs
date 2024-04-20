@@ -137,7 +137,10 @@ namespace CSUL.ViewModels.PlayViewModels
                     "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {   //终止游戏进程
-                    processes.TaskKills();
+                    if (!processes.TaskKills())
+                    {
+                        MessageBox.Show("检测到没有给予权限\n可能无法正常终止进程", "游戏启动出现问题", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else if (result == MessageBoxResult.Cancel) return;
             }
@@ -172,13 +175,23 @@ namespace CSUL.ViewModels.PlayViewModels
                 {
                     startInfoBox.Text = "检查游戏文件占用";
                     await Task.Delay(500);
-                    IEnumerable<FileInfo> fileInfos = CP.Pmod.GetAllFiles().Concat(CP.GameRoot.GetAllFiles());
+                    IEnumerable<FileInfo> fileInfos = CP.GameData.GetAllFiles().Concat(CP.GameRoot.GetAllFiles());
                     async Task<bool> ShouldReload()
                     {
                         bool ret = false;
                         foreach(FileInfo fileInfo in fileInfos)
                         {
-                            if (await fileInfo.Release()) ret = true;
+                            if (fileInfo.IsInUse())
+                            {
+                                string name = fileInfo.Name;
+                                if (name.Length > 18) name = name[..6] + "..." + name[(name.Length - 9)..];
+                                startInfoBox.Text = "解除" + name;
+                                if(!await fileInfo.Release())
+                                {
+                                    MessageBox.Show("检测到没有给予权限\n可能无法正常解除文件占用", "游戏启动出现问题", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                }
+                                ret = true;
+                            }
                         }
                         return ret;
                     }

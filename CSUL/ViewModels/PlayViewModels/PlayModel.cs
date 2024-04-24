@@ -398,7 +398,8 @@ namespace CSUL.ViewModels.PlayViewModels
                             await NetworkData.DownloadFromUri(fileData.Url, stream, api: true);
                         }
                         await temp.Decompress(zipPath);
-                        temp.DirectoryInfo.GetDirectories().First().CopyTo(path);
+                        File.Delete(zipPath);
+                        temp.DirectoryInfo.CopyTo(path);
                         modData = new(path)
                         {
                             ModVersion = data.ResourceVersion

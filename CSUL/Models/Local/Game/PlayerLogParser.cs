@@ -103,9 +103,11 @@ namespace CSUL.Models.Local.Game
                     if (logs.Count > 0)
                     {
                         StringBuilder builder = new();
-                        builder.Append("以下消息由CSUL解析游戏日志自动生成，和CSUL本身无关").AppendLine();
+                        builder.Append("以下消息由CSUL解析游戏日志自动生成，产生原因和CSUL无关").AppendLine();
                         builder.Append('-', 60).AppendLine();
                         builder.AppendJoin('\n', logs);
+                        builder.Append('-', 60).AppendLine();
+                        builder.Append("再次提醒，以上消息为游戏日志，产生原因和CSUL无关").AppendLine();
                         MessageBox.Show(builder.ToString(), "CSUL 游戏日志解析器", MessageBoxButton.OK, MessageBoxImage.Warning);
                         logs.Clear();
                     }
@@ -165,7 +167,7 @@ namespace CSUL.Models.Local.Game
                     }
                     else if (line.Contains("A platform service integration failed to initialize"))
                     {
-                        logs.Add("Steam正版验证未通过");
+                        logs.Add("Steam正版验证未通过\n若为Steam正版请以Steam正版兼容模式启动");
                     }
                     else if (line.Contains("Out of memory"))
                     {

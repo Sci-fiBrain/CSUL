@@ -65,7 +65,10 @@ namespace CSUL.Models
             };
             using Process handleProcess = new() { StartInfo = startInfo };
             handleProcess.Start();
-            await handleProcess.WaitForExitAsync();
+            if (!await Task.Run(() => handleProcess.WaitForExit(TimeSpan.FromMinutes(5))))
+            {
+                handleProcess.Kill();
+            }
             HashSet<int> pids = new();
             while (handleProcess.StandardOutput.ReadLine() is string line)
             {

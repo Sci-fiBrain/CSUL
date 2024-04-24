@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CSUL.Models
 {
@@ -57,22 +58,26 @@ namespace CSUL.Models
         /// 递归获取文件夹下的所有文件
         /// </summary>
         /// <param name="dirPath">文件夹路径</param>
-        public static FileInfo[] GetAllFiles(string dirPath)
-            => GetAllFiles(new DirectoryInfo(dirPath));
+        /// <param name="Ignored">忽略的文件夹</param>
+        public static FileInfo[] GetAllFiles(string dirPath, params string[] Ignored)
+            => GetAllFiles(new DirectoryInfo(dirPath), Ignored.Select(x => new DirectoryInfo(x)).ToArray());
 
         /// <summary>
         /// 递归获取文件夹下的所有文件
         /// </summary>
-        /// <param name="dirPath">文件夹</param>
-        public static FileInfo[] GetAllFiles(this DirectoryInfo dir)
+        /// <param name="dir">文件夹</param>
+        /// <param name="Ignored">忽略的文件夹</param>
+        public static FileInfo[] GetAllFiles(this DirectoryInfo dir, params DirectoryInfo[] Ignored)
         {
             if (!dir.Exists) throw new DirectoryNotFoundException(dir.FullName);
             List<FileInfo> files = new();
             void RecursionSearch(DirectoryInfo root)
             {
                 files.AddRange(root.GetFiles());
-                foreach (DirectoryInfo dir in root.GetDirectories())
+                foreach (DirectoryInfo dir in root.GetDirectories().Where(x => !Ignored.Any(y => x.FullName == y.FullName)))
+                {
                     RecursionSearch(dir);
+                }
             }
             RecursionSearch(dir);
             return files.ToArray();

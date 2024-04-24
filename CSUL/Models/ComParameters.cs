@@ -162,6 +162,9 @@ namespace CSUL.Models
         /// </summary>
         private readonly string basePath = AppDomain.CurrentDomain.BaseDirectory;
 
+        /// <summary>
+        /// CSUL运行文件夹
+        /// </summary>
         public DirectoryInfo Base => GetDirectoryInfo(basePath);
 
         #endregion -基础文件夹-
@@ -241,7 +244,7 @@ namespace CSUL.Models
 
         private static DirectoryInfo GetDirectoryInfo(string dirPath)
         {
-            DirectoryInfo directory = new(dirPath);
+            DirectoryInfo directory = new(dirPath.Trim('\\'));
             if (!directory.Exists) directory.Create();
             return directory;
         }

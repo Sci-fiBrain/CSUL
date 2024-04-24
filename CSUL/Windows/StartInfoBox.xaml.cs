@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CSUL.Windows
 {
@@ -15,7 +16,17 @@ namespace CSUL.Windows
         public string? Text
         {
             get => text.Content.ToString();
-            set => text.Content = value;
+            set
+            {
+                text.Content = value;
+                SubText = "";
+            }
+        }
+
+        public string? SubText
+        {
+            get => subtext.Content.ToString();
+            set => subtext.Content = value;
         }
     }
 }

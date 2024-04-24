@@ -173,9 +173,10 @@ namespace CSUL.ViewModels.PlayViewModels
 
                 try
                 {
+
                     startInfoBox.Text = "检查游戏文件占用";
                     await Task.Delay(500);
-                    IEnumerable<FileInfo> fileInfos = CP.GameData.GetAllFiles().Concat(CP.GameRoot.GetAllFiles());
+                    IEnumerable<FileInfo> fileInfos = CP.GameData.GetAllFiles(CP.Base).Concat(CP.GameRoot.GetAllFiles(CP.Base));
                     async Task<bool> ShouldReload()
                     {
                         bool ret = false;
@@ -183,9 +184,10 @@ namespace CSUL.ViewModels.PlayViewModels
                         {
                             if (fileInfo.IsInUse())
                             {
+                                if (!ret) startInfoBox.Text = "正在解除游戏文件占用 通常少于3分钟";
                                 string name = fileInfo.Name;
                                 if (name.Length > 18) name = name[..6] + "..." + name[(name.Length - 9)..];
-                                startInfoBox.Text = "解除" + name;
+                                startInfoBox.SubText = "解除" + name;
                                 if(!await fileInfo.Release())
                                 {
                                     MessageBox.Show("检测到没有给予权限\n可能无法正常解除文件占用", "游戏启动出现问题", MessageBoxButton.OK, MessageBoxImage.Warning);
